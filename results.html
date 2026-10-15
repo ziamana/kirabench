@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results · KiraBench</title>
+<meta name="description" content="Every local AI model tested by Kira on used consumer GPUs: speed, score, and whether it fits in the card's memory.">
+<meta name="theme-color" content="#0f1311">
+<link rel="preload" href="assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="mark" href="./" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
+  <nav aria-label="Main"><a href="results.html" aria-current="page">Results</a><a class="hide-s" href="./#method">Method</a><a href="./#alerts">Alerts</a></nav>
+</div></header>
+
+<main class="wrap">
+  <section style="padding-top:56px">
+    <p class="cmd"><b>$</b> kirabench results --all</p>
+    <h1 style="font-size:clamp(30px,4vw,44px)">Every model, on every <span class="gb">GPU</span> tested</h1>
+    <p class="sub">Click a column to sort. Score is the share of checked tasks passed; tokens per second is generation speed at the same context length for every model. "Offload" means the model did not fit in the card's memory and part of it ran from system memory.</p>
+  </section>
+  <p class="cmd" style="margin:0 0 10px"><b>$</b> kirabench rig --current</p>
+  <dl class="rig" id="rig"></dl>
+  <section style="padding-top:36px">
+    <div id="results"></div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware.</span>
+  <nav aria-label="Footer"><a href="results.html">Results</a><a href="privacy.html">Privacy</a><a href="legal.html">Legal notice</a></nav>
+</div></footer>
+<script src="assets/palette.js"></script>
+<script src="assets/kira.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

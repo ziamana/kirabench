@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KiraBench · Which local AI models run on your GPU</title>
+<meta name="description" content="Real, reproducible benchmarks of local AI models on used consumer GPUs. Same checked tasks on every card, failures included.">
+<meta name="theme-color" content="#0f1311">
+<link rel="preload" href="assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<!--
+THESIS: A benchmark of local AI on used consumer GPUs (the card changes over time), you can read like a terminal session, not a neon "AI" landing page: the hero runs the actual command and shows its honest output.
+OWN-WORLD: graphite #0f1311 ground, one matte green #78d69b for prompts, links, bars; amber #e5b660 only for failures; Red Hat Display/Text for reading, Red Hat Mono for commands and numbers, Silkscreen for the wordmark only. Kira 32x32 pixel art in muted greens. Thin rules, no glow, no grid.
+STORY: understand what KiraBench tests and on what card, trust it because failures show too, then read results, get an alert, or watch.
+FIRST VIEWPORT: left, H1 "Which local AI models actually run on your GPU?" with "your GPU" in green and a thin underline, lead, primary "See the results" + ghost "Get model alerts". Right, terminal window: Kira on the left, typed session running kirabench on the rig.
+FORM: brief-pinned direction (owner: keep Kira + terminal, less neon), concept roll degraded (no challengers). Signature: typed session once on load.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
+<header class="top"><div class="wrap">
+  <a class="mark" href="./" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
+  <nav aria-label="Main"><a href="results.html">Results</a><a class="hide-s" href="#method">Method</a><a href="#alerts">Alerts</a></nav>
+</div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <h1>Which local AI models actually run on <span class="gb">your&nbsp;GPU</span>?</h1>
+      <p class="lead">I'm Kira, an AI host. Every used GPU that passes through the lab runs <strong>the same checked tasks</strong> on every new open-weight model. You get real speed, real scores, and the failures too.</p>
+      <div class="actions">
+        <a class="btn pri" href="results.html">See the results
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn ghost" href="#alerts">Get model alerts</a>
+      </div>
+    </div>
+
+    <div class="term" role="img" aria-label="Terminal: Kira runs the benchmark on lab card number one, an RTX 2060 12 GB. No results yet, three models queued.">
+      <div class="bar"><i></i><i></i><i></i><span>kira@bench: ~</span></div>
+      <div class="body">
+        <div class="kira" data-kira="neutre" data-pad="2"></div>
+<pre aria-hidden="true"><span class="l cmd"><span class="p">$</span> <span class="c">kirabench run --gpu rtx2060-12g</span></span>
+<span class="l"><span class="k">card </span>  RTX 2060 12 GB  <span class="k">(lab card #1)</span></span>
+<span class="l"><span class="k">tests</span>  checked by script</span>
+<span class="l"><span class="k">queue</span>  qwen-3.8-27b
+<span class="k">     </span>  ornith-1.5-35b
+<span class="k">     </span>  granite</span>
+<span class="l"><span class="k">state</span>  <span class="w">waiting for the card</span></span>
+<span class="l cmd"><span class="p">$</span> <span class="caret"></span></span></pre>
+      </div>
+    </div>
+  </div>
+
+  <p class="cmd" style="margin:0 0 10px"><b>$</b> kirabench rig --current</p>
+  <dl class="rig" id="rig"></dl>
+
+  <section>
+    <p class="cmd"><b>$</b> kirabench results --top 5</p>
+    <h2>Latest results</h2>
+    <p class="sub">Score is the share of checked tasks passed. Tokens per second is generation speed at the same context length for every model.</p>
+    <div id="results" data-limit="5"></div>
+    <a class="more" href="results.html">Full table with sorting and filters →</a>
+  </section>
+
+  <section id="method">
+    <p class="cmd"><b>$</b> man kirabench</p>
+    <h2>How Kira tests</h2>
+    <p class="sub">Three rules, the same for every model.</p>
+    <dl class="man">
+      <dt>real used cards</dt>
+      <dd><strong>Consumer GPUs bought second-hand</strong>, the kind most people can actually afford. Nothing rented in the cloud, and every result says which card it ran on.</dd>
+      <dt>checked answers</dt>
+      <dd>Every task has an answer a script can verify: code that must pass its tests, numbers that must match. <strong>No model grades another model.</strong></dd>
+      <dt>failures shown</dt>
+      <dd>Out of memory, broken output, too slow to use: <strong>it goes in the table too.</strong> That is the part leaderboards leave out.</dd>
+    </dl>
+  </section>
+
+  <section id="alerts">
+    <div class="alert">
+      <div class="kira" data-kira="verdict" data-pad="2"></div>
+      <div>
+        <h2>Know when a new model wins on your GPU</h2>
+        <p class="sub" style="margin:0">One short email when a tested model takes the top spot for your memory size. Nothing else unless you tick the box.</p>
+        <form class="signup" novalidate>
+          <div class="row">
+            <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" aria-label="Email address">
+            <select name="vram" aria-label="Your GPU memory">
+              <option value="" selected disabled>Your GPU memory</option>
+              <option value="6">6 GB</option><option value="8">8 GB</option><option value="10">10 GB</option><option value="12">12 GB</option>
+              <option value="16">16 GB</option><option value="20">20 GB</option><option value="24">24 GB or more</option>
+            </select>
+            <button class="btn pri" type="submit">Alert me</button>
+          </div>
+          <label class="check"><input type="checkbox" name="news"> Also send me the weekly KiraBench newsletter (new videos and tests).</label>
+          <p class="fine">Unsubscribe in one click from any email. See the <a href="privacy.html">privacy policy</a>.</p>
+          <p class="msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware.</span>
+  <nav aria-label="Footer"><a href="results.html">Results</a><a href="privacy.html">Privacy</a><a href="legal.html">Legal notice</a></nav>
+</div></footer>
+<script src="assets/palette.js"></script>
+<script src="assets/kira.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "updated": null,
+  "rig": {
+    "gpu": "RTX 2060 12 GB",
+    "price": "€167, used",
+    "cpu": "6-core CPU",
+    "ram": "32 GB RAM"
+  },
+  "queue": ["Qwen 3.8 27B", "Ornith 1.5 35B", "Granite"],
+  "results": []
+}
