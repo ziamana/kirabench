@@ -169,7 +169,8 @@ def page_epreuve(b):
     verdict = ""
     if v:
         verdict = f"""<section><p class="cmd"><b>$</b> kirabench verdict {e(b["id"])}</p><h2>Our verdict</h2>
-<dl class="man"><dt>human co-host</dt><dd>{e(M[v["human"]]["name"])}</dd><dt>kira</dt><dd>{e(M[v["kira"]]["name"])}</dd></dl>
+<dl class="man">{"".join(f'<dt>#{i + 1}</dt><dd><a href="{racine}models/{m}/#{b["id"]}">{e(M[m]["name"])}</a></dd>' for i, m in enumerate(v["ranking"]))}</dl>
+<p>{e(v.get("why", ""))}</p>
 <p class="dim">Then you are the second judge: open each one below and say which you would ship in the comments of the video.</p></section>"""
     galerie = "".join(f'<section class="run"><h3><a href="{racine}models/{r["model"]}/#{b["id"]}">{e(M[r["model"]]["name"])}</a></h3>{apercu(r, racine, M[r["model"]]["name"] + " · " + b["title"])}</section>' for r in runs)
     corps = f"""<section class="hero2">
