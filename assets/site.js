@@ -40,6 +40,13 @@
 
   // data/kirabench.json (modèles, épreuves, mesures) → lignes : une par modèle et par carte.
   // Vérifications = total sur les épreuves passées par ce modèle (un modèle n'a pas besoin de toutes les avoir faites).
+  // Détail d'une épreuve pour l'infobulle : titre, chaque vérification réussie ou non, notes.
+  function detailChecks(D, r) {
+    const b = D.benchmarks.find(x => x.id === r.benchmark) || { title: r.benchmark, checks: [] };
+    return { title: b.title, items: b.checks.filter(c => c.id in r.checks).map(c => ({ label: c.label, ok: !!r.checks[c.id] })), notes: r.notes || [] };
+  }
+  window.KB = Object.assign(window.KB || {}, { detailChecks });
+
   function versTableau(D) {
     const rig = D.rigs[0] || {};
     const rows = D.speed.map(s => {
@@ -48,8 +55,9 @@
       const ok = runs.reduce((a, r) => a + Object.values(r.checks).filter(Boolean).length, 0);
       const n = runs.reduce((a, r) => a + Object.keys(r.checks).length, 0);
       const g = D.rigs.find(x => x.id === s.rig) || {};
+      const detail = runs.map(r => detailChecks(D, r));
       return { id: s.model, model: m.name, gpu: g.gpu, quant: s.quant, context: s.context, vram_gb: s.vram_gb, pp_tok_s: s.pp512, tok_s: s.tg128,
-               score: n ? Math.round(100 * ok / n) : 0, checks: n ? `${ok}/${n}` : "—", tests: runs.length, fits: true };
+               score: n ? Math.round(100 * ok / n) : 0, checks: n ? `${ok}/${n}` : "—", detail, tests: runs.length, fits: true };
     });
     const notes = "Context = tokens the model can keep in mind; vram is measured with that context loaded. Prefill = llama-bench pp512, decode = tg128, 3 runs. Checks = automatic browser checks passed on everything the model built (website, Snake game…), one prompt, no help. Click a model for the details.";
     return { rig: { gpu: [rig.gpu, rig.detail].filter(Boolean).join(" on ").replace(" on EVGA XC on", ", EVGA XC on"), cpu: rig.cpu, ram: rig.ram }, results: rows, notes, queue: ["more models that fit in 12 GB"] };
@@ -93,7 +101,7 @@ queued: ${(data.queue || []).map(esc).join(", ")}</pre></div></div>`;
           <td class="num">${esc(r.vram_gb)} GB</td>
           <td class="num">${esc(r.pp_tok_s)}</td>
           <td class="num">${esc(r.tok_s)}<span class="meter" style="width:${Math.round(36 * r.tok_s / mt)}px"></span></td>
-          <td class="num">${esc(r.checks || r.score + "%")}<span class="meter" style="width:${Math.round(36 * r.score / ms)}px"></span></td>
+          <td class="num"><span class="chk" tabindex="0" role="button" aria-label="${esc(r.checks)} checks passed, show details" data-checks="${esc(JSON.stringify(r.detail || []))}">${esc(r.checks || r.score + "%")}</span><span class="meter" style="width:${Math.round(36 * r.score / ms)}px"></span></td>
           <td><span class="tag ${r.fits ? "" : "no"}">${r.fits ? "yes" : "offload"}</span></td>
         </tr>`).join("")}</tbody></table></div>`;
       if (!limit && data.notes) el.insertAdjacentHTML("beforeend", `<p class="notes">${esc(data.notes)}</p>`);
@@ -118,4 +126,35 @@ queued: ${(data.queue || []).map(esc).join(", ")}</pre></div></div>`;
       msg.textContent = "Alerts open with the first benchmark run. Come back in a few days.";
     });
   });
+
+  // ---- infobulle des vérifications : tout élément [data-checks] (JSON : [{title, items:[{label, ok}], notes}])
+  const tip = document.createElement("div");
+  tip.className = "chktip"; tip.setAttribute("role", "tooltip"); tip.hidden = true;
+  document.body.appendChild(tip);
+  let cible = null;
+  function montrer(el) {
+    let d = [];
+    try { d = JSON.parse(el.dataset.checks || "[]"); } catch (e) { return; }
+    if (!d.length) return;
+    tip.innerHTML = d.map(g => `<div class="g"><b>${esc(g.title)}</b><ul>${g.items.map(i =>
+      `<li class="${i.ok ? "ok" : "ko"}"><span aria-hidden="true">${i.ok ? "✓" : "✗"}</span>${esc(i.label)}</li>`).join("")}</ul>${
+      (g.notes || []).filter((n, k) => !g.items.every(i => i.ok) || k < 0).map(n => `<p>${esc(n)}</p>`).join("")}</div>`).join("");
+    tip.hidden = false; cible = el;
+    const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect();
+    let x = r.left + r.width / 2 - t.width / 2, y = r.bottom + 8;
+    x = Math.max(8, Math.min(x, innerWidth - t.width - 8));
+    if (y + t.height > innerHeight - 8) y = r.top - t.height - 8;
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
+  const cacher = () => { tip.hidden = true; cible = null; };
+  document.addEventListener("mouseover", e => { const el = e.target.closest("[data-checks]"); if (el) montrer(el); });
+  document.addEventListener("mouseout", e => { if (e.target.closest("[data-checks]") && !tip.contains(e.relatedTarget)) cacher(); });
+  document.addEventListener("focusin", e => { const el = e.target.closest("[data-checks]"); if (el) montrer(el); });
+  document.addEventListener("focusout", e => { if (e.target.closest("[data-checks]")) cacher(); });
+  // un clic (ou un toucher sur téléphone) ouvre toujours ; cliquer ailleurs referme
+  document.addEventListener("click", e => { const el = e.target.closest("[data-checks]"); if (el) { e.preventDefault(); montrer(el); } else cacher(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") cacher(); });
+  // au défilement, l'infobulle suit son score (le focus d'un clic peut faire défiler la page)
+  addEventListener("scroll", () => { if (cible && !tip.hidden) montrer(cible); }, { passive: true });
 })();
+

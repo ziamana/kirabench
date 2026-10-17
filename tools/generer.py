@@ -85,6 +85,13 @@ def apercu(run, racine, titre):
 </div>"""
 
 
+def chk(runs):
+    """Score x/y avec l'infobulle de détail (même format que assets/site.js)."""
+    ok = sum(passe(r)[0] for r in runs); n = sum(passe(r)[1] for r in runs)
+    d = [{"title": B[r["benchmark"]]["title"], "items": [{"label": c["label"], "ok": bool(r["checks"][c["id"]])} for c in B[r["benchmark"]]["checks"] if c["id"] in r["checks"]], "notes": r.get("notes", [])} for r in runs]
+    return f'<span class="chk" tabindex="0" role="button" aria-label="{ok}/{n} checks passed, show details" data-checks="{e(json.dumps(d))}">{ok}/{n}</span>'
+
+
 def checks_html(run):
     b = B[run["benchmark"]]
     li = "".join(f'<li class="{"ok" if run["checks"].get(c["id"]) else "ko"}"><span class="mark2" aria-hidden="true">{"✓" if run["checks"].get(c["id"]) else "✗"}</span>{e(c["label"])}<span class="sr-only">{": passed" if run["checks"].get(c["id"]) else ": failed"}</span></li>' for c in b["checks"] if c["id"] in run["checks"])
@@ -108,7 +115,7 @@ def page_modele(m):
         b = B[r["benchmark"]]; ok, n = passe(r)
         epreuves += f"""<section class="run" id="{e(b["id"])}">
   <h3><a href="{racine}benchmarks/{b["id"]}/">{e(b["title"])}</a></h3>
-  <p class="meta mono">{ok}/{n} checks · built in {duree(r["seconds"])} · {len(r["files"])} file{"s" if len(r["files"]) > 1 else ""} ({e(", ".join(r["files"]))}) · {e(R[r["rig"]]["gpu"])}</p>
+  <p class="meta mono">{chk([r])} checks · built in {duree(r["seconds"])} · {len(r["files"])} file{"s" if len(r["files"]) > 1 else ""} ({e(", ".join(r["files"]))}) · {e(R[r["rig"]]["gpu"])}</p>
   {checks_html(r)}
   {apercu(r, racine, m["name"] + " · " + b["title"])}
   <details class="log" data-log="{racine}logs/{r["model"]}/{r["benchmark"]}.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
@@ -156,7 +163,7 @@ def page_epreuve(b):
     for r in sorted(runs, key=lambda r: (-passe(r)[0], r["seconds"])):
         m = M[r["model"]]; ok, n = passe(r)
         cel = "".join(f'<td class="num {"okc" if r["checks"].get(c["id"]) else "koc"}">{"✓" if r["checks"].get(c["id"]) else "✗"}</td>' for c in b["checks"])
-        lignes += f'<tr><td><a href="{racine}models/{m["id"]}/#{b["id"]}">{e(m["name"])}</a></td>{cel}<td class="num">{ok}/{n}</td><td class="num">{duree(r["seconds"])}</td></tr>'
+        lignes += f'<tr><td><a href="{racine}models/{m["id"]}/#{b["id"]}">{e(m["name"])}</a></td>{cel}<td class="num">{chk([r])}</td><td class="num">{duree(r["seconds"])}</td></tr>'
     v = next((x for x in D.get("verdicts", []) if x["benchmark"] == b["id"]), None)
     verdict = ""
     if v:

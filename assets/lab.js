@@ -60,7 +60,7 @@
         const src = `${racine}lab/${r.model}/${r.benchmark}/index.html`;
         return `<div class="lab${device === "phone" ? " phone" : ""}">
           <div class="labbar"><span class="labtitle"><a href="${racine}models/${esc(r.model)}/#${esc(bench)}">${esc(nom(r.model))}</a></span>
-          <span class="mono dim">${ok}/${n} · ${r.seconds >= 60 ? Math.floor(r.seconds / 60) + " min " + String(r.seconds % 60).padStart(2, "0") + " s" : r.seconds + " s"}</span>
+          <span class="mono dim"><span class="chk" tabindex="0" role="button" aria-label="${ok}/${n} checks passed, show details" data-checks="${esc(JSON.stringify([window.KB.detailChecks(D, r)]))}">${ok}/${n}</span> · ${r.seconds >= 60 ? Math.floor(r.seconds / 60) + " min " + String(r.seconds % 60).padStart(2, "0") + " s" : r.seconds + " s"}</span>
           <a class="labopen" href="${src}" target="_blank" rel="noopener">Open</a></div>
           <div class="labview"><iframe title="${esc(nom(r.model))}" src="${src}" sandbox="allow-scripts allow-forms"></iframe></div></div>`;
       }).join("") || `<p class="dim">Pick at least one model.</p>`;
