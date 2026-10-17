@@ -41,7 +41,7 @@
   function render(el, data, limit) {
     const rig = document.getElementById("rig");
     if (rig && data.rig) {
-      rig.innerHTML = [["gpu", data.rig.gpu], ["paid", data.rig.price], ["cpu", data.rig.cpu], ["memory", data.rig.ram]]
+      rig.innerHTML = [["gpu", data.rig.gpu], ["cpu", data.rig.cpu], ["memory", data.rig.ram]]
         .map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
     }
     const rows = data.results || [];

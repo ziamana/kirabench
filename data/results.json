@@ -2,7 +2,6 @@
  "updated": "2026-10-17",
  "rig": {
   "gpu": "RTX 2060 12 GB (EVGA XC) on PCIe 3.0 x1",
-  "price": "€167, used",
   "cpu": "Core i5-9400F, 6 cores",
   "ram": "32 GB DDR4-2400"
  },
