@@ -37,7 +37,7 @@ svg.px{display:block;width:100%;height:auto}
 .top nav a{color:var(--dim);text-decoration:none;font-size:14px;padding:8px 12px;border-radius:8px;transition:color .15s,background-color .15s}
 .top nav a:hover{color:var(--text);background:var(--surface)}
 .top nav a[aria-current]{color:var(--text)}
-@media (max-width:560px){.top nav a.hide-s{display:none}.top nav a{padding:8px 9px}}
+@media (max-width:560px){.top nav .hide-s{display:none}.top nav a{padding:8px 9px}}
 
 /* héros */
 .hero{display:grid;grid-template-columns:1fr 1.02fr;gap:56px;align-items:center;padding:72px 0 64px}

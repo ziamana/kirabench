@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmarks · KiraBench</title>
+<meta name="description" content="Every KiraBench test: the prompt, the checks and which local models passed them.">
+<meta name="theme-color" content="#0f1311">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preload" href="../assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/style.css?v=e5a3d946">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="mark" href="../" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
+  <nav aria-label="Main"><a href="../results.html">Results</a><a href="../benchmarks/" aria-current="page">Benchmarks</a><span class="hide-s"><a href="../compare.html">Compare</a></span><a class="hide-s" href="../#alerts">Alerts</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero2">
+  <p class="cmd"><b>$</b> kirabench tests --list</p>
+  <h1>Every test, the same for every model</h1>
+  <p class="sub">Each test is one prompt given to the model, with no help, then automatic checks in a real browser. Not every model has taken every test yet; new tests are added over time.</p>
+</section>
+<section><section class="run">
+  <h3><a href="../benchmarks/bakery-site/">Bakery website</a></h3>
+  <p class="meta mono">3 models tested · 4 checks · website</p>
+  <p class="dim">Create a complete website for a small French bakery called &quot;Le Petit Four&quot; in the current folder (index.html plus any CSS and JavaScript files you need). It must have: a hero section with the name and a tagline, a menu w…</p>
+  <p class="dim small">Tested: Qwen 3.5 9B, Ornith 1.5 9B, NeoHorse 1 9B. Most checks passed: <a href="../models/qwen3.5-9b/#bakery-site">Qwen 3.5 9B</a> (<span class="chk" tabindex="0" role="button" aria-label="4/4 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: []}]">4/4</span>), <a href="../models/neohorse-1-9b/#bakery-site">NeoHorse 1 9B</a> (<span class="chk" tabindex="0" role="button" aria-label="4/4 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Its tagline says every \&quot;croquette\&quot; (kibble) is made with love.&quot;]}]">4/4</span>).</p>
+  <p class="more"><a href="../benchmarks/bakery-site/">Open the test</a> · <a href="../compare.html?b=bakery-site">Compare side by side</a></p>
+</section><section class="run">
+  <h3><a href="../benchmarks/snake-game/">Snake game</a></h3>
+  <p class="meta mono">3 models tested · 5 checks · game</p>
+  <p class="dim">Create a playable Snake game in the current folder (index.html plus any CSS and JavaScript files you need). Arrow keys move the snake, eating food makes it grow and adds 1 to the score shown on screen, hitting a wall or …</p>
+  <p class="dim small">Tested: Qwen 3.5 9B, Ornith 1.5 9B, NeoHorse 1 9B. Most checks passed: <a href="../models/qwen3.5-9b/#snake-game">Qwen 3.5 9B</a> (<span class="chk" tabindex="0" role="button" aria-label="5/5 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 150 ms: classic speed.&quot;]}]">5/5</span>), <a href="../models/ornith-1.5-9b/#snake-game">Ornith 1.5 9B</a> (<span class="chk" tabindex="0" role="button" aria-label="5/5 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 100 ms: fast but playable.&quot;]}]">5/5</span>).</p>
+  <p class="more"><a href="../benchmarks/snake-game/">Open the test</a> · <a href="../compare.html?b=snake-game">Compare side by side</a></p>
+</section></section>
+</main>
+<footer><div class="wrap">
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware. Model names and logos belong to their owners.</span>
+  <nav aria-label="Footer"><a href="../results.html">Results</a><a href="../privacy.html">Privacy</a><a href="../legal.html">Legal notice</a></nav>
+</div></footer>
+<script src="../assets/palette.js?v=4d212828"></script>
+<script src="../assets/kira.js?v=e03618f0"></script>
+<script src="../assets/site.js?v=7e004c21"></script>
+<script src="../assets/lab.js?v=94fec4ca"></script>
+</body>
+</html>

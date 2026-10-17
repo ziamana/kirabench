@@ -45,7 +45,7 @@ def page(titre, desc, racine, corps, actif=""):
 <body>
 <header class="top"><div class="wrap">
   <a class="mark" href="{racine}" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
-  <nav aria-label="Main">{nav("results.html", "Results", "results")}{nav("compare.html", "Compare", "compare")}<a class="hide-s" href="{racine}#method">Method</a><a href="{racine}#alerts">Alerts</a></nav>
+  <nav aria-label="Main">{nav("results.html", "Results", "results")}{nav("benchmarks/", "Benchmarks", "benchmarks")}<span class="hide-s">{nav("compare.html", "Compare", "compare")}</span><a class="hide-s" href="{racine}#alerts">Alerts</a></nav>
 </div></header>
 <main class="wrap">
 {corps}
@@ -205,9 +205,51 @@ def page_compare():
         page("Compare", "Compare what local AI models built for the same prompt, side by side.", "", corps, "compare"))
 
 
+def page_index_epreuves():
+    racine = "../"
+    blocs = ""
+    for b in D["benchmarks"]:
+        runs = [r for r in D["runs"] if r["benchmark"] == b["id"]]
+        top = max((passe(r)[0] for r in runs), default=None)
+        meilleurs = [r for r in runs if passe(r)[0] == top] if runs else []
+        noms = ", ".join(M[r["model"]]["name"] for r in runs) or "no model yet"
+        blocs += f"""<section class="run">
+  <h3><a href="{racine}benchmarks/{b["id"]}/">{e(b["title"])}</a></h3>
+  <p class="meta mono">{len(runs)} model{"s" if len(runs) != 1 else ""} tested · {len(b["checks"])} checks · {e(b["kind"])}</p>
+  <p class="dim">{e(b["prompt"][:220])}{"…" if len(b["prompt"]) > 220 else ""}</p>
+  <p class="dim small">Tested: {e(noms)}.{(" Most checks passed: " + ", ".join(f'<a href="{racine}models/{r["model"]}/#{b["id"]}">{e(M[r["model"]]["name"])}</a> ({chk([r])})' for r in meilleurs) + ".") if meilleurs else ""}</p>
+  <p class="more"><a href="{racine}benchmarks/{b["id"]}/">Open the test</a> · <a href="{racine}compare.html?b={b["id"]}">Compare side by side</a></p>
+</section>"""
+    corps = f"""<section class="hero2">
+  <p class="cmd"><b>$</b> kirabench tests --list</p>
+  <h1>Every test, the same for every model</h1>
+  <p class="sub">Each test is one prompt given to the model, with no help, then automatic checks in a real browser. Not every model has taken every test yet; new tests are added over time.</p>
+</section>
+<section>{blocs}</section>"""
+    open(os.path.join(SITE, "benchmarks", "index.html"), "w").write(
+        page("Benchmarks", "Every KiraBench test: the prompt, the checks and which local models passed them.", racine, corps, "benchmarks"))
+
+
+def versionner():
+    """Ajoute ?v=<empreinte> aux fichiers CSS/JS de toutes les pages : le navigateur recharge dès qu'un fichier change."""
+    import hashlib, re
+    emp = {}
+    for f in ["assets/style.css", "assets/site.js", "assets/lab.js", "assets/kira.js", "assets/palette.js"]:
+        emp[f] = hashlib.sha1(open(os.path.join(SITE, f), "rb").read()).hexdigest()[:8]
+    pages = [os.path.join(dp, f) for dp, _, fs in os.walk(SITE) for f in fs if f.endswith(".html") and "/lab/" not in dp and "/.git" not in dp]
+    for p in pages:
+        s = open(p).read()
+        for f, h in emp.items():
+            s = re.sub(r'((?:\.\./)*' + re.escape(f) + r')(\?v=[0-9a-f]+)?"', r'\1?v=' + h + '"', s)
+        open(p, "w").write(s)
+    return len(pages)
+
+
 for m in D["models"]:
     page_modele(m)
 for b in D["benchmarks"]:
     page_epreuve(b)
 page_compare()
+page_index_epreuves()
+print("versions ajoutées sur", versionner(), "pages")
 print(len(D["models"]), "modèles,", len(D["benchmarks"]), "épreuves, compare.html")
