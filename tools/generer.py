@@ -27,7 +27,8 @@ def passe(run):
 
 
 def page(titre, desc, racine, corps, actif=""):
-    nav = lambda h, t, k: f'<a href="{racine}{h}"{" aria-current=\"page\"" if actif == k else ""}>{t}</a>'
+    # même menu, même ordre et mêmes classes sur toutes les pages (la classe va sur le lien, jamais sur un span autour)
+    nav = lambda h, t, k, cls="": f'<a{f" class=\"{cls}\"" if cls else ""} href="{racine}{h}"{" aria-current=\"page\"" if actif == k else ""}>{t}</a>'
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -45,7 +46,7 @@ def page(titre, desc, racine, corps, actif=""):
 <body>
 <header class="top"><div class="wrap">
   <a class="mark" href="{racine}" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
-  <nav aria-label="Main">{nav("results.html", "Results", "results")}{nav("benchmarks/", "Benchmarks", "benchmarks")}<span class="hide-s">{nav("compare.html", "Compare", "compare")}</span><a class="hide-s" href="{racine}#alerts">Alerts</a></nav>
+  <nav aria-label="Main">{nav("results.html", "Results", "results")}{nav("benchmarks/", "Benchmarks", "benchmarks")}{nav("compare.html", "Compare", "compare", "hide-s")}<a class="hide-s" href="{racine}#alerts">Alerts</a></nav>
 </div></header>
 <main class="wrap">
 {corps}

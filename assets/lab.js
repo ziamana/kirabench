@@ -2,7 +2,8 @@
 (function () {
   "use strict";
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const racine = (document.querySelector('link[rel="stylesheet"]').getAttribute("href") || "").replace("assets/style.css", "");
+  // racine du site déduite de la feuille de style (« ../../assets/style.css?v=… » → « ../../ ») ; le ?v= doit être retiré
+  const racine = (document.querySelector('link[rel="stylesheet"]').getAttribute("href") || "").split("?")[0].replace("assets/style.css", "");
 
   // ---- bascule ordinateur / téléphone sur chaque aperçu
   function brancherLab(lab) {
