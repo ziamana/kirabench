@@ -28,8 +28,18 @@ try {
       const tops = new Set(nav.map(a => Math.round(a.getBoundingClientRect().top)));
       return { titre: document.title, nav: nav.map(a => a.textContent).join('|'), aligne: tops.size === 1,
         erreurTexte: /could not be loaded/i.test(document.body.innerText), iframes: document.querySelectorAll('iframe').length,
-        chk: document.querySelectorAll('[data-checks]').length, lignes: document.querySelectorAll('#results tbody tr').length };
+        chk: document.querySelectorAll('[data-checks]').length, lignes: document.querySelectorAll('#results tbody tr').length,
+        liens: [...document.querySelectorAll('.top a, footer a')].map(a => a.href) };
     })()` })).result.result.value;
+    // chaque lien du menu et du pied de page : la page existe, et l'ancre (#alerts…) existe sur la page d'arrivée
+    const mauvais = [];
+    for (const href of r.liens) {
+      const u = new URL(href);
+      const rep = await fetch(u.href.split('#')[0]).catch(() => null);
+      if (!rep || !rep.ok) { mauvais.push(href + ' (' + (rep ? rep.status : 'erreur') + ')'); continue; }
+      if (u.hash && !(await rep.text()).includes('id="' + u.hash.slice(1) + '"')) mauvais.push(href + ' (ancre absente)');
+    }
+    if (mauvais.length) errs.push('liens : ' + mauvais.join(', '));
     const ok = !r.erreurTexte && r.aligne && r.nav === 'Results|Benchmarks|Compare|Alerts' && errs.length === 0;
     if (!ok) echecs++;
     console.log(`${ok ? 'OK ' : 'KO '} ${('/' + pg).padEnd(30)} menu ${r.aligne ? 'aligné' : 'DÉCALÉ'} [${r.nav}] iframes ${r.iframes} scores ${r.chk} lignes ${r.lignes}${r.erreurTexte ? ' ERREUR DONNÉES' : ''}${errs.length ? ' JS: ' + errs.join(' ; ').slice(0, 200) : ''}`);

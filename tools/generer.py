@@ -45,8 +45,8 @@ def page(titre, desc, racine, corps, actif=""):
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="mark" href="{racine}" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
-  <nav aria-label="Main">{nav("results.html", "Results", "results")}{nav("benchmarks/", "Benchmarks", "benchmarks")}{nav("compare.html", "Compare", "compare", "hide-s")}<a class="hide-s" href="{racine}#alerts">Alerts</a></nav>
+  <a class="mark" href="{racine or './'}" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
+  <nav aria-label="Main">{nav("results.html", "Results", "results")}{nav("benchmarks/", "Benchmarks", "benchmarks")}{nav("compare.html", "Compare", "compare", "hide-s")}<a class="hide-s" href="{racine or './'}#alerts">Alerts</a></nav>
 </div></header>
 <main class="wrap">
 {corps}
