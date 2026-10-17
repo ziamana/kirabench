@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le Petit Four — Boulangerie &amp; Pâtisserie</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header / Nav -->
+  <header class="header" id="top">
+    <div class="container header__inner">
+      <a class="brand" href="#top">
+        <span class="brand__mark">🥐</span>
+        <span class="brand__name">Le Petit Four</span>
+      </a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#menu">Menu</a>
+        <a href="#horaires">Horaires</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero__content">
+        <p class="hero__eyebrow">Boulangerie &amp; Pâtisserie artisanale</p>
+        <h1 class="hero__title">Le Petit Four</h1>
+        <p class="hero__tagline">
+          Des pains au levain, des croissants dorés et des pâtisseries
+          faites avec amour chaque matin. Bienvenue chez nous !
+        </p>
+        <a class="btn btn--primary" href="#menu">Découvrir la carte</a>
+      </div>
+    </section>
+
+    <!-- Menu -->
+    <section class="section" id="menu">
+      <div class="container">
+        <h2 class="section__title">Notre carte</h2>
+        <p class="section__subtitle">Fraîchement sortis du four</p>
+        <div class="menu">
+          <article class="menu__item">
+            <h3>Croissant beurre</h3>
+            <p class="menu__desc">Beurre AOP, feuilleté à la main</p>
+            <span class="menu__price">1,40 €</span>
+          </article>
+          <article class="menu__item">
+            <h3>Pain de campagne</h3>
+            <p class="menu__desc">Farine complète, levain naturel</p>
+            <span class="menu__price">4,50 €</span>
+          </article>
+          <article class="menu__item">
+            <h3>Baguette tradition</h3>
+            <p class="menu__desc">Croustillante, croquante</p>
+            <span class="menu__price">1,10 €</span>
+          </article>
+          <article class="menu__item">
+            <h3>Pain au chocolat</h3>
+            <p class="menu__desc">Cacao fondant au centre</p>
+            <span class="menu__price">1,50 €</span>
+          </article>
+          <article class="menu__item">
+            <h3>Pierre aux épices</h3>
+            <p class="menu__desc">Recette ancestrale aux épices</p>
+            <span class="menu__price">2,20 €</span>
+          </article>
+          <article class="menu__item">
+            <h3>Praliné maison</h3>
+            <p class="menu__desc">Gâteau au chocolat et praliné</p>
+            <span class="menu__price">3,80 €</span>
+          </article>
+          <article class="menu__item">
+            <h3>Tarte aux pommes</h3>
+            <p class="menu__desc">Pommes locales, pâte brisée</p>
+            <span class="menu__price">4,90 €</span>
+          </article>
+          <article class="menu__item">
+            <h3>Café corsé</h3>
+            <p class="menu__desc">Thermos fraîchement préparé</p>
+            <span class="menu__price">1,80 €</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opening hours -->
+    <section class="section section--hours" id="horaires">
+      <div class="container">
+        <h2 class="section__title">Horaires d'ouverture</h2>
+        <ul class="hours">
+          <li>
+            <span>Lundi – Vendredi</span>
+            <span class="hours__time">7h00 – 19h30</span>
+          </li>
+          <li>
+            <span>Samedi</span>
+            <span class="hours__time">7h30 – 13h00 / 14h00 – 19h00</span>
+          </li>
+          <li>
+            <span>Dimanche</span>
+            <span class="hours__time"> Fermé</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section section--contact" id="contact">
+      <div class="container">
+        <h2 class="section__title">Contact</h2>
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="field">
+            <label for="name">Nom</label>
+            <input type="text" id="name" name="name" required placeholder="Votre nom">
+            <p class="hint" data-error="name">Veuillez indiquer votre nom.</p>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="vous@exemple.fr">
+            <p class="hint" data-error="email">Veuillez indiquer un email valide.</p>
+          </div>
+          <div class="field field--full">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Votre message..."></textarea>
+            <p class="hint" data-error="message">Veuillez écrire un message.</p>
+          </div>
+          <button type="submit" class="btn btn--primary">Envoyer</button>
+          <p class="thankyou" id="thankYou" role="status" aria-live="polite">
+            Merci ! Votre message a bien été envoyé. 🥐
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p><strong>Le Petit Four</strong></p>
+      <p>12 rue des Pâtissiers, 75000 Paris</p>
+      <p>Tél. 01 23 45 67 89</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

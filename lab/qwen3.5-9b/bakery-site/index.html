@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Petit Four - Boulangerie</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Le Petit Four</div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#horaires">Horaires</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="accueil" class="hero">
+            <div class="hero-content">
+                <h1>Le Petit Four</h1>
+                <p class="tagline">L'art de la boulangerie traditionnelle</p>
+                <p class="subtitle">Pain d'épices, croissants, pains artisanaux et plus encore</p>
+            </div>
+        </section>
+
+        <section id="menu" class="menu">
+            <h2>Notre Menu</h2>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <span class="item-name">Croissant Beurre</span>
+                    <span class="item-price">1.50 €</span>
+                </div>
+                <div class="menu-item">
+                    <span class="item-name">Pain d'Épices</span>
+                    <span class="item-price">2.20 €</span>
+                </div>
+                <div class="menu-item">
+                    <span class="item-name">Pain de Campagne</span>
+                    <span class="item-price">1.80 €</span>
+                </div>
+                <div class="menu-item">
+                    <span class="item-name">Brioche</span>
+                    <span class="item-price">1.70 €</span>
+                </div>
+                <div class="menu-item">
+                    <span class="item-name">Gateau au Chocolat</span>
+                    <span class="item-price">4.50 €</span>
+                </div>
+                <div class="menu-item">
+                    <span class="item-name">Tarte aux Pommes</span>
+                    <span class="item-price">3.80 €</span>
+                </div>
+                <div class="menu-item">
+                    <span class="item-name">Baguette Tradition</span>
+                    <span class="item-price">0.95 €</span>
+                </div>
+                <div class="menu-item">
+                    <span class="item-name">Pain au Chocolat</span>
+                    <span class="item-price">1.40 €</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="horaires" class="horaires">
+            <h2>Nos Horaires</h2>
+            <div class="hours-container">
+                <div class="hours-item">
+                    <span class="day">Lundi - Vendredi</span>
+                    <span class="time">7h30 - 19h30</span>
+                </div>
+                <div class="hours-item">
+                    <span class="day">Samedi</span>
+                    <span class="time">8h00 - 19h30</span>
+                </div>
+                <div class="hours-item">
+                    <span class="day">Dimanche</span>
+                    <span class="time">8h00 - 13h00</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Contactez-nous</h2>
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nom</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Envoyer</button>
+            </form>
+            <div id="thankYouMessage" class="thank-you-message" style="display: none;">
+                <p>Merci de votre message! Nous vous répondrons sous peu.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Le Petit Four - Boulangerie Artisanale</p>
+        <p>12 Rue de la Paix, 75001 Paris, France</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

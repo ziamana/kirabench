@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    overflow: hidden;
+  }
+  .game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    color: #eee;
+    font-size: 18px;
+  }
+  .score-label { font-weight: 600; }
+  .score-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4ecca3;
+    min-width: 48px;
+    text-align: center;
+  }
+  canvas {
+    background: #16213e;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    display: block;
+  }
+  .overlay {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.75);
+    border-radius: 12px;
+    padding: 28px 36px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    gap: 14px;
+    backdrop-filter: blur(4px);
+  }
+  .overlay h2 { font-size: 26px; margin-bottom: 4px; }
+  .overlay p { color: #ccc; font-size: 14px; margin-bottom: 8px; }
+  .overlay button {
+    background: #4ecca3;
+    color: #1a1a2e;
+    border: none;
+    padding: 10px 24px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .overlay button:hover { background: #3db892; }
+  .overlay button:active { transform: scale(0.97); }
+</style>
+</head>
+<body>
+
+<div class="game-wrapper">
+  <div class="header">
+    <span class="score-label">Score</span>
+    <span class="score-value" id="score">0</span>
+  </div>
+  <canvas id="game" width="400" height="400"></canvas>
+  <div class="overlay" id="overlay">
+    <h2 id="overlay-title">Snake</h2>
+    <p id="overlay-msg">Use arrow keys to move</p>
+    <button id="start-btn">Start Game</button>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const CELL = 20;
+  const COLS = canvas.width / CELL;
+  const ROWS = canvas.height / CELL;
+
+  let snake = [];
+  let food = null;
+  let dir = { x: 1, y: 0 };
+  let nextDir = { x: 1, y: 0 };
+  let score = 0;
+  let running = false;
+  let gameOver = false;
+  let loopId = null;
+
+  const scoreEl = document.getElementById('score');
+  const overlay = document.getElementById('overlay');
+  const overlayTitle = document.getElementById('overlay-title');
+  const overlayMsg = document.getElementById('overlay-msg');
+  const startBtn = document.getElementById('start-btn');
+
+  function init() {
+    snake = [
+      { x: 6, y: 10 },
+      { x: 5, y: 10 },
+      { x: 4, y: 10 },
+    ];
+    dir = { x: 1, y: 0 };
+    nextDir = { x: 1, y: 0 };
+    score = 0;
+    scoreEl.textContent = score;
+    placeFood();
+    draw();
+  }
+
+  function placeFood() {
+    do {
+      food = {
+        x: Math.floor(Math.random() * COLS),
+        y: Math.floor(Math.random() * ROWS),
+      };
+    } while (snake.some(s => s.x === food.x && s.y === food.y));
+  }
+
+  function draw() {
+    ctx.fillStyle = '#16213e';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Snake
+    snake.forEach((cell, i) => {
+      const isHead = i === 0;
+      ctx.fillStyle = isHead ? '#4ecca3' : '#3db892';
+      ctx.beginPath();
+      ctx.roundRect(
+        cell.x * CELL + 1,
+        cell.y * CELL + 1,
+        CELL - 2,
+        CELL - 2,
+        isHead ? 6 : 4,
+      );
+      ctx.fill();
+      if (isHead) {
+        ctx.fillStyle = '#1a1a2e';
+        ctx.beginPath();
+        ctx.arc(cell.x * CELL + CELL * 0.35, cell.y * CELL + CELL * 0.35, 2.5, 0, Math.PI * 2);
+        ctx.arc(cell.x * CELL + CELL * 0.65, cell.y * CELL + CELL * 0.35, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+
+    // Food
+    ctx.fillStyle = '#e94560';
+    ctx.beginPath();
+    ctx.arc(
+      food.x * CELL + CELL / 2,
+      food.y * CELL + CELL / 2,
+      CELL / 2 - 2,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+  }
+
+  function update() {
+    dir = { ...nextDir };
+    const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+    // Wall collision
+    if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
+      endGame();
+      return;
+    }
+
+    // Self collision
+    if (snake.some(s => s.x === head.x && s.y === head.y)) {
+      endGame();
+      return;
+    }
+
+    snake.unshift(head);
+
+    // Eat food
+    if (head.x === food.x && head.y === food.y) {
+      score += 1;
+      scoreEl.textContent = score;
+      placeFood();
+    } else {
+      snake.pop();
+    }
+
+    draw();
+  }
+
+  function endGame() {
+    running = false;
+    gameOver = true;
+    cancelAnimationFrame(loopId);
+    overlayTitle.textContent = 'Game Over';
+    overlayMsg.textContent = `Final Score: ${score}`;
+    startBtn.textContent = 'Restart';
+    overlay.style.display = 'flex';
+  }
+
+  function loop() {
+    if (!running) return;
+    update();
+    loopId = requestAnimationFrame(loop);
+  }
+
+  function start() {
+    if (running) return;
+    init();
+    running = true;
+    gameOver = false;
+    overlay.style.display = 'none';
+    loopId = requestAnimationFrame(loop);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!running) return;
+    switch (e.key) {
+      case 'ArrowUp':
+        if (dir.y === 0) nextDir = { x: 0, y: -1 };
+        e.preventDefault();
+        break;
+      case 'ArrowDown':
+        if (dir.y === 0) nextDir = { x: 0, y: 1 };
+        e.preventDefault();
+        break;
+      case 'ArrowLeft':
+        if (dir.x === 0) nextDir = { x: -1, y: 0 };
+        e.preventDefault();
+        break;
+      case 'ArrowRight':
+        if (dir.x === 0) nextDir = { x: 1, y: 0 };
+        e.preventDefault();
+        break;
+    }
+  });
+
+  startBtn.addEventListener('click', start);
+
+  // Initial draw
+  init();
+</script>
+</body>
+</html>

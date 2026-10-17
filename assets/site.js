@@ -32,16 +32,33 @@
   // Résultats
   const holder = document.getElementById("results");
   if (holder) {
-    fetch("data/results.json", { cache: "no-store" })
+    fetch("data/kirabench.json", { cache: "no-store" })
       .then(r => r.json())
-      .then(d => render(holder, d, Number(holder.dataset.limit || 0)))
+      .then(d => render(holder, versTableau(d), Number(holder.dataset.limit || 0)))
       .catch(() => { holder.innerHTML = `<div class="empty"><pre><span class="w">error</span> results could not be loaded. Refresh the page.</pre></div>`; });
+  }
+
+  // data/kirabench.json (modèles, épreuves, mesures) → lignes : une par modèle et par carte.
+  // Vérifications = total sur les épreuves passées par ce modèle (un modèle n'a pas besoin de toutes les avoir faites).
+  function versTableau(D) {
+    const rig = D.rigs[0] || {};
+    const rows = D.speed.map(s => {
+      const m = D.models.find(x => x.id === s.model) || { name: s.model };
+      const runs = D.runs.filter(r => r.model === s.model && r.rig === s.rig);
+      const ok = runs.reduce((a, r) => a + Object.values(r.checks).filter(Boolean).length, 0);
+      const n = runs.reduce((a, r) => a + Object.keys(r.checks).length, 0);
+      const g = D.rigs.find(x => x.id === s.rig) || {};
+      return { id: s.model, model: m.name, gpu: g.gpu, quant: s.quant, context: s.context, vram_gb: s.vram_gb, pp_tok_s: s.pp512, tok_s: s.tg128,
+               score: n ? Math.round(100 * ok / n) : 0, checks: n ? `${ok}/${n}` : "—", tests: runs.length, fits: true };
+    });
+    const notes = "Context = tokens the model can keep in mind; vram is measured with that context loaded. Prefill = llama-bench pp512, decode = tg128, 3 runs. Checks = automatic browser checks passed on everything the model built (website, Snake game…), one prompt, no help. Click a model for the details.";
+    return { rig: { gpu: [rig.gpu, rig.detail].filter(Boolean).join(" on ").replace(" on EVGA XC on", ", EVGA XC on"), cpu: rig.cpu, ram: rig.ram }, results: rows, notes, queue: ["more models that fit in 12 GB"] };
   }
 
   function render(el, data, limit) {
     const rig = document.getElementById("rig");
     if (rig && data.rig) {
-      rig.innerHTML = [["gpu", data.rig.gpu], ["cpu", data.rig.cpu], ["memory", data.rig.ram]]
+      rig.innerHTML = [["gpu", data.rig.gpu], ["cpu", data.rig.cpu], ["memory", data.rig.ram]].filter(x => x[1])
         .map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
     }
     const rows = data.results || [];
@@ -53,7 +70,7 @@ queued: ${(data.queue || []).map(esc).join(", ")}</pre></div></div>`;
     }
     let key = "score", dir = -1, view = "all", gpu = "all";
     const gpus = [...new Set(rows.map(r => r.gpu))];
-    const cols = [["model", "model", 0], ["gpu", "gpu", 0], ["quant", "quant", 0], ["vram_gb", "vram @64k", 1], ["pp_tok_s", "prefill t/s", 1], ["tok_s", "decode t/s", 1], ["score", "checks", 1], ["fits", "fits", 0]];
+    const cols = [["model", "model", 0], ["gpu", "gpu", 0], ["quant", "quant", 0], ["context", "context", 1], ["vram_gb", "vram used", 1], ["pp_tok_s", "prefill t/s", 1], ["tok_s", "decode t/s", 1], ["score", "checks", 1], ["fits", "fits", 0]];
     const max = k => Math.max(...rows.map(r => Number(r[k]) || 0), 1);
     function draw() {
       let list = rows.filter(r => (gpu === "all" || r.gpu === gpu) && (view === "all" || (view === "fits" ? r.fits : !r.fits)));
@@ -69,13 +86,14 @@ queued: ${(data.queue || []).map(esc).join(", ")}</pre></div></div>`;
         <div class="tablewrap"><table><thead><tr>${cols.map(([k, l, n]) =>
           `<th scope="col" data-k="${k}" class="${n ? "num" : ""}"${k === key ? ` aria-sort="${dir < 0 ? "descending" : "ascending"}"` : ""}>${l}</th>`).join("")}
         </tr></thead><tbody>${list.map(r => `<tr>
-          <td>${r.video ? `<a href="${esc(r.video)}">${esc(r.model)}</a>` : esc(r.model)}</td>
+          <td>${r.id ? `<a href="models/${esc(r.id)}/">${esc(r.model)}</a>` : esc(r.model)}</td>
           <td>${esc(r.gpu)}</td>
           <td>${esc(r.quant)}</td>
+          <td class="num">${r.context ? Math.round(r.context / 1024) + "k" : "—"}</td>
           <td class="num">${esc(r.vram_gb)} GB</td>
           <td class="num">${esc(r.pp_tok_s)}</td>
           <td class="num">${esc(r.tok_s)}<span class="meter" style="width:${Math.round(36 * r.tok_s / mt)}px"></span></td>
-          <td class="num">${esc(r.score)}%<span class="meter" style="width:${Math.round(36 * r.score / ms)}px"></span></td>
+          <td class="num">${esc(r.checks || r.score + "%")}<span class="meter" style="width:${Math.round(36 * r.score / ms)}px"></span></td>
           <td><span class="tag ${r.fits ? "" : "no"}">${r.fits ? "yes" : "offload"}</span></td>
         </tr>`).join("")}</tbody></table></div>`;
       if (!limit && data.notes) el.insertAdjacentHTML("beforeend", `<p class="notes">${esc(data.notes)}</p>`);

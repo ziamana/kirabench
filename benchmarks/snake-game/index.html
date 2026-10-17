@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Snake game · KiraBench</title>
+<meta name="description" content="Snake game: the same prompt given to every local model, the automatic checks and what each one built.">
+<meta name="theme-color" content="#0f1311">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="preload" href="../../assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="mark" href="../../" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
+  <nav aria-label="Main"><a href="../../results.html">Results</a><a href="../../compare.html">Compare</a><a class="hide-s" href="../../#method">Method</a><a href="../../#alerts">Alerts</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero2">
+  <p class="cmd"><b>$</b> kirabench test snake-game</p>
+  <h1>Snake game</h1>
+  <p class="sub">Pi 1.1.0 coding agent (read, bash, edit, write), one prompt, no help, 20 min limit. Every model gets exactly this prompt:</p>
+  <pre class="prompt">Create a playable Snake game in the current folder (index.html plus any CSS and JavaScript files you need). Arrow keys move the snake, eating food makes it grow and adds 1 to the score shown on screen, hitting a wall or itself ends the game with a Game Over message and a Restart button. No external resources. When you are finished, reply DONE.</pre>
+</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench checks snake-game</p>
+  <h2>Results</h2>
+  <p class="dim small">Automatic checks run in a real browser on what each model built. <a href="../../compare.html?b=snake-game">Compare them side by side</a>.</p>
+  <div class="tablewrap"><table class="checks-t"><thead><tr><th scope="col">model</th><th scope="col" class="num">Game drawn on a canvas</th><th scope="col" class="num">Score shown on screen</th><th scope="col" class="num">The snake moves</th><th scope="col" class="num">Game Over when hitting a wall</th><th scope="col" class="num">Restart starts a new, playable game</th><th scope="col" class="num">checks</th><th scope="col" class="num">time</th></tr></thead><tbody><tr><td><a href="../../models/ornith-1.5-9b/#snake-game">Ornith 1.5 9B</a></td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num">5/5</td><td class="num">43 s</td></tr><tr><td><a href="../../models/qwen3.5-9b/#snake-game">Qwen 3.5 9B</a></td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num">5/5</td><td class="num">1 min 04 s</td></tr><tr><td><a href="../../models/neohorse-1-9b/#snake-game">NeoHorse 1 9B</a></td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num okc">✓</td><td class="num koc">✗</td><td class="num">4/5</td><td class="num">54 s</td></tr></tbody></table></div>
+</section>
+<section><p class="cmd"><b>$</b> kirabench verdict snake-game</p><h2>Our verdict</h2>
+<dl class="man"><dt>human co-host</dt><dd>Ornith 1.5 9B</dd><dt>kira</dt><dd>Qwen 3.5 9B</dd></dl>
+<p class="dim">Then you are the second judge: open each one below and say which you would ship in the comments of the video.</p></section>
+<section><p class="cmd"><b>$</b> kirabench gallery snake-game</p><h2>What each model built</h2><section class="run"><h3><a href="../../models/qwen3.5-9b/#snake-game">Qwen 3.5 9B</a></h3><div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">Qwen 3.5 9B · Snake game</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/qwen3.5-9b/snake-game/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="Qwen 3.5 9B · Snake game, made by the model" src="../../lab/qwen3.5-9b/snake-game/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div></section><section class="run"><h3><a href="../../models/ornith-1.5-9b/#snake-game">Ornith 1.5 9B</a></h3><div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">Ornith 1.5 9B · Snake game</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/ornith-1.5-9b/snake-game/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="Ornith 1.5 9B · Snake game, made by the model" src="../../lab/ornith-1.5-9b/snake-game/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div></section><section class="run"><h3><a href="../../models/neohorse-1-9b/#snake-game">NeoHorse 1 9B</a></h3><div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">NeoHorse 1 9B · Snake game</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/neohorse-1-9b/snake-game/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="NeoHorse 1 9B · Snake game, made by the model" src="../../lab/neohorse-1-9b/snake-game/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div></section></section>
+</main>
+<footer><div class="wrap">
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware. Model names and logos belong to their owners.</span>
+  <nav aria-label="Footer"><a href="../../results.html">Results</a><a href="../../privacy.html">Privacy</a><a href="../../legal.html">Legal notice</a></nav>
+</div></footer>
+<script src="../../assets/palette.js"></script>
+<script src="../../assets/kira.js"></script>
+<script src="../../assets/site.js"></script>
+<script src="../../assets/lab.js"></script>
+</body>
+</html>

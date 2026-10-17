@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeoHorse 1 9B · KiraBench</title>
+<meta name="description" content="NeoHorse 1 9B tested on real hardware: speed, the websites and games it built, and every check it passed or failed.">
+<meta name="theme-color" content="#0f1311">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="preload" href="../../assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="mark" href="../../" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
+  <nav aria-label="Main"><a href="../../results.html">Results</a><a href="../../compare.html">Compare</a><a class="hide-s" href="../../#method">Method</a><a href="../../#alerts">Alerts</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero2">
+  <p class="cmd"><b>$</b> kirabench model neohorse-1-9b</p>
+  <div class="mhead"><span class="mlogo mono-logo" aria-hidden="true">N1</span><h1>NeoHorse 1 9B</h1></div>
+  <p class="sub">A further-trained Qwen 3.5 9B aimed at agents: tool use, coding and following instructions inside an agent harness.</p>
+  <dl class="rig"><div><dt>creator</dt><dd>TokenRhythm</dd></div><div><dt>based on</dt><dd><a href="../../models/qwen3.5-9b/">Qwen 3.5 9B</a></dd></div><div><dt>license</dt><dd>Apache 2.0</dd></div><div><dt>parameters</dt><dd>8.95 B (text only)</dd></div><div><dt>weights</dt><dd><a href="https://huggingface.co/TokenRhythm/NeoHorse-1-9B" rel="noopener">Hugging Face</a></dd></div></dl>
+</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench speed neohorse-1-9b</p>
+  <h2>Speed on our cards</h2>
+  <p class="dim small">Prefill = how fast it reads (tokens per second), decode = how fast it writes. Measured with llama-bench, 3 runs.</p>
+  <div class="tablewrap"><table><thead><tr><th scope="col">gpu</th><th scope="col">quant</th><th scope="col" class="num">context</th><th scope="col" class="num">vram used</th><th scope="col" class="num">prefill 512</th><th scope="col" class="num">prefill 4096</th><th scope="col" class="num">decode</th></tr></thead><tbody><tr><td>RTX 2060 12 GB</td><td>Q4_K_M</td><td class="num">64k</td><td class="num">7.2 GB</td>
+<td class="num">1,230</td><td class="num">1,217</td><td class="num">47.1</td></tr></tbody></table></div>
+</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench tests neohorse-1-9b</p>
+  <h2>What it built</h2>
+  <section class="run" id="bakery-site">
+  <h3><a href="../../benchmarks/bakery-site/">Bakery website</a></h3>
+  <p class="meta mono">4/4 checks · built in 1 min 53 s · 1 file (index.html) · RTX 2060 12 GB</p>
+  <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>At least 6 prices in euros<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Opening hours shown<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Contact form with an email field<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Thank-you message appears after sending, without a reload<span class="sr-only">: passed</span></li></ul><p class="note">Its tagline says every &quot;croquette&quot; (kibble) is made with love.</p>
+  <div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">NeoHorse 1 9B · Bakery website</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/neohorse-1-9b/bakery-site/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="NeoHorse 1 9B · Bakery website, made by the model" src="../../lab/neohorse-1-9b/bakery-site/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div>
+  <details class="log" data-log="../../logs/neohorse-1-9b/bakery-site.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
+  <p class="more"><a href="../../compare.html?b=bakery-site">Compare with the other models on this test</a></p>
+</section><section class="run" id="snake-game">
+  <h3><a href="../../benchmarks/snake-game/">Snake game</a></h3>
+  <p class="meta mono">4/5 checks · built in 54 s · 1 file (index.html) · RTX 2060 12 GB</p>
+  <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Game drawn on a canvas<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Score shown on screen<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>The snake moves<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Game Over when hitting a wall<span class="sr-only">: passed</span></li><li class="ko"><span class="mark2" aria-hidden="true">✗</span>Restart starts a new, playable game<span class="sr-only">: failed</span></li></ul><p class="note">The snake moves one cell per screen refresh (60 per second on a 60 Hz screen), so every new game ends almost instantly.</p>
+  <div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">NeoHorse 1 9B · Snake game</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/neohorse-1-9b/snake-game/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="NeoHorse 1 9B · Snake game, made by the model" src="../../lab/neohorse-1-9b/snake-game/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div>
+  <details class="log" data-log="../../logs/neohorse-1-9b/snake-game.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
+  <p class="more"><a href="../../compare.html?b=snake-game">Compare with the other models on this test</a></p>
+</section>
+</section>
+<section class="split">
+  <div><p class="cmd"><b>$</b> man neohorse-1-9b</p><h2>When to pick it</h2>
+  <dl class="man"><dt>pick it if</dt><dd>You run agents with tools (what it was trained for) and want a clean, sober result: every feature of its website worked.</dd><dt>watch out</dt><dd>Its own model card shows it does not code better than Qwen 3.5 9B. Its Snake moves one cell per screen refresh, so it is unplayable.</dd></dl></div>
+  <div><p class="cmd"><b>$</b> kirabench claims neohorse-1-9b</p><h2>What it claims</h2><ul class="plain"><li>Average of 10 benchmarks 69.04, against 65.60 for Qwen 3.5 9B <span class="who">(developer numbers)</span></li><li>PinchBench 82.25 against 74.55 for Qwen 3.5 9B <span class="who">(developer numbers)</span></li><li>LiveCodeBench v6 unchanged from Qwen 3.5 9B (65.14) <span class="who">(its own model card)</span></li></ul>
+  <h2 style="margin-top:28px">What others say</h2><ul class="plain"><li><a href="https://www.mindstudio.ai/blog/neohorse-1-9b-agentic-post-training" rel="noopener">NeoHorse-1-9B: Agentic Post-Training on Qwen3.5-9B Explained</a> <span class="who">MindStudio</span></li><li><a href="https://arxiv.org/html/2609.08183v1" rel="noopener">NeoHorse-1: Towards Recursive Self-Improvement via Agentic Post-Training</a> <span class="who">arXiv</span></li></ul></div>
+</section>
+</main>
+<footer><div class="wrap">
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware. Model names and logos belong to their owners.</span>
+  <nav aria-label="Footer"><a href="../../results.html">Results</a><a href="../../privacy.html">Privacy</a><a href="../../legal.html">Legal notice</a></nav>
+</div></footer>
+<script src="../../assets/palette.js"></script>
+<script src="../../assets/kira.js"></script>
+<script src="../../assets/site.js"></script>
+<script src="../../assets/lab.js"></script>
+</body>
+</html>

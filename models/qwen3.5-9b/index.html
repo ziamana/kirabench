@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen 3.5 9B · KiraBench</title>
+<meta name="description" content="Qwen 3.5 9B tested on real hardware: speed, the websites and games it built, and every check it passed or failed.">
+<meta name="theme-color" content="#0f1311">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="preload" href="../../assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="mark" href="../../" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
+  <nav aria-label="Main"><a href="../../results.html">Results</a><a href="../../compare.html">Compare</a><a class="hide-s" href="../../#method">Method</a><a href="../../#alerts">Alerts</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero2">
+  <p class="cmd"><b>$</b> kirabench model qwen3.5-9b</p>
+  <div class="mhead"><img class="mlogo" src="../../assets/logos/qwen.svg" alt="" width="56" height="56"><h1>Qwen 3.5 9B</h1></div>
+  <p class="sub">The original model. Ornith 1.5 9B and NeoHorse 1 9B are both further-trained versions of it.</p>
+  <dl class="rig"><div><dt>creator</dt><dd>Qwen (Alibaba)</dd></div><div><dt>based on</dt><dd>original model</dd></div><div><dt>license</dt><dd>Apache 2.0</dd></div><div><dt>parameters</dt><dd>9.2 B</dd></div><div><dt>weights</dt><dd><a href="https://huggingface.co/Qwen/Qwen3.5-9B" rel="noopener">Hugging Face</a></dd></div></dl>
+</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench speed qwen3.5-9b</p>
+  <h2>Speed on our cards</h2>
+  <p class="dim small">Prefill = how fast it reads (tokens per second), decode = how fast it writes. Measured with llama-bench, 3 runs.</p>
+  <div class="tablewrap"><table><thead><tr><th scope="col">gpu</th><th scope="col">quant</th><th scope="col" class="num">context</th><th scope="col" class="num">vram used</th><th scope="col" class="num">prefill 512</th><th scope="col" class="num">prefill 4096</th><th scope="col" class="num">decode</th></tr></thead><tbody><tr><td>RTX 2060 12 GB</td><td>Q4_K_M</td><td class="num">64k</td><td class="num">7.4 GB</td>
+<td class="num">1,234</td><td class="num">1,218</td><td class="num">45.2</td></tr></tbody></table></div>
+</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench tests qwen3.5-9b</p>
+  <h2>What it built</h2>
+  <section class="run" id="bakery-site">
+  <h3><a href="../../benchmarks/bakery-site/">Bakery website</a></h3>
+  <p class="meta mono">4/4 checks · built in 1 min 50 s · 3 files (index.html, script.js, styles.css) · RTX 2060 12 GB</p>
+  <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>At least 6 prices in euros<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Opening hours shown<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Contact form with an email field<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Thank-you message appears after sending, without a reload<span class="sr-only">: passed</span></li></ul>
+  <div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">Qwen 3.5 9B · Bakery website</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/qwen3.5-9b/bakery-site/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="Qwen 3.5 9B · Bakery website, made by the model" src="../../lab/qwen3.5-9b/bakery-site/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div>
+  <details class="log" data-log="../../logs/qwen3.5-9b/bakery-site.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
+  <p class="more"><a href="../../compare.html?b=bakery-site">Compare with the other models on this test</a></p>
+</section><section class="run" id="snake-game">
+  <h3><a href="../../benchmarks/snake-game/">Snake game</a></h3>
+  <p class="meta mono">5/5 checks · built in 1 min 04 s · 3 files (game.js, index.html, styles.css) · RTX 2060 12 GB</p>
+  <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Game drawn on a canvas<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Score shown on screen<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>The snake moves<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Game Over when hitting a wall<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Restart starts a new, playable game<span class="sr-only">: passed</span></li></ul><p class="note">One step every 150 ms: classic speed.</p>
+  <div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">Qwen 3.5 9B · Snake game</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/qwen3.5-9b/snake-game/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="Qwen 3.5 9B · Snake game, made by the model" src="../../lab/qwen3.5-9b/snake-game/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div>
+  <details class="log" data-log="../../logs/qwen3.5-9b/snake-game.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
+  <p class="more"><a href="../../compare.html?b=snake-game">Compare with the other models on this test</a></p>
+</section>
+</section>
+<section class="split">
+  <div><p class="cmd"><b>$</b> man qwen3.5-9b</p><h2>When to pick it</h2>
+  <dl class="man"><dt>pick it if</dt><dd>You want something that works on the first try: it passed every check, and it is good at using tools.</dd><dt>watch out</dt><dd>The design is correct but not the most polished. Reviewers find it weaker on large changes spread over many files.</dd></dl></div>
+  <div><p class="cmd"><b>$</b> kirabench claims qwen3.5-9b</p><h2>What it claims</h2><ul class="plain"><li>No special claims: this is the base model.</li></ul>
+  <h2 style="margin-top:28px">What others say</h2><ul class="plain"><li><a href="https://www.xda-developers.com/replaced-claude-local-9b-model-week-handled-95-work/" rel="noopener">I replaced Claude with a local 9B model for a week, and it handled 95% of my work</a> <span class="who">XDA</span></li></ul></div>
+</section>
+</main>
+<footer><div class="wrap">
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware. Model names and logos belong to their owners.</span>
+  <nav aria-label="Footer"><a href="../../results.html">Results</a><a href="../../privacy.html">Privacy</a><a href="../../legal.html">Legal notice</a></nav>
+</div></footer>
+<script src="../../assets/palette.js"></script>
+<script src="../../assets/kira.js"></script>
+<script src="../../assets/site.js"></script>
+<script src="../../assets/lab.js"></script>
+</body>
+</html>
