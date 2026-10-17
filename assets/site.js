@@ -112,18 +112,36 @@ queued: ${(data.queue || []).map(esc).join(", ")}</pre></div></div>`;
     draw();
   }
 
-  // Inscription : à brancher sur Brevo (double opt-in) une fois le compte créé.
+  // Inscription : ajout seul dans Supabase (table alert_signups, RLS « insert » pour anon, aucune lecture possible).
+  // La clé publishable est faite pour être publique ; la confirmation par e-mail (double opt-in) viendra avant toute alerte.
+  const SB_URL = "https://pwehtuvjawtaqsfhyzvg.supabase.co/rest/v1/alert_signups";
+  const SB_KEY = "sb_publishable_4QEkNcUUQWzv8tDV1u94Fg_5GeeZrEK";
+  const MERCI = "You're on the list. Before any alert, we'll send you one email to confirm it's really you.";
   document.querySelectorAll("form.signup").forEach(f => {
-    const msg = f.querySelector(".msg");
+    const msg = f.querySelector(".msg"), btn = f.querySelector("button[type=submit]");
     f.email.addEventListener("input", () => { f.email.removeAttribute("aria-invalid"); msg.classList.remove("err"); msg.textContent = ""; });
     f.addEventListener("submit", e => {
       e.preventDefault();
+      if (btn.disabled) return;
       if (!f.vram.value) { msg.classList.add("err"); msg.textContent = "Pick your GPU memory so the alert matches your card."; f.vram.focus(); return; }
       if (!f.email.checkValidity()) {
         f.email.setAttribute("aria-invalid", "true"); msg.classList.add("err");
         msg.textContent = "That email doesn't look right. Check it and try again."; f.email.focus(); return;
       }
-      msg.textContent = "Alerts open with the first benchmark run. Come back in a few days.";
+      msg.classList.remove("err");
+      if (f.website && f.website.value) { msg.textContent = MERCI; f.reset(); return; } // champ piège : rempli = robot
+      btn.disabled = true; msg.textContent = "Sending…";
+      fetch(SB_URL, {
+        method: "POST",
+        headers: { apikey: SB_KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({ email: f.email.value.trim(), vram: Number(f.vram.value), newsletter: f.news.checked })
+      }).then(r => {
+        // 409 = déjà inscrit : même message, pour ne pas révéler qui est sur la liste
+        if (r.ok || r.status === 409) { msg.textContent = MERCI; f.reset(); return; }
+        throw new Error(r.status);
+      }).catch(() => {
+        msg.classList.add("err"); msg.textContent = "Something went wrong and nothing was saved. Try again in a minute.";
+      }).finally(() => { btn.disabled = false; });
     });
   });
 

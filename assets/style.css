@@ -135,6 +135,7 @@ input[aria-invalid="true"]{box-shadow:inset 0 0 0 1px var(--amber)}
 label.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--dim);cursor:pointer}
 label.check input{margin-top:4px;accent-color:var(--accent);width:16px;height:16px;flex:none}
 .fine{font-size:13px;color:var(--faint);margin:10px 0 0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .msg{margin:10px 0 0;font-size:14px;min-height:1.4em;color:var(--dim)}
 .msg.err{color:var(--amber)}
 
