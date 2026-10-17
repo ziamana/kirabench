@@ -93,6 +93,9 @@
    "checks": {"canvas": true, "score_affiche": true, "anime": true, "game_over": true, "restart": false},
    "notes": ["The snake moves one cell per screen refresh (60 per second on a 60 Hz screen), so every new game ends almost instantly."]}
  ],
+ "videos": [
+  {"url": "https://youtu.be/fvvTnrv_aiw", "title": "Qwen 3.5 9B vs Ornith 1.5 9B vs NeoHorse 9B", "date": "2026-10-17", "models": ["qwen3.5-9b", "ornith-1.5-9b", "neohorse-1-9b"]}
+ ],
  "verdicts": [
   {"benchmark": "bakery-site", "ranking": ["neohorse-1-9b", "qwen3.5-9b", "ornith-1.5-9b"],
    "why": "NeoHorse's site is the one we would ship. Ornith's looks the most professional, but a contact form that shows its errors before anyone types costs you customers."},

@@ -108,6 +108,7 @@ def page_modele(m):
     base = M.get(m.get("base")) if m.get("base") else None
     faits = [("creator", e(m["creator"])), ("based on", f'<a href="{racine}models/{base["id"]}/">{e(base["name"])}</a>' if base else "original model"),
              ("license", e(m["license"])), ("parameters", e(m["params"])), ("weights", f'<a href="{e(m["hf"])}" rel="noopener">Hugging Face</a>')]
+    faits += [("video", f'<a href="{e(v["url"])}" rel="noopener">▶ {e(v["title"])}</a>') for v in D.get("videos", []) if m["id"] in v["models"]]
     rig = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in faits)
     vitesse = "".join(f"""<tr><td>{e(R[s["rig"]]["gpu"])}</td><td>{e(s["quant"])}</td><td class="num">{s["context"] // 1024}k</td><td class="num">{s["vram_gb"]} GB</td>
 <td class="num">{s["pp512"]:,}</td><td class="num">{s["pp4096"]:,}</td><td class="num">{s["tg128"]}</td></tr>""" for s in vit)
