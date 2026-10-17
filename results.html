@@ -19,7 +19,7 @@
   <section style="padding-top:56px">
     <p class="cmd"><b>$</b> kirabench results --all</p>
     <h1 style="font-size:clamp(30px,4vw,44px)">Every model, on every <span class="gb">GPU</span> tested</h1>
-    <p class="sub">Click a column to sort. Score is the share of checked tasks passed; tokens per second is generation speed at the same context length for every model. "Offload" means the model did not fit in the card's memory and part of it ran from system memory.</p>
+    <p class="sub">Click a column to sort. Checks is the share of automatic browser checks passed. Prefill is how fast the model reads, decode is how fast it writes, in tokens per second, at the same context length for every model. "Offload" means the model did not fit in the card's memory and part of it ran from system memory.</p>
   </section>
   <p class="cmd" style="margin:0 0 10px"><b>$</b> kirabench rig --current</p>
   <dl class="rig" id="rig"></dl>

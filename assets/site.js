@@ -47,13 +47,13 @@
     const rows = data.results || [];
     if (!rows.length) {
       el.innerHTML = `<div class="tablewrap"><div class="empty"><pre><span class="p">$</span> <span class="c">kirabench results</span>
-no results yet. first run starts when the card is installed.
+no results yet.
 queued: ${(data.queue || []).map(esc).join(", ")}</pre></div></div>`;
       return;
     }
     let key = "score", dir = -1, view = "all", gpu = "all";
     const gpus = [...new Set(rows.map(r => r.gpu))];
-    const cols = [["model", "model", 0], ["gpu", "gpu", 0], ["quant", "quant", 0], ["vram_gb", "vram used", 1], ["tok_s", "tokens/s", 1], ["score", "score", 1], ["fits", "fits", 0]];
+    const cols = [["model", "model", 0], ["gpu", "gpu", 0], ["quant", "quant", 0], ["vram_gb", "vram @64k", 1], ["pp_tok_s", "prefill t/s", 1], ["tok_s", "decode t/s", 1], ["score", "checks", 1], ["fits", "fits", 0]];
     const max = k => Math.max(...rows.map(r => Number(r[k]) || 0), 1);
     function draw() {
       let list = rows.filter(r => (gpu === "all" || r.gpu === gpu) && (view === "all" || (view === "fits" ? r.fits : !r.fits)));
@@ -73,10 +73,12 @@ queued: ${(data.queue || []).map(esc).join(", ")}</pre></div></div>`;
           <td>${esc(r.gpu)}</td>
           <td>${esc(r.quant)}</td>
           <td class="num">${esc(r.vram_gb)} GB</td>
+          <td class="num">${esc(r.pp_tok_s)}</td>
           <td class="num">${esc(r.tok_s)}<span class="meter" style="width:${Math.round(36 * r.tok_s / mt)}px"></span></td>
           <td class="num">${esc(r.score)}%<span class="meter" style="width:${Math.round(36 * r.score / ms)}px"></span></td>
           <td><span class="tag ${r.fits ? "" : "no"}">${r.fits ? "yes" : "offload"}</span></td>
         </tr>`).join("")}</tbody></table></div>`;
+      if (!limit && data.notes) el.insertAdjacentHTML("beforeend", `<p class="notes">${esc(data.notes)}</p>`);
       el.querySelectorAll("th").forEach(th => th.onclick = () => { const k = th.dataset.k; dir = k === key ? -dir : -1; key = k; draw(); });
       el.querySelectorAll(".filters button[data-v]").forEach(b => b.onclick = () => { view = b.dataset.v; draw(); });
       el.querySelectorAll(".filters button[data-g]").forEach(b => b.onclick = () => { gpu = b.dataset.g; draw(); });

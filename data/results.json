@@ -1,11 +1,45 @@
 {
-  "updated": null,
-  "rig": {
-    "gpu": "RTX 2060 12 GB",
-    "price": "€167, used",
-    "cpu": "6-core CPU",
-    "ram": "32 GB RAM"
+ "updated": "2026-10-17",
+ "rig": {
+  "gpu": "RTX 2060 12 GB (EVGA XC) on PCIe 3.0 x1",
+  "price": "€167, used",
+  "cpu": "Core i5-9400F, 6 cores",
+  "ram": "32 GB DDR4-2400"
+ },
+ "queue": [
+  "more 4B to 14B models that fit in 12 GB (suggest one in the comments)"
+ ],
+ "notes": "llama.cpp 8172e65, Q4_K_M, flash attention, 64k context. Prefill = llama-bench pp512, decode = tg128, 3 runs. Checks = 9 automatic browser checks on a website and a Snake game built by each model in the Pi agent, one prompt, no help.",
+ "results": [
+  {
+   "model": "Qwen 3.5 9B",
+   "gpu": "RTX 2060 12 GB",
+   "quant": "Q4_K_M",
+   "vram_gb": 7.4,
+   "pp_tok_s": 1234,
+   "tok_s": 45.2,
+   "score": 100,
+   "fits": true
   },
-  "queue": ["Qwen 3.8 27B", "Ornith 1.5 35B", "Granite"],
-  "results": []
+  {
+   "model": "Ornith 1.5 9B",
+   "gpu": "RTX 2060 12 GB",
+   "quant": "Q4_K_M",
+   "vram_gb": 7.2,
+   "pp_tok_s": 1230,
+   "tok_s": 47.1,
+   "score": 89,
+   "fits": true
+  },
+  {
+   "model": "NeoHorse 1 9B",
+   "gpu": "RTX 2060 12 GB",
+   "quant": "Q4_K_M",
+   "vram_gb": 7.2,
+   "pp_tok_s": 1230,
+   "tok_s": 47.1,
+   "score": 89,
+   "fits": true
+  }
+ ]
 }
