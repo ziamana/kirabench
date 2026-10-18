@@ -581,6 +581,16 @@
     "ornith-1.5-9b",
     "neohorse-1-9b"
    ]
+  },
+  {
+   "url": "https://youtu.be/x41qiNX41QU",
+   "title": "LFM2.5 24B vs Qwen3.6 35B on a 12GB GPU",
+   "date": "2026-10-18",
+   "models": [
+    "qwen3.6-35b-a3b",
+    "lfm2.5-24b-a2b",
+    "ornith-1.5-9b"
+   ]
   }
  ],
  "verdicts": [
