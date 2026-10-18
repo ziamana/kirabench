@@ -209,7 +209,7 @@
     }
    ],
    "pick_if": "You have a 12 GB card and want the model that holds up when the job gets hard: it won all three tests, including the only real car crash.",
-   "watch_out": "It saved its Snake game one folder above the folder it was given, so our automatic checker found nothing until we tested the file by hand. One funny slip: it sells \"Pastis de Marseille\" as a biscuit (pastis is an aniseed drink).",
+   "watch_out": "It saved its Snake game one folder above the folder it was given, so our automatic checker found nothing until we tested the file by hand.",
    "community": []
   },
   {
@@ -459,8 +459,7 @@
     "merci_sans_recharger": true
    },
    "notes": [
-    "Navigation bar, big header, 8 products with descriptions, hours for every day.",
-    "Sells \"Pastis de Marseille\" as an aniseed biscuit (pastis is a drink)."
+    "Navigation bar, big header, 8 products with descriptions, hours for every day."
    ]
   },
   {
