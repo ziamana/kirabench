@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen3.6 35B A3B · KiraBench</title>
+<meta name="description" content="Qwen3.6 35B A3B tested on real hardware: speed, the websites and games it built, and every check it passed or failed.">
+<meta name="theme-color" content="#0f1311">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="preload" href="../../assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/style.css?v=9b34c80d">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="mark" href="../../" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
+  <nav aria-label="Main"><a href="../../results.html">Results</a><a href="../../benchmarks/">Benchmarks</a><a class="hide-s" href="../../compare.html">Compare</a><a class="hide-s" href="../../#alerts">Alerts</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero2">
+  <p class="cmd"><b>$</b> kirabench model qwen3.6-35b-a3b</p>
+  <div class="mhead"><img class="mlogo" src="../../assets/logos/qwen.svg" alt="" width="56" height="56"><h1>Qwen3.6 35B A3B</h1></div>
+  <p class="sub">Alibaba&#x27;s mixture-of-experts model: 35 B parameters, about 3 B active for each token. With every expert kept in RAM, it runs on a 12 GB card using about 3 GB of video memory.</p>
+  <dl class="rig"><div><dt>creator</dt><dd>Qwen (Alibaba)</dd></div><div><dt>based on</dt><dd>original model</dd></div><div><dt>license</dt><dd>Apache 2.0</dd></div><div><dt>parameters</dt><dd>35 B (3 B active)</dd></div><div><dt>weights</dt><dd><a href="https://huggingface.co/Qwen/Qwen3.6-35B-A3B" rel="noopener">Hugging Face</a></dd></div></dl>
+</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench speed qwen3.6-35b-a3b</p>
+  <h2>Speed on our cards</h2>
+  <p class="dim small">Prefill = how fast it reads (tokens per second), decode = how fast it writes. Measured with llama-bench, 3 runs.</p>
+  <div class="tablewrap"><table><thead><tr><th scope="col">gpu</th><th scope="col">quant</th><th scope="col" class="num">context</th><th scope="col" class="num">vram used</th><th scope="col" class="num">prefill 512</th><th scope="col" class="num">prefill 4096</th><th scope="col" class="num">decode</th></tr></thead><tbody><tr><td>RTX 2060 12 GB</td><td>UD-Q4_K_M</td><td class="num">64k</td><td class="num">3.0 GB</td>
+<td class="num">77</td><td class="num">78</td><td class="num">24.5</td></tr></tbody></table></div>
+</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench tests qwen3.6-35b-a3b</p>
+  <h2>What it built</h2>
+  <section class="run" id="bakery-site">
+  <h3><a href="../../benchmarks/bakery-site/">Bakery website</a></h3>
+  <p class="meta mono"><span class="chk" tabindex="0" role="button" aria-label="4/4 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Navigation bar, big header, 8 products with descriptions, hours for every day.&quot;, &quot;Sells \&quot;Pastis de Marseille\&quot; as an aniseed biscuit (pastis is a drink).&quot;]}]">4/4</span> checks · built in 7 min 25 s · 1 file (index.html) · RTX 2060 12 GB</p>
+  <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>At least 6 prices in euros<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Opening hours shown<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Contact form with an email field<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Thank-you message appears after sending, without a reload<span class="sr-only">: passed</span></li></ul><p class="note">Navigation bar, big header, 8 products with descriptions, hours for every day.</p><p class="note">Sells &quot;Pastis de Marseille&quot; as an aniseed biscuit (pastis is a drink).</p>
+  <div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">Qwen3.6 35B A3B · Bakery website</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/qwen3.6-35b-a3b/bakery-site/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="Qwen3.6 35B A3B · Bakery website, made by the model" src="../../lab/qwen3.6-35b-a3b/bakery-site/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div>
+  <details class="log" data-log="../../logs/qwen3.6-35b-a3b/bakery-site.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
+  <p class="more"><a href="../../compare.html?b=bakery-site">Compare with the other models on this test</a></p>
+</section><section class="run" id="snake-game">
+  <h3><a href="../../benchmarks/snake-game/">Snake game</a></h3>
+  <p class="meta mono"><span class="chk" tabindex="0" role="button" aria-label="5/5 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Saved one folder above the folder it was given: our checker found nothing, so we tested the file by hand.&quot;, &quot;The Game Over box spills outside the board.&quot;]}]">5/5</span> checks · built in 1 min 41 s · 1 file (index.html) · RTX 2060 12 GB</p>
+  <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Game drawn on a canvas<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Score shown on screen<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>The snake moves<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Game Over when hitting a wall<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Restart starts a new, playable game<span class="sr-only">: passed</span></li></ul><p class="note">Saved one folder above the folder it was given: our checker found nothing, so we tested the file by hand.</p><p class="note">The Game Over box spills outside the board.</p>
+  <div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">Qwen3.6 35B A3B · Snake game</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/qwen3.6-35b-a3b/snake-game/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="Qwen3.6 35B A3B · Snake game, made by the model" src="../../lab/qwen3.6-35b-a3b/snake-game/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div>
+  <details class="log" data-log="../../logs/qwen3.6-35b-a3b/snake-game.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
+  <p class="more"><a href="../../compare.html?b=snake-game">Compare with the other models on this test</a></p>
+</section><section class="run" id="car-crash">
+  <h3><a href="../../benchmarks/car-crash/">Car crash (2D physics)</a></h3>
+  <p class="meta mono"><span class="chk" tabindex="0" role="button" aria-label="4/6 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;A city at night, the car hits the wall, smoke, 7 bricks fall. Light physics, but a real crash.&quot;]}]">4/6</span> checks · built in 6 min 32 s · 1 file (index.html) · RTX 2060 12 GB</p>
+  <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Drawn on a canvas<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>The scene moves<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Brick counter shown<span class="sr-only">: passed</span></li><li class="ko"><span class="mark2" aria-hidden="true">✗</span>At least 10 bricks knocked<span class="sr-only">: failed</span></li><li class="ko"><span class="mark2" aria-hidden="true">✗</span>Debris settles on the ground<span class="sr-only">: failed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Replay restarts the scene<span class="sr-only">: passed</span></li></ul><p class="note">A city at night, the car hits the wall, smoke, 7 bricks fall. Light physics, but a real crash.</p>
+  <div class="lab" data-lab>
+  <div class="labbar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="labtitle mono">Qwen3.6 35B A3B · Car crash (2D physics)</span>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
+    </div>
+    <a class="labopen" href="../../lab/qwen3.6-35b-a3b/car-crash/index.html" target="_blank" rel="noopener">Open full page</a>
+  </div>
+  <div class="labview"><iframe title="Qwen3.6 35B A3B · Car crash (2D physics), made by the model" src="../../lab/qwen3.6-35b-a3b/car-crash/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+</div>
+  <details class="log" data-log="../../logs/qwen3.6-35b-a3b/car-crash.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
+  <p class="more"><a href="../../compare.html?b=car-crash">Compare with the other models on this test</a></p>
+</section>
+</section>
+<section class="split">
+  <div><p class="cmd"><b>$</b> man qwen3.6-35b-a3b</p><h2>When to pick it</h2>
+  <dl class="man"><dt>pick it if</dt><dd>You have a 12 GB card and want the model that holds up when the job gets hard: it won all three tests, including the only real car crash.</dd><dt>watch out</dt><dd>It saved its Snake game one folder above the folder it was given, so our automatic checker found nothing until we tested the file by hand. One funny slip: it sells &quot;Pastis de Marseille&quot; as a biscuit (pastis is an aniseed drink).</dd></dl></div>
+  <div><p class="cmd"><b>$</b> kirabench claims qwen3.6-35b-a3b</p><h2>What it claims</h2><ul class="plain"><li>Built for agentic coding: frontend workflows and repository-level reasoning <span class="who">(developer)</span></li></ul>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware. Model names and logos belong to their owners.</span>
+  <nav aria-label="Footer"><a href="../../results.html">Results</a><a href="../../privacy.html">Privacy</a><a href="../../legal.html">Legal notice</a></nav>
+</div></footer>
+<script src="../../assets/palette.js?v=4d212828"></script>
+<script src="../../assets/kira.js?v=e03618f0"></script>
+<script src="../../assets/site.js?v=025b6613"></script>
+<script src="../../assets/lab.js?v=4960febb"></script>
+</body>
+</html>

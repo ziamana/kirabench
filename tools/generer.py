@@ -166,12 +166,14 @@ def page_epreuve(b):
         m = M[r["model"]]; ok, n = passe(r)
         cel = "".join(f'<td class="num {"okc" if r["checks"].get(c["id"]) else "koc"}">{"✓" if r["checks"].get(c["id"]) else "✗"}</td>' for c in b["checks"])
         lignes += f'<tr><td><a href="{racine}models/{m["id"]}/#{b["id"]}">{e(m["name"])}</a></td>{cel}<td class="num">{chk([r])}</td><td class="num">{duree(r["seconds"])}</td></tr>'
-    v = next((x for x in D.get("verdicts", []) if x["benchmark"] == b["id"]), None)
+    vs = [x for x in D.get("verdicts", []) if x["benchmark"] == b["id"]]
     verdict = ""
-    if v:
-        verdict = f"""<section><p class="cmd"><b>$</b> kirabench verdict {e(b["id"])}</p><h2>Our verdict</h2>
+    if vs:
+        blocs = "".join(f"""<h3>{e(v.get("title", ""))}</h3>
 <dl class="man">{"".join(f'<dt>#{i + 1}</dt><dd><a href="{racine}models/{m}/#{b["id"]}">{e(M[m]["name"])}</a></dd>' for i, m in enumerate(v["ranking"]))}</dl>
-<p>{e(v.get("why", ""))}</p>
+<p>{e(v.get("why", ""))}</p>""" for v in vs)
+        verdict = f"""<section><p class="cmd"><b>$</b> kirabench verdict {e(b["id"])}</p><h2>Our verdict</h2>
+{blocs}
 <p class="dim">Then you are the second judge: open each one below and say which you would ship in the comments of the video.</p></section>"""
     galerie = "".join(f'<section class="run"><h3><a href="{racine}models/{r["model"]}/#{b["id"]}">{e(M[r["model"]]["name"])}</a></h3>{apercu(r, racine, M[r["model"]]["name"] + " · " + b["title"])}</section>' for r in runs)
     corps = f"""<section class="hero2">

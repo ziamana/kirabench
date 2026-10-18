@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Crash Physics</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #1a1a2e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+canvas {
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+#ui {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  z-index: 10;
+}
+#counter {
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 2px solid #e94560;
+}
+#replay {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  background: #e94560;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+#replay:hover { background: #c73650; transform: scale(1.05); }
+#replay:active { transform: scale(0.95); }
+</style>
+</head>
+<body>
+<div id="ui">
+  <div id="counter">Bricks knocked: 0</div>
+  <button id="replay">Replay</button>
+</div>
+<canvas id="canvas"></canvas>
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const counterEl = document.getElementById('counter');
+const replayBtn = document.getElementById('replay');
+
+const W = 900, H = 500;
+canvas.width = W;
+canvas.height = H;
+
+const GROUND_Y = H - 50;
+const GRAVITY = 0.45;
+const FRICTION = 0.98;
+const BOUNCE = 0.55;
+
+let bricks = [];
+let particles = [];
+let smokeParticles = [];
+let sparkParticles = [];
+let debris = [];
+let car = null;
+let crashed = false;
+let crashTime = 0;
+let bricksKnocked = 0;
+let animId = null;
+let frameCount = 0;
+
+// --- Brick class ---
+class Brick {
+  constructor(x, y, w, h) {
+    this.x = x; this.y = y;
+    this.w = w; this.h = h;
+    this.vx = 0; this.vy = 0;
+    this.rotation = 0;
+    this.angularVel = 0;
+    this.active = true;
+    this.onGround = false;
+    this.color = this.randomColor();
+    this.knocked = false;
+  }
+  randomColor() {
+    const colors = ['#b5453a','#c1440c','#a0522d','#8b4513','#cd853f','#d2691e','#a0522d','#b8533a','#c45a3a','#8b3a3a'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+  update() {
+    if (!this.active) return;
+    this.vy += GRAVITY;
+    this.vx *= FRICTION;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.rotation += this.angularVel;
+    this.angularVel *= 0.99;
+    if (this.y + this.h > GROUND_Y) {
+      this.y = GROUND_Y - this.h;
+      this.vy *= -BOUNCE;
+      this.vx *= 0.9;
+      this.angularVel *= 0.8;
+      if (Math.abs(this.vy) < 1) { this.vy = 0; this.onGround = true; }
+    }
+    // walls
+    if (this.x < 0) { this.x = 0; this.vx *= -BOUNCE; }
+    if (this.x + this.w > W) { this.x = W - this.w; this.vx *= -BOUNCE; }
+    if (this.knocked && !this.knockedCounted) {
+      this.knockedCounted = true;
+      bricksKnocked++;
+      counterEl.textContent = 'Bricks knocked: ' + bricksKnocked;
+    }
+  }
+  draw() {
+    if (!this.active) return;
+    ctx.save();
+    ctx.translate(this.x + this.w/2, this.y + this.h/2);
+    ctx.rotate(this.rotation);
+    // brick body
+    ctx.fillStyle = this.color;
+    ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
+    // brick lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(-this.w/2, -this.h/2, this.w, this.h);
+    // horizontal mortar line
+    ctx.beginPath();
+    ctx.moveTo(-this.w/2, 0);
+    ctx.lineTo(this.w/2, 0);
+    ctx.stroke();
+    // vertical mortar line (offset)
+    ctx.beginPath();
+    ctx.moveTo(0, -this.h/2);
+    ctx.lineTo(0, 0);
+    ctx.stroke();
+    ctx.restore();
+  }
+  containsPoint(px, py) {
+    // simple AABB (ignoring rotation for collision)
+    return px >= this.x && px <= this.x + this.w && py >= this.y && py <= this.y + this.h;
+  }
+}
+
+// --- Particle classes ---
+class Spark {
+  constructor(x, y) {
+    this.x = x; this.y = y;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 6;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed - 2;
+    this.life = 1;
+    this.decay = 0.02 + Math.random() * 0.04;
+    this.size = 1 + Math.random() * 2;
+  }
+  update() {
+    this.vy += 0.15;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life -= this.decay;
+    if (this.y > GROUND_Y) { this.y = GROUND_Y; this.vy *= -0.3; this.vx *= 0.8; }
+  }
+  draw() {
+    if (this.life <= 0) return;
+    ctx.globalAlpha = this.life;
+    ctx.fillStyle = this.life > 0.5 ? '#ffff00' : '#ff8800';
+    ctx.fillRect(this.x, this.y, this.size, this.size);
+    ctx.globalAlpha = 1;
+  }
+}
+
+class SmokeParticle {
+  constructor(x, y) {
+    this.x = x; this.y = y;
+    this.vx = -0.5 + Math.random() * 1.5;
+    this.vy = -1 - Math.random() * 2;
+    this.life = 1;
+    this.decay = 0.008 + Math.random() * 0.012;
+    this.size = 3 + Math.random() * 6;
+    this.maxSize = this.size + 10 + Math.random() * 15;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy -= 0.02;
+    this.vx *= 0.99;
+    this.life -= this.decay;
+    this.size += (this.maxSize - this.size) * 0.03;
+  }
+  draw() {
+    if (this.life <= 0) return;
+    ctx.globalAlpha = this.life * 0.4;
+    ctx.fillStyle = '#888';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+class Debris {
+  constructor(x, y, type) {
+    this.x = x; this.y = y;
+    this.type = type; // 'wheel', 'headlight', 'mirror', 'panel'
+    this.vx = (Math.random() - 0.5) * 8;
+    this.vy = -2 - Math.random() * 5;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.angularVel = (Math.random() - 0.5) * 0.3;
+    this.life = 1;
+    this.active = true;
+  }
+  update() {
+    this.vy += GRAVITY;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.rotation += this.angularVel;
+    if (this.y + 10 > GROUND_Y) {
+      this.y = GROUND_Y - 10;
+      this.vy *= -BOUNCE * 0.5;
+      this.vx *= 0.7;
+      this.angularVel *= 0.7;
+      if (Math.abs(this.vy) < 0.5) this.vy = 0;
+    }
+    if (this.x < -50 || this.x > W + 50) this.active = false;
+  }
+  draw() {
+    if (!this.active) return;
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    if (this.type === 'wheel') {
+      ctx.fillStyle = '#333';
+      ctx.beginPath();
+      ctx.arc(0, 0, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#666';
+      ctx.beginPath();
+      ctx.arc(0, 0, 4, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (this.type === 'headlight') {
+      ctx.fillStyle = '#ffff88';
+      ctx.fillRect(-4, -4, 8, 8);
+      ctx.strokeStyle = '#aaa';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(-4, -4, 8, 8);
+    } else if (this.type === 'mirror') {
+      ctx.fillStyle = '#cc3333';
+      ctx.fillRect(-3, -5, 6, 10);
+    } else {
+      ctx.fillStyle = '#aa2222';
+      ctx.fillRect(-6, -4, 12, 8);
+    }
+    ctx.restore();
+  }
+}
+
+// --- Car ---
+function createCar() {
+  return {
+    x: -80,
+    y: GROUND_Y - 45,
+    w: 110,
+    h: 45,
+    speed: 5,
+    crumpleAmount: 0,
+    crumpleDir: 1,
+    wheelAngle: 0,
+    // Original front X for crumple reference
+    frontX: 0,
+    // Damage state
+    headlightBroken: false,
+    hoodUp: false,
+    hoodAngle: 0,
+    smokeTimer: 0,
+    sparkTimer: 0,
+  };
+}
+
+function drawCar(c) {
+  const cx = c.x;
+  const cy = c.y;
+  const cw = c.w;
+  const ch = c.h;
+  const frontX = cx + cw;
+  const crumple = c.crumpleAmount;
+
+  // --- Car body ---
+  // Main body (rear section, not damaged)
+  ctx.fillStyle = '#d43333';
+  ctx.beginPath();
+  ctx.moveTo(cx, cy + ch);
+  ctx.lineTo(cx, cy + 12);
+  ctx.lineTo(cx + 15, cy + 5);
+  ctx.lineTo(cx + cw - crumple * 15, cy + 5);
+  ctx.lineTo(cx + cw - crumple * 15, cy + ch);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#8b1a1a';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Cabin / roof
+  ctx.fillStyle = '#cc2222';
+  ctx.beginPath();
+  ctx.moveTo(cx + 20, cy + 5);
+  ctx.lineTo(cx + 30, cy - 10);
+  ctx.lineTo(cx + 65, cy - 10);
+  ctx.lineTo(cx + 75, cy + 5);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Windows
+  ctx.fillStyle = '#88bbdd';
+  ctx.beginPath();
+  ctx.moveTo(cx + 32, cy - 7);
+  ctx.lineTo(cx + 38, cy - 7);
+  ctx.lineTo(cx + 42, cy + 2);
+  ctx.lineTo(cx + 28, cy + 2);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(cx + 48, cy - 7);
+  ctx.lineTo(cx + 62, cy - 7);
+  ctx.lineTo(cx + 67, cy + 2);
+  ctx.lineTo(cx + 44, cy + 2);
+  ctx.closePath();
+  ctx.fill();
+
+  // Hood (may be crumpled)
+  if (crumple > 0) {
+    ctx.fillStyle = '#bb2222';
+    ctx.beginPath();
+    ctx.moveTo(cx + cw - crumple * 15 - 20, cy + 5);
+    ctx.lineTo(cx + cw - crumple * 15, cy + 5);
+    ctx.lineTo(cx + cw - crumple * 5, cy + 5 + crumple * 12);
+    ctx.lineTo(cx + cw - crumple * 15 - 20, cy + 5);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  } else {
+    ctx.fillStyle = '#cc3333';
+    ctx.fillRect(cx + cw - 25, cy + 2, 25, 8);
+  }
+
+  // Front bumper area (crushed)
+  if (crumple > 0) {
+    ctx.fillStyle = '#991111';
+    ctx.beginPath();
+    ctx.moveTo(frontX - crumple * 15, cy + 5);
+    ctx.lineTo(frontX - crumple * 15, cy + ch);
+    ctx.lineTo(frontX - crumple * 10, cy + ch);
+    ctx.lineTo(frontX - crumple * 5, cy + 10 + crumple * 8);
+    ctx.lineTo(frontX - crumple * 15, cy + 5);
+    ctx.closePath();
+    ctx.fill();
+    // Dent lines
+    ctx.strokeStyle = '#660000';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+      const dy = 8 + i * 8;
+      ctx.beginPath();
+      ctx.moveTo(frontX - crumple * 15, cy + dy);
+      ctx.lineTo(frontX - crumple * 15 + 5 + i * 3, cy + dy + 3);
+      ctx.stroke();
+    }
+  }
+
+  // Headlight
+  if (!c.headlightBroken) {
+    ctx.fillStyle = '#ffff66';
+    ctx.beginPath();
+    ctx.arc(frontX - 3, cy + 18, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  } else {
+    // Broken headlight
+    ctx.fillStyle = '#666';
+    ctx.beginPath();
+    ctx.arc(frontX - 3, cy + 18, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#333';
+    ctx.stroke();
+    // Crack lines
+    ctx.strokeStyle = '#aaa';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(frontX - 5, cy + 16);
+    ctx.lineTo(frontX - 1, cy + 20);
+    ctx.moveTo(frontX - 3, cy + 15);
+    ctx.lineTo(frontX + 1, cy + 17);
+    ctx.stroke();
+  }
+
+  // Tail light
+  ctx.fillStyle = '#ff3333';
+  ctx.fillRect(cx - 1, cy + 10, 4, 8);
+
+  // Side trim
+  ctx.fillStyle = '#888';
+  ctx.fillRect(cx + 10, cy + ch - 5, cw - 20, 3);
+
+  // Door handle
+  ctx.fillStyle = '#aaa';
+  ctx.fillRect(cx + 45, cy + 8, 8, 2);
+
+  // Side mirror
+  if (crumple < 0.3) {
+    ctx.fillStyle = '#cc2222';
+    ctx.fillRect(frontX - 8, cy - 2, 6, 8);
+    ctx.fillStyle = '#88bbdd';
+    ctx.fillRect(frontX - 7, cy, 4, 4);
+  }
+
+  // Wheels
+  c.wheelAngle += c.speed * 0.15;
+  drawWheel(cx + 22, cy + ch, 10, c.wheelAngle);
+  drawWheel(cx + cw - 18, cy + ch, 10, c.wheelAngle);
+}
+
+function drawWheel(x, y, r, angle) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  // Tire
+  ctx.fillStyle = '#222';
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.fill();
+  // Rim
+  ctx.fillStyle = '#777';
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.55, 0, Math.PI * 2);
+  ctx.fill();
+  // Spokes
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 2;
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 5) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(Math.cos(a) * r * 0.55, Math.sin(a) * r * 0.55);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// --- Build wall ---
+function buildWall() {
+  const brickW = 36;
+  const brickH = 18;
+  const cols = 8;
+  const rows = 7;
+  const startX = W - 180;
+  const startY = GROUND_Y - brickH;
+  bricks = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const offset = (row % 2 === 1) ? brickW / 2 : 0;
+      const bx = startX + col * brickW + offset - (row % 2 === 1 ? brickW / 2 : 0);
+      const by = startY - row * brickH;
+      bricks.push(new Brick(bx, by, brickW - 2, brickH - 2));
+    }
+  }
+}
+
+// --- Particles ---
+function spawnSparks(x, y, count) {
+  for (let i = 0; i < count; i++) {
+    sparkParticles.push(new Spark(x, y));
+  }
+}
+function spawnSmoke(x, y) {
+  smokeParticles.push(new SmokeParticle(x, y));
+}
+
+// --- Collision ---
+function checkCarBrickCollision(c, brick) {
+  if (!brick.active || brick.knocked) return false;
+  const frontX = c.x + c.w - c.crumpleAmount * 15;
+  return frontX > brick.x && c.x < brick.x + brick.w &&
+         c.y + c.h > brick.y && c.y < brick.y + brick.h;
+}
+
+// --- Background ---
+function drawBackground() {
+  // Sky gradient
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
+  skyGrad.addColorStop(0, '#1a1a3e');
+  skyGrad.addColorStop(0.5, '#2d2d5e');
+  skyGrad.addColorStop(1, '#4a4a7a');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, GROUND_Y);
+
+  // Stars
+  ctx.fillStyle = '#fff';
+  for (let i = 0; i < 40; i++) {
+    const sx = (i * 137 + 50) % W;
+    const sy = (i * 73 + 20) % (GROUND_Y - 100);
+    const ss = 0.5 + (i % 3) * 0.5;
+    ctx.globalAlpha = 0.3 + (i % 5) * 0.15;
+    ctx.fillRect(sx, sy, ss, ss);
+  }
+  ctx.globalAlpha = 1;
+
+  // Moon
+  ctx.fillStyle = '#eee8cc';
+  ctx.beginPath();
+  ctx.arc(750, 60, 30, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#1a1a3e';
+  ctx.beginPath();
+  ctx.arc(760, 55, 25, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Ground
+  const groundGrad = ctx.createLinearGradient(0, GROUND_Y, 0, H);
+  groundGrad.addColorStop(0, '#4a4a4a');
+  groundGrad.addColorStop(1, '#2a2a2a');
+  ctx.fillStyle = groundGrad;
+  ctx.fillRect(0, GROUND_Y, W, H - GROUND_Y);
+
+  // Road markings
+  ctx.strokeStyle = '#666';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([30, 20]);
+  ctx.beginPath();
+  ctx.moveTo(0, GROUND_Y + 25);
+  ctx.lineTo(W, GROUND_Y + 25);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Sidewalk
+  ctx.fillStyle = '#555';
+  ctx.fillRect(0, GROUND_Y, W, 8);
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < W; i += 40) {
+    ctx.beginPath();
+    ctx.moveTo(i, GROUND_Y);
+    ctx.lineTo(i, GROUND_Y + 8);
+    ctx.stroke();
+  }
+
+  // Background buildings silhouette
+  ctx.fillStyle = '#1e1e3a';
+  // Building 1
+  ctx.fillRect(50, GROUND_Y - 120, 60, 120);
+  ctx.fillRect(120, GROUND_Y - 80, 40, 80);
+  // Building 2
+  ctx.fillRect(250, GROUND_Y - 150, 50, 150);
+  ctx.fillRect(310, GROUND_Y - 100, 35, 100);
+  // Building 3
+  ctx.fillRect(600, GROUND_Y - 130, 55, 130);
+  ctx.fillRect(670, GROUND_Y - 90, 45, 90);
+  ctx.fillRect(730, GROUND_Y - 160, 40, 160);
+
+  // Building windows
+  ctx.fillStyle = '#3a3a5a';
+  for (let bx = 55; bx < 105; bx += 15) {
+    for (let by = GROUND_Y - 110; by < GROUND_Y - 10; by += 20) {
+      ctx.fillRect(bx, by, 8, 10);
+    }
+  }
+  for (let bx = 255; bx < 295; bx += 15) {
+    for (let by = GROUND_Y - 140; by < GROUND_Y - 10; by += 20) {
+      ctx.fillRect(bx, by, 8, 10);
+    }
+  }
+  for (let bx = 605; bx < 650; bx += 15) {
+    for (let by = GROUND_Y - 120; by < GROUND_Y - 10; by += 20) {
+      ctx.fillRect(bx, by, 8, 10);
+    }
+  }
+  for (let bx = 735; bx < 765; bx += 15) {
+    for (let by = GROUND_Y - 150; by < GROUND_Y - 10; by += 20) {
+      ctx.fillRect(bx, by, 8, 10);
+    }
+  }
+}
+
+// --- Main loop ---
+function reset() {
+  bricksKnocked = 0;
+  counterEl.textContent = 'Bricks knocked: 0';
+  crashed = false;
+  crashTime = 0;
+  particles = [];
+  smokeParticles = [];
+  sparkParticles = [];
+  debris = [];
+  frameCount = 0;
+  car = createCar();
+  buildWall();
+}
+
+function update() {
+  frameCount++;
+
+  if (!crashed) {
+    // Car driving
+    car.x += car.speed;
+    car.frontX = car.x + car.w;
+
+    // Check collision with any brick
+    for (const brick of bricks) {
+      if (checkCarBrickCollision(car, brick)) {
+        crashed = true;
+        crashTime = frameCount;
+        break;
+      }
+    }
+  }
+
+  if (crashed) {
+    const elapsed = frameCount - crashTime;
+
+    // Car crumple animation
+    if (elapsed < 30) {
+      car.crumpleAmount = Math.min(1, elapsed / 30);
+      car.speed *= 0.85;
+      car.x += car.speed;
+
+      // Spawn sparks at impact point
+      if (elapsed < 20 && elapsed % 2 === 0) {
+        const impactX = car.x + car.w;
+        spawnSparks(impactX, car.y + 20, 5 + Math.floor(Math.random() * 5));
+      }
+
+      // Spawn smoke
+      if (elapsed > 5 && elapsed % 4 === 0) {
+        spawnSmoke(car.x + car.w - 10, car.y + 5);
+      }
+
+      // Break off parts
+      if (elapsed === 5) {
+        car.headlightBroken = true;
+        debris.push(new Debris(car.x + car.w - 5, car.y + 20, 'headlight'));
+      }
+      if (elapsed === 10) {
+        debris.push(new Debris(car.x + car.w - 10, car.y - 5, 'mirror'));
+      }
+      if (elapsed === 15) {
+        debris.push(new Debris(car.x + 20, car.y + car.h, 'wheel'));
+        debris.push(new Debris(car.x + car.w - 18, car.y + car.h, 'wheel'));
+      }
+      if (elapsed === 20) {
+        debris.push(new Debris(car.x + car.w - 30, car.y + 5, 'panel'));
+      }
+    } else {
+      car.crumpleAmount = 1;
+      car.speed = 0;
+    }
+
+    // Hit bricks
+    for (const brick of bricks) {
+      if (brick.active && !brick.knocked) {
+        const frontX = car.x + car.w - car.crumpleAmount * 15;
+        if (frontX > brick.x - 10 && frontX < brick.x + brick.w + 5) {
+          // Check vertical overlap
+          if (car.y + car.h > brick.y + 2 && car.y < brick.y + brick.h - 2) {
+            brick.knocked = true;
+            // Random velocity based on position
+            const row = Math.floor((GROUND_Y - brick.y) / 20);
+            const col = Math.floor((brick.x - (W - 180)) / 36);
+            brick.vx = 2 + Math.random() * 4 + col * 0.5;
+            brick.vy = -3 - Math.random() * 5 - row * 0.3;
+            brick.angularVel = (Math.random() - 0.5) * 0.2;
+            // Some bricks get pushed further
+            if (Math.random() < 0.3) {
+              brick.vx *= 2;
+              brick.vy *= 1.5;
+              brick.angularVel *= 2;
+            }
+          }
+        }
+      }
+    }
+
+    // Extra sparks after crash
+    if (crashed && frameCount % 6 === 0 && frameCount - crashTime < 80) {
+      spawnSparks(car.x + car.w - 15, car.y + car.h / 2, 2);
+    }
+
+    // Extra smoke
+    if (crashed && frameCount % 8 === 0 && frameCount - crashTime < 120) {
+      spawnSmoke(car.x + car.w - 20 + Math.random() * 10, car.y - 5 + Math.random() * 10);
+    }
+  }
+
+  // Update bricks
+  for (const brick of bricks) {
+    brick.update();
+  }
+
+  // Brick-to-brick collisions (simplified)
+  for (let i = 0; i < bricks.length; i++) {
+    for (let j = i + 1; j < bricks.length; j++) {
+      const a = bricks[i], b = bricks[j];
+      if (!a.active || !b.active) continue;
+      if (a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y) {
+        // Simple push apart
+        const overlapX = Math.min(a.x + a.w - b.x, b.x + b.w - a.x);
+        const overlapY = Math.min(a.y + a.h - b.y, b.y + b.h - a.y);
+        if (overlapX < overlapY) {
+          const push = overlapX / 2;
+          if (a.x < b.x) { a.x -= push; b.x += push; }
+          else { a.x += push; b.x -= push; }
+          // Transfer some velocity
+          const avgVx = (a.vx + b.vx) / 2;
+          a.vx = avgVx + (a.vx - b.vx) * 0.3;
+          b.vx = avgVx - (a.vx - b.vx) * 0.3;
+        } else {
+          const push = overlapY / 2;
+          if (a.y < b.y) { a.y -= push; b.y += push; }
+          else { a.y += push; b.y -= push; }
+          const avgVy = (a.vy + b.vy) / 2;
+          a.vy = avgVy + (a.vy - b.vy) * 0.3;
+          b.vy = avgVy - (a.vy - b.vy) * 0.3;
+        }
+      }
+    }
+  }
+
+  // Update particles
+  sparkParticles.forEach(p => p.update());
+  smokeParticles.forEach(p => p.update());
+  debris.forEach(p => p.update());
+
+  // Cleanup
+  sparkParticles = sparkParticles.filter(p => p.life > 0);
+  smokeParticles = smokeParticles.filter(p => p.life > 0);
+  debris = debris.filter(p => p.active);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  drawBackground();
+
+  // Draw debris (under bricks)
+  debris.forEach(d => d.draw());
+
+  // Draw bricks
+  for (const brick of bricks) {
+    brick.draw();
+  }
+
+  // Draw car
+  if (car) drawCar(car);
+
+  // Draw smoke (behind sparks)
+  smokeParticles.forEach(p => p.draw());
+
+  // Draw sparks
+  sparkParticles.forEach(p => p.draw());
+
+  // Crash text
+  if (crashed && frameCount - crashTime < 60) {
+    const alpha = 1 - (frameCount - crashTime) / 60;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#ff4444';
+    ctx.font = 'bold 48px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('CRASH!', W / 2, H / 2 - 30);
+    ctx.globalAlpha = 1;
+  }
+
+  // Finished text
+  if (crashed && frameCount - crashTime > 90) {
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Press Replay to try again', W / 2, H - 15);
+  }
+}
+
+function gameLoop() {
+  update();
+  draw();
+  animId = requestAnimationFrame(gameLoop);
+}
+
+// --- Events ---
+replayBtn.addEventListener('click', () => {
+  if (animId) cancelAnimationFrame(animId);
+  reset();
+  gameLoop();
+});
+
+// --- Start ---
+reset();
+gameLoop();
+</script>
+</function>
+</tool_call>
+</body>
+</html>

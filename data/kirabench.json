@@ -1,105 +1,637 @@
 {
- "updated": "2026-10-17",
+ "updated": "2026-10-18",
  "rigs": [
-  {"id": "rtx2060-12g", "gpu": "RTX 2060 12 GB", "detail": "EVGA XC on PCIe 3.0 x1", "cpu": "Core i5-9400F, 6 cores", "ram": "32 GB DDR4-2400", "os": "Linux, CUDA 13.4", "engine": "llama.cpp 8172e65"}
+  {
+   "id": "rtx2060-12g",
+   "gpu": "RTX 2060 12 GB",
+   "detail": "EVGA XC on PCIe 3.0 x1",
+   "cpu": "Core i5-9400F, 6 cores",
+   "ram": "32 GB DDR4-2400",
+   "os": "Linux, CUDA 13.4",
+   "engine": "llama.cpp 8172e65"
+  }
  ],
  "benchmarks": [
   {
-   "id": "bakery-site", "title": "Bakery website", "kind": "website",
+   "id": "bakery-site",
+   "title": "Bakery website",
+   "kind": "website",
    "harness": "Pi 1.1.0 coding agent (read, bash, edit, write), one prompt, no help, 20 min limit",
    "prompt": "Create a complete website for a small French bakery called \"Le Petit Four\" in the current folder (index.html plus any CSS and JavaScript files you need). It must have: a hero section with the name and a tagline, a menu with at least 6 products and their prices in euros, the opening hours, and a contact form (name, email, message) that shows a thank-you message without reloading the page. It must look good on desktop and on a phone. No external resources: no CDN, no web fonts, no images from the internet. When you are finished, reply DONE.",
    "checks": [
-    {"id": "prix_6", "label": "At least 6 prices in euros"},
-    {"id": "horaires", "label": "Opening hours shown"},
-    {"id": "formulaire", "label": "Contact form with an email field"},
-    {"id": "merci_sans_recharger", "label": "Thank-you message appears after sending, without a reload"}
+    {
+     "id": "prix_6",
+     "label": "At least 6 prices in euros"
+    },
+    {
+     "id": "horaires",
+     "label": "Opening hours shown"
+    },
+    {
+     "id": "formulaire",
+     "label": "Contact form with an email field"
+    },
+    {
+     "id": "merci_sans_recharger",
+     "label": "Thank-you message appears after sending, without a reload"
+    }
    ]
   },
   {
-   "id": "snake-game", "title": "Snake game", "kind": "game",
+   "id": "snake-game",
+   "title": "Snake game",
+   "kind": "game",
    "harness": "Pi 1.1.0 coding agent (read, bash, edit, write), one prompt, no help, 20 min limit",
    "prompt": "Create a playable Snake game in the current folder (index.html plus any CSS and JavaScript files you need). Arrow keys move the snake, eating food makes it grow and adds 1 to the score shown on screen, hitting a wall or itself ends the game with a Game Over message and a Restart button. No external resources. When you are finished, reply DONE.",
    "checks": [
-    {"id": "canvas", "label": "Game drawn on a canvas"},
-    {"id": "score_affiche", "label": "Score shown on screen"},
-    {"id": "anime", "label": "The snake moves"},
-    {"id": "game_over", "label": "Game Over when hitting a wall"},
-    {"id": "restart", "label": "Restart starts a new, playable game"}
+    {
+     "id": "canvas",
+     "label": "Game drawn on a canvas"
+    },
+    {
+     "id": "score_affiche",
+     "label": "Score shown on screen"
+    },
+    {
+     "id": "anime",
+     "label": "The snake moves"
+    },
+    {
+     "id": "game_over",
+     "label": "Game Over when hitting a wall"
+    },
+    {
+     "id": "restart",
+     "label": "Restart starts a new, playable game"
+    }
+   ]
+  },
+  {
+   "id": "car-crash",
+   "title": "Car crash (2D physics)",
+   "kind": "animation",
+   "harness": "Pi 1.1.0 coding agent (read, bash, edit, write), one prompt, no help, 20 min limit",
+   "prompt": "Create a fun 2D physics animation drawn on a canvas, in the current folder (index.html plus any CSS and JavaScript files you need). A car drives from the left to the right and crashes into a brick wall made of at least 40 bricks. On impact, the bricks fly in all directions with gravity, bounce on the ground and pile up; the car gets damaged: its front crumples and some parts break off, with sparks or smoke. Show a counter \"Bricks knocked: N\" that goes up as bricks fall, and a \"Replay\" button that restarts the whole scene from the beginning. The animation starts by itself when the page opens. No external resources: no libraries, no images, no web fonts. When you are finished, reply DONE.",
+   "checks": [
+    {
+     "id": "canvas",
+     "label": "Drawn on a canvas"
+    },
+    {
+     "id": "anime",
+     "label": "The scene moves"
+    },
+    {
+     "id": "compteur_affiche",
+     "label": "Brick counter shown"
+    },
+    {
+     "id": "briques_tombent",
+     "label": "At least 10 bricks knocked"
+    },
+    {
+     "id": "debris_se_posent",
+     "label": "Debris settles on the ground"
+    },
+    {
+     "id": "replay",
+     "label": "Replay restarts the scene"
+    }
    ]
   }
  ],
  "models": [
   {
-   "id": "qwen3.5-9b", "name": "Qwen 3.5 9B", "creator": "Qwen (Alibaba)", "base": null, "license": "Apache 2.0",
-   "params": "9.2 B", "hf": "https://huggingface.co/Qwen/Qwen3.5-9B", "logo": "assets/logos/qwen.svg",
+   "id": "qwen3.5-9b",
+   "name": "Qwen 3.5 9B",
+   "creator": "Qwen (Alibaba)",
+   "base": null,
+   "license": "Apache 2.0",
+   "params": "9.2 B",
+   "hf": "https://huggingface.co/Qwen/Qwen3.5-9B",
+   "logo": "assets/logos/qwen.svg",
    "about": "The original model. Ornith 1.5 9B and NeoHorse 1 9B are both further-trained versions of it.",
    "claims": [],
    "pick_if": "You want something that works on the first try: it passed every check, and it is good at using tools.",
    "watch_out": "The design is correct but not the most polished. Reviewers find it weaker on large changes spread over many files.",
    "community": [
-    {"title": "I replaced Claude with a local 9B model for a week, and it handled 95% of my work", "source": "XDA", "url": "https://www.xda-developers.com/replaced-claude-local-9b-model-week-handled-95-work/"}
+    {
+     "title": "I replaced Claude with a local 9B model for a week, and it handled 95% of my work",
+     "source": "XDA",
+     "url": "https://www.xda-developers.com/replaced-claude-local-9b-model-week-handled-95-work/"
+    }
    ]
   },
   {
-   "id": "ornith-1.5-9b", "name": "Ornith 1.5 9B", "creator": "Ornith (DeepReinforce)", "base": "qwen3.5-9b", "license": "MIT",
-   "params": "9.2 B", "hf": "https://huggingface.co/ornith-ai/Ornith-1.5-9B", "logo": "assets/logos/ornith.png",
+   "id": "ornith-1.5-9b",
+   "name": "Ornith 1.5 9B",
+   "creator": "Ornith (DeepReinforce)",
+   "base": "qwen3.5-9b",
+   "license": "MIT",
+   "params": "9.2 B",
+   "hf": "https://huggingface.co/ornith-ai/Ornith-1.5-9B",
+   "logo": "assets/logos/ornith.png",
    "about": "A further-trained Qwen 3.5 9B built with a self-improvement loop. The developer recommends always keeping reasoning on.",
    "claims": [
-    {"text": "SWE-bench Verified 70.6, Terminal-Bench 2.1 47.0", "who": "developer numbers"}
+    {
+     "text": "SWE-bench Verified 70.6, Terminal-Bench 2.1 47.0",
+     "who": "developer numbers"
+    }
    ],
    "pick_if": "You want the most polished look: the cleanest Snake and the most professional-looking site at first sight, and it finished fastest.",
    "watch_out": "Check its work: its contact form showed the error and thank-you messages before anyone typed. An independent test reports a gap between its benchmark scores and real tasks.",
    "community": [
-    {"title": "Ornith 1.5 9B: Local Test Results Expose a Benchmark Gap", "source": "MindStudio", "url": "https://www.mindstudio.ai/blog/ornith-1-5-9b-local-test"},
-    {"title": "Ornith releases Ornith-1.5 open weights under MIT", "source": "DataNorth", "url": "https://datanorth.ai/news/ornith-releases-ornith-1-5"}
+    {
+     "title": "Ornith 1.5 9B: Local Test Results Expose a Benchmark Gap",
+     "source": "MindStudio",
+     "url": "https://www.mindstudio.ai/blog/ornith-1-5-9b-local-test"
+    },
+    {
+     "title": "Ornith releases Ornith-1.5 open weights under MIT",
+     "source": "DataNorth",
+     "url": "https://datanorth.ai/news/ornith-releases-ornith-1-5"
+    }
    ]
   },
   {
-   "id": "neohorse-1-9b", "name": "NeoHorse 1 9B", "creator": "TokenRhythm", "base": "qwen3.5-9b", "license": "Apache 2.0",
-   "params": "8.95 B (text only)", "hf": "https://huggingface.co/TokenRhythm/NeoHorse-1-9B", "logo": null,
+   "id": "neohorse-1-9b",
+   "name": "NeoHorse 1 9B",
+   "creator": "TokenRhythm",
+   "base": "qwen3.5-9b",
+   "license": "Apache 2.0",
+   "params": "8.95 B (text only)",
+   "hf": "https://huggingface.co/TokenRhythm/NeoHorse-1-9B",
+   "logo": null,
    "about": "A further-trained Qwen 3.5 9B aimed at agents: tool use, coding and following instructions inside an agent harness.",
    "claims": [
-    {"text": "Average of 10 benchmarks 69.04, against 65.60 for Qwen 3.5 9B", "who": "developer numbers"},
-    {"text": "PinchBench 82.25 against 74.55 for Qwen 3.5 9B", "who": "developer numbers"},
-    {"text": "LiveCodeBench v6 unchanged from Qwen 3.5 9B (65.14)", "who": "its own model card"}
+    {
+     "text": "Average of 10 benchmarks 69.04, against 65.60 for Qwen 3.5 9B",
+     "who": "developer numbers"
+    },
+    {
+     "text": "PinchBench 82.25 against 74.55 for Qwen 3.5 9B",
+     "who": "developer numbers"
+    },
+    {
+     "text": "LiveCodeBench v6 unchanged from Qwen 3.5 9B (65.14)",
+     "who": "its own model card"
+    }
    ],
    "pick_if": "You run agents with tools (what it was trained for) and want a clean, sober result: every feature of its website worked.",
    "watch_out": "Its own model card shows it does not code better than Qwen 3.5 9B. Its Snake moves one cell per screen refresh, so it is unplayable.",
    "community": [
-    {"title": "NeoHorse-1-9B: Agentic Post-Training on Qwen3.5-9B Explained", "source": "MindStudio", "url": "https://www.mindstudio.ai/blog/neohorse-1-9b-agentic-post-training"},
-    {"title": "NeoHorse-1: Towards Recursive Self-Improvement via Agentic Post-Training", "source": "arXiv", "url": "https://arxiv.org/html/2609.08183v1"}
+    {
+     "title": "NeoHorse-1-9B: Agentic Post-Training on Qwen3.5-9B Explained",
+     "source": "MindStudio",
+     "url": "https://www.mindstudio.ai/blog/neohorse-1-9b-agentic-post-training"
+    },
+    {
+     "title": "NeoHorse-1: Towards Recursive Self-Improvement via Agentic Post-Training",
+     "source": "arXiv",
+     "url": "https://arxiv.org/html/2609.08183v1"
+    }
    ]
+  },
+  {
+   "id": "qwen3.6-35b-a3b",
+   "name": "Qwen3.6 35B A3B",
+   "creator": "Qwen (Alibaba)",
+   "base": null,
+   "license": "Apache 2.0",
+   "params": "35 B (3 B active)",
+   "hf": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
+   "logo": "assets/logos/qwen.svg",
+   "about": "Alibaba's mixture-of-experts model: 35 B parameters, about 3 B active for each token. With every expert kept in RAM, it runs on a 12 GB card using about 3 GB of video memory.",
+   "claims": [
+    {
+     "text": "Built for agentic coding: frontend workflows and repository-level reasoning",
+     "who": "developer"
+    }
+   ],
+   "pick_if": "You have a 12 GB card and want the model that holds up when the job gets hard: it won all three tests, including the only real car crash.",
+   "watch_out": "It saved its Snake game one folder above the folder it was given, so our automatic checker found nothing until we tested the file by hand. One funny slip: it sells \"Pastis de Marseille\" as a biscuit (pastis is an aniseed drink).",
+   "community": []
+  },
+  {
+   "id": "lfm2.5-24b-a2b",
+   "name": "LFM2.5 24B A2B",
+   "creator": "Liquid AI",
+   "base": null,
+   "license": "LFM Open License v1.0",
+   "params": "24 B (about 2 B active)",
+   "hf": "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B",
+   "logo": "assets/logos/liquid.png",
+   "about": "Liquid AI's largest LFM2.5 model, a mixture of experts built for fast, private agents on-device. Its model card compares it directly to Qwen3.6 35B.",
+   "claims": [
+    {
+     "text": "LiveClaw (agent tasks) 48.09, against 38.19 for Qwen3.6-35B-A3B",
+     "who": "developer numbers"
+    },
+    {
+     "text": "Up to 1.7× faster than comparable MoEs on-device",
+     "who": "developer numbers"
+    },
+    {
+     "text": "Trained with reinforcement learning inside agent harnesses, including Pi",
+     "who": "developer"
+    }
+   ],
+   "pick_if": "You want quick results on simple jobs: it built a working bakery site in about 4 minutes, almost twice as fast as Qwen3.6.",
+   "watch_out": "It broke on the harder tests: its Snake never redraws the screen, and its car crash shows a few floating bricks with a counter stuck at 0 after 18 minutes. On our 12 GB card it was not 1.7× faster: same writing speed as Qwen3.6.",
+   "community": []
   }
  ],
  "speed": [
-  {"model": "qwen3.5-9b", "rig": "rtx2060-12g", "quant": "Q4_K_M", "file_gb": 5.74, "context": 65536, "vram_gb": 7.4, "pp512": 1234, "pp4096": 1218, "tg128": 45.2},
-  {"model": "ornith-1.5-9b", "rig": "rtx2060-12g", "quant": "Q4_K_M", "file_gb": 5.37, "context": 65536, "vram_gb": 7.2, "pp512": 1230, "pp4096": 1216, "tg128": 47.1},
-  {"model": "neohorse-1-9b", "rig": "rtx2060-12g", "quant": "Q4_K_M", "file_gb": 5.23, "context": 65536, "vram_gb": 7.2, "pp512": 1230, "pp4096": 1217, "tg128": 47.1}
+  {
+   "model": "qwen3.5-9b",
+   "rig": "rtx2060-12g",
+   "quant": "Q4_K_M",
+   "file_gb": 5.74,
+   "context": 65536,
+   "vram_gb": 7.4,
+   "pp512": 1234,
+   "pp4096": 1218,
+   "tg128": 45.2
+  },
+  {
+   "model": "ornith-1.5-9b",
+   "rig": "rtx2060-12g",
+   "quant": "Q4_K_M",
+   "file_gb": 5.37,
+   "context": 65536,
+   "vram_gb": 7.2,
+   "pp512": 1230,
+   "pp4096": 1216,
+   "tg128": 47.1
+  },
+  {
+   "model": "neohorse-1-9b",
+   "rig": "rtx2060-12g",
+   "quant": "Q4_K_M",
+   "file_gb": 5.23,
+   "context": 65536,
+   "vram_gb": 7.2,
+   "pp512": 1230,
+   "pp4096": 1217,
+   "tg128": 47.1
+  },
+  {
+   "model": "qwen3.6-35b-a3b",
+   "rig": "rtx2060-12g",
+   "quant": "UD-Q4_K_M",
+   "file_gb": 22.7,
+   "context": 65536,
+   "vram_gb": 3.0,
+   "pp512": 77,
+   "pp4096": 78,
+   "tg128": 24.5
+  },
+  {
+   "model": "lfm2.5-24b-a2b",
+   "rig": "rtx2060-12g",
+   "quant": "Q4_K_M",
+   "file_gb": 14.5,
+   "context": 65536,
+   "vram_gb": 1.6,
+   "pp512": 88,
+   "pp4096": 85,
+   "tg128": 24.8
+  }
  ],
  "runs": [
-  {"model": "qwen3.5-9b", "benchmark": "bakery-site", "rig": "rtx2060-12g", "date": "2026-10-17", "seconds": 110, "files": ["index.html", "script.js", "styles.css"],
-   "checks": {"prix_6": true, "horaires": true, "formulaire": true, "merci_sans_recharger": true}, "notes": []},
-  {"model": "ornith-1.5-9b", "benchmark": "bakery-site", "rig": "rtx2060-12g", "date": "2026-10-17", "seconds": 111, "files": ["index.html", "script.js", "styles.css"],
-   "checks": {"prix_6": true, "horaires": true, "formulaire": true, "merci_sans_recharger": false},
-   "notes": ["The error messages and the thank-you message are already visible when the page opens, before anyone types."]},
-  {"model": "neohorse-1-9b", "benchmark": "bakery-site", "rig": "rtx2060-12g", "date": "2026-10-17", "seconds": 113, "files": ["index.html"],
-   "checks": {"prix_6": true, "horaires": true, "formulaire": true, "merci_sans_recharger": true},
-   "notes": ["Its tagline says every \"croquette\" (kibble) is made with love."]},
-  {"model": "qwen3.5-9b", "benchmark": "snake-game", "rig": "rtx2060-12g", "date": "2026-10-17", "seconds": 64, "files": ["game.js", "index.html", "styles.css"],
-   "checks": {"canvas": true, "score_affiche": true, "anime": true, "game_over": true, "restart": true}, "notes": ["One step every 150 ms: classic speed."]},
-  {"model": "ornith-1.5-9b", "benchmark": "snake-game", "rig": "rtx2060-12g", "date": "2026-10-17", "seconds": 43, "files": ["game.js", "index.html", "style.css"],
-   "checks": {"canvas": true, "score_affiche": true, "anime": true, "game_over": true, "restart": true}, "notes": ["One step every 100 ms: fast but playable."]},
-  {"model": "neohorse-1-9b", "benchmark": "snake-game", "rig": "rtx2060-12g", "date": "2026-10-17", "seconds": 54, "files": ["index.html"],
-   "checks": {"canvas": true, "score_affiche": true, "anime": true, "game_over": true, "restart": false},
-   "notes": ["The snake moves one cell per screen refresh (60 per second on a 60 Hz screen), so every new game ends almost instantly."]}
+  {
+   "model": "qwen3.5-9b",
+   "benchmark": "bakery-site",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-17",
+   "seconds": 110,
+   "files": [
+    "index.html",
+    "script.js",
+    "styles.css"
+   ],
+   "checks": {
+    "prix_6": true,
+    "horaires": true,
+    "formulaire": true,
+    "merci_sans_recharger": true
+   },
+   "notes": []
+  },
+  {
+   "model": "ornith-1.5-9b",
+   "benchmark": "bakery-site",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-17",
+   "seconds": 111,
+   "files": [
+    "index.html",
+    "script.js",
+    "styles.css"
+   ],
+   "checks": {
+    "prix_6": true,
+    "horaires": true,
+    "formulaire": true,
+    "merci_sans_recharger": false
+   },
+   "notes": [
+    "The error messages and the thank-you message are already visible when the page opens, before anyone types."
+   ]
+  },
+  {
+   "model": "neohorse-1-9b",
+   "benchmark": "bakery-site",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-17",
+   "seconds": 113,
+   "files": [
+    "index.html"
+   ],
+   "checks": {
+    "prix_6": true,
+    "horaires": true,
+    "formulaire": true,
+    "merci_sans_recharger": true
+   },
+   "notes": [
+    "Its tagline says every \"croquette\" (kibble) is made with love."
+   ]
+  },
+  {
+   "model": "qwen3.5-9b",
+   "benchmark": "snake-game",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-17",
+   "seconds": 64,
+   "files": [
+    "game.js",
+    "index.html",
+    "styles.css"
+   ],
+   "checks": {
+    "canvas": true,
+    "score_affiche": true,
+    "anime": true,
+    "game_over": true,
+    "restart": true
+   },
+   "notes": [
+    "One step every 150 ms: classic speed."
+   ]
+  },
+  {
+   "model": "ornith-1.5-9b",
+   "benchmark": "snake-game",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-17",
+   "seconds": 43,
+   "files": [
+    "game.js",
+    "index.html",
+    "style.css"
+   ],
+   "checks": {
+    "canvas": true,
+    "score_affiche": true,
+    "anime": true,
+    "game_over": true,
+    "restart": true
+   },
+   "notes": [
+    "One step every 100 ms: fast but playable."
+   ]
+  },
+  {
+   "model": "neohorse-1-9b",
+   "benchmark": "snake-game",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-17",
+   "seconds": 54,
+   "files": [
+    "index.html"
+   ],
+   "checks": {
+    "canvas": true,
+    "score_affiche": true,
+    "anime": true,
+    "game_over": true,
+    "restart": false
+   },
+   "notes": [
+    "The snake moves one cell per screen refresh (60 per second on a 60 Hz screen), so every new game ends almost instantly."
+   ]
+  },
+  {
+   "model": "lfm2.5-24b-a2b",
+   "benchmark": "bakery-site",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-18",
+   "seconds": 245,
+   "files": [
+    "index.html",
+    "script.js",
+    "style.css"
+   ],
+   "checks": {
+    "prix_6": true,
+    "horaires": true,
+    "formulaire": true,
+    "merci_sans_recharger": true
+   },
+   "notes": [
+    "Works, but plain: no navigation, and the Contact title sits alone on the left."
+   ]
+  },
+  {
+   "model": "qwen3.6-35b-a3b",
+   "benchmark": "bakery-site",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-18",
+   "seconds": 445,
+   "files": [
+    "index.html"
+   ],
+   "checks": {
+    "prix_6": true,
+    "horaires": true,
+    "formulaire": true,
+    "merci_sans_recharger": true
+   },
+   "notes": [
+    "Navigation bar, big header, 8 products with descriptions, hours for every day.",
+    "Sells \"Pastis de Marseille\" as an aniseed biscuit (pastis is a drink)."
+   ]
+  },
+  {
+   "model": "lfm2.5-24b-a2b",
+   "benchmark": "snake-game",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-18",
+   "seconds": 267,
+   "files": [
+    "index.html",
+    "script.js",
+    "style.css"
+   ],
+   "checks": {
+    "canvas": true,
+    "score_affiche": true,
+    "anime": false,
+    "game_over": true,
+    "restart": true
+   },
+   "notes": [
+    "The loop moves the snake 10 times per second but never redraws the screen: nothing moves, then Game Over."
+   ]
+  },
+  {
+   "model": "qwen3.6-35b-a3b",
+   "benchmark": "snake-game",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-18",
+   "seconds": 101,
+   "files": [
+    "index.html"
+   ],
+   "checks": {
+    "canvas": true,
+    "score_affiche": true,
+    "anime": true,
+    "game_over": true,
+    "restart": true
+   },
+   "notes": [
+    "Saved one folder above the folder it was given: our checker found nothing, so we tested the file by hand.",
+    "The Game Over box spills outside the board."
+   ]
+  },
+  {
+   "model": "lfm2.5-24b-a2b",
+   "benchmark": "car-crash",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-18",
+   "seconds": 1107,
+   "files": [
+    "index.html"
+   ],
+   "checks": {
+    "canvas": true,
+    "anime": true,
+    "compteur_affiche": true,
+    "briques_tombent": false,
+    "debris_se_posent": true,
+    "replay": true
+   },
+   "notes": [
+    "A thin floating stack of bricks instead of a wall, a tiny car, and the counter never leaves 0. The automatic checks score it higher than what you see."
+   ]
+  },
+  {
+   "model": "qwen3.6-35b-a3b",
+   "benchmark": "car-crash",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-18",
+   "seconds": 392,
+   "files": [
+    "index.html"
+   ],
+   "checks": {
+    "canvas": true,
+    "anime": true,
+    "compteur_affiche": true,
+    "briques_tombent": false,
+    "debris_se_posent": false,
+    "replay": true
+   },
+   "notes": [
+    "A city at night, the car hits the wall, smoke, 7 bricks fall. Light physics, but a real crash."
+   ]
+  },
+  {
+   "model": "ornith-1.5-9b",
+   "benchmark": "car-crash",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-18",
+   "seconds": 406,
+   "files": [
+    "index.html",
+    "physics.js",
+    "style.css"
+   ],
+   "checks": {
+    "canvas": true,
+    "anime": false,
+    "compteur_affiche": true,
+    "briques_tombent": false,
+    "debris_se_posent": true,
+    "replay": true
+   },
+   "notes": [
+    "Blank screen: one variable (running) is never defined, so the animation dies before it starts. Bonus run after LFM2.5's crash."
+   ]
+  }
  ],
  "videos": [
-  {"url": "https://youtu.be/fvvTnrv_aiw", "title": "Qwen 3.5 9B vs Ornith 1.5 9B vs NeoHorse 9B", "date": "2026-10-17", "models": ["qwen3.5-9b", "ornith-1.5-9b", "neohorse-1-9b"]}
+  {
+   "url": "https://youtu.be/fvvTnrv_aiw",
+   "title": "Qwen 3.5 9B vs Ornith 1.5 9B vs NeoHorse 9B",
+   "date": "2026-10-17",
+   "models": [
+    "qwen3.5-9b",
+    "ornith-1.5-9b",
+    "neohorse-1-9b"
+   ]
+  }
  ],
  "verdicts": [
-  {"benchmark": "bakery-site", "ranking": ["neohorse-1-9b", "qwen3.5-9b", "ornith-1.5-9b"],
-   "why": "NeoHorse's site is the one we would ship. Ornith's looks the most professional, but a contact form that shows its errors before anyone types costs you customers."},
-  {"benchmark": "snake-game", "ranking": ["ornith-1.5-9b", "qwen3.5-9b", "neohorse-1-9b"],
-   "why": "Ornith's game is the nicest to play. NeoHorse's snake moves 60 cells per second, so nobody can play it."}
+  {
+   "benchmark": "bakery-site",
+   "ranking": [
+    "neohorse-1-9b",
+    "qwen3.5-9b",
+    "ornith-1.5-9b"
+   ],
+   "why": "NeoHorse's site is the one we would ship. Ornith's looks the most professional, but a contact form that shows its errors before anyone types costs you customers.",
+   "title": "Episode 3 · 9B models"
+  },
+  {
+   "benchmark": "snake-game",
+   "ranking": [
+    "ornith-1.5-9b",
+    "qwen3.5-9b",
+    "neohorse-1-9b"
+   ],
+   "why": "Ornith's game is the nicest to play. NeoHorse's snake moves 60 cells per second, so nobody can play it.",
+   "title": "Episode 3 · 9B models"
+  },
+  {
+   "benchmark": "bakery-site",
+   "title": "Episode 4 · 24B vs 35B",
+   "ranking": [
+    "qwen3.6-35b-a3b",
+    "lfm2.5-24b-a2b"
+   ],
+   "why": "Both sites work. Qwen3.6's looks like a real bakery; LFM2.5's is fast but plain."
+  },
+  {
+   "benchmark": "snake-game",
+   "title": "Episode 4 · 24B vs 35B",
+   "ranking": [
+    "qwen3.6-35b-a3b",
+    "lfm2.5-24b-a2b"
+   ],
+   "why": "Qwen3.6's game plays well (despite the file in the wrong folder). LFM2.5's never redraws the screen: nobody can play it."
+  },
+  {
+   "benchmark": "car-crash",
+   "title": "Episode 4 · 24B vs 35B, plus a bonus",
+   "ranking": [
+    "qwen3.6-35b-a3b",
+    "lfm2.5-24b-a2b",
+    "ornith-1.5-9b"
+   ],
+   "why": "Only Qwen3.6 made a real crash. LFM2.5 used 18 of its 20 minutes for a few floating bricks; Ornith 1.5 shows a blank screen."
+  }
  ]
 }
