@@ -230,16 +230,110 @@ def page_index_epreuves():
   <h1>Every test, the same for every model</h1>
   <p class="sub">Each test is one prompt given to the model, with no help, then automatic checks in a real browser. Not every model has taken every test yet; new tests are added over time.</p>
 </section>
-<section>{blocs}</section>"""
+<section>{blocs}</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench chess --list</p>
+  <h2>Chess</h2>
+  <section class="run">
+    <h3><a href="{racine}chess/opus-vs-astra/">Claude Opus 5.5 vs GPT-6 Astra</a></h3>
+    <p class="meta mono">1 game · 80 moves · graded by Stockfish 19 · episode 5</p>
+    <p class="dim">Two frontier models play chess in their regular chat apps, no engine, no tools. Astra wins by checkmate; Claude explained every move and still lost a rook it thought was protected.</p>
+    <p class="more"><a href="{racine}chess/opus-vs-astra/">Replay the game move by move</a></p>
+  </section>
+</section>"""
     open(os.path.join(SITE, "benchmarks", "index.html"), "w").write(
         page("Benchmarks", "Every KiraBench test: the prompt, the checks and which local models passed them.", racine, corps, "benchmarks"))
+
+
+def page_echecs():
+    """Page de la partie d'échecs de l'ép. 5 (données : data/chess-opus-astra.json, écrit par tools/preparer_echecs.py)."""
+    racine = "../../"
+    G = json.load(open(os.path.join(SITE, "data/chess-opus-astra.json")))
+    mv = G["moves"]
+    hk = lambda n, noir: 2 * (n - 1) + (1 if noir else 0)
+    stats = {}
+    for j in ("opus", "astra"):
+        c = [d for d in mv if d["player"] == j]
+        g = lambda x: sum(1 for d in c if d["grade"] == x)
+        stats[j] = {"best": g("best"), "good": g("good"), "inacc": g("inaccuracy"), "mist": g("mistake"), "blun": g("blunder"),
+                    "acpl": round(sum(d["loss"] for d in c) / len(c)), "min": round(sum(d["secs"] for d in c) / 60), "n": len(c),
+                    "ill": sum(1 for d in c if d.get("illegal"))}
+    so, sa = stats["opus"], stats["astra"]
+    lignes = [("Best moves (within 0.1 pawn of Stockfish)", f'{so["best"]} / {so["n"]}', f'{sa["best"]} / {sa["n"]}'), ("Good moves", so["good"], sa["good"]),
+              ("Inaccuracies ?!", so["inacc"], sa["inacc"]), ("Mistakes ?", so["mist"], sa["mist"]), ("Blunders ??", so["blun"], sa["blun"]),
+              ("Average loss per move (centipawns)", so["acpl"], sa["acpl"]), ("Illegal moves", so["ill"], sa["ill"]),
+              ("Total answer time", f'{so["min"]} min', f'{sa["min"]} min'), ("Explained its moves", "every move", "never"), ("Result", "lost", "won by checkmate")]
+    table = "".join(f'<tr><td>{e(a)}</td><td class="num">{e(b)}</td><td class="num">{e(c)}</td></tr>' for a, b, c in lignes)
+    moments = [(hk(20, 1), "20…Rac8?", "Astra's first slip. Claude misses the chance."), (hk(25, 0), "25.Rc2??", "The rook Claude thought was protected."),
+               (hk(26, 0), "26.Qxc2, illegal", "Claude tries to take back through its own knight."), (hk(43, 1), "43…Na4??", "Astra blunders, still winning."),
+               (hk(70, 1), "70…e1=Q", "A new queen."), (hk(80, 1), "80…Qb2#", "Checkmate.")]
+    chips = "".join(f'<button type="button" data-go="{k}" aria-pressed="false"><b class="mono">{e(t)}</b><span>{e(d)}</span></button>' for k, t, d in moments)
+    video = next((v for v in D.get("videos", []) if v.get("page") == "chess/opus-vs-astra"), None)
+    bouton = f'<a class="btn pri" href="{e(video["url"])}" rel="noopener">▶ Watch the episode</a>' if video else ""
+    donnees = json.dumps(G, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    corps = f"""<section class="hero2">
+  <p class="cmd"><b>$</b> kirabench chess --white claude-opus-5.5 --black gpt-6-astra</p>
+  <h1>GPT-6 Astra beat Claude Opus 5.5 at chess</h1>
+  <p class="sub">One game, 80 moves, played in the regular chat apps: no engine, no tools, no code. Stockfish 19 graded every move. Claude explained every move it played; Astra only ever wrote the move.</p>
+  <div class="actions">{bouton}<a class="btn ghost" href="game.pgn" download>Download the PGN</a></div>
+</section>
+<section data-chess>
+  <p class="cmd"><b>$</b> kirabench replay</p>
+  <h2>Replay the game</h2>
+  <p class="sub">Click a move, drag the slider or use the arrow keys. Under every move of Claude's: what it wrote before playing it.</p>
+  <div class="cz-key" role="group" aria-label="Key moments">{chips}</div>
+  <div class="cz">
+    <div class="cz-left">
+      <div class="cz-boardwrap">
+        <div class="cz-eval" aria-hidden="true"><div class="cz-evalfill"></div></div>
+        <div class="cz-board" role="grid" aria-label="Chessboard"></div>
+      </div>
+      <div class="cz-ctl">
+        <button type="button" data-step="first" aria-label="Starting position">⏮</button><button type="button" data-step="-1" aria-label="Previous move">◀</button>
+        <span class="cz-evaltxt mono" aria-label="Stockfish evaluation">+0.2</span>
+        <button type="button" data-step="1" aria-label="Next move">▶</button><button type="button" data-step="last" aria-label="Final position">⏭</button>
+      </div>
+      <label class="cz-slide"><span class="sr-only">Move</span><input class="cz-range" type="range" min="0" max="160" value="0"><span class="cz-count mono small dim">0 / 160</span></label>
+    </div>
+    <div class="cz-right">
+      <div class="cz-panel" aria-live="polite"></div>
+      <div class="cz-moves" aria-label="All moves"></div>
+    </div>
+  </div>
+  <p class="cmd" style="margin-top:28px"><b>$</b> kirabench eval --graph</p>
+  <div class="cz-curve" title="Click to jump to a move"></div>
+  <p class="small dim">Stockfish's evaluation from White's side after every move (above the line: Claude is better). Dots are blunders. Click to jump.</p>
+</section>
+<section>
+  <p class="cmd"><b>$</b> kirabench chess --stats</p>
+  <h2>The numbers</h2>
+  <p class="sub">Claude played slightly worse on average but blundered far less. One blunder on move 25 was enough: it cost a whole rook.</p>
+  <div class="tablewrap"><table class="cz-stats"><thead><tr><th scope="col">Stockfish 19, depth 20</th><th scope="col" class="num">Claude Opus 5.5 · White</th><th scope="col" class="num">GPT-6 Astra · Black</th></tr></thead><tbody>{table}</tbody></table></div>
+</section>
+<section>
+  <p class="cmd"><b>$</b> man kirabench-chess</p>
+  <h2>How it was played</h2>
+  <dl class="man">
+    <dt>apps</dt><dd><strong>Claude Opus 5.5</strong> on claude.ai, effort high. <strong>GPT-6 Astra</strong> on ChatGPT, effort high. Regular chat apps, no API. A coin toss gave Claude White.</dd>
+    <dt>each turn</dt><dd>The model gets the moves so far and the position (FEN), and answers with one line: <span class="mono">MOVE: …</span>. No engine, no tools, no code.</dd>
+    <dt>relay</dt><dd>A small AI relay (Claude Haiku 5.5) copied the moves between the two tabs. A referee script (python-chess) checked every move: three illegal moves in a row would lose the game.</dd>
+    <dt>grading</dt><dd>Stockfish 19 at depth 20, after the game. Each move is graded by how much evaluation it loses: best up to 0.1 pawn, good up to 0.5, inaccuracy up to 1, mistake up to 2.5, blunder more than 2.5.</dd>
+    <dt>notes</dt><dd>Move 40: the relay cut Claude's answer before its move line; the move counted is the one Claude actually wrote (Kc2). Move 63: ChatGPT hit its usage limit and the game resumed the next morning from the same position, so answer times there leave out the night.</dd>
+  </dl>
+  <p class="small dim" style="margin-top:18px">Chess pieces: Colin M.L. Burnett (cburnett set, CC BY-SA 3.0, via python-chess). Engine: Stockfish (GPLv3). Claude is a trademark of Anthropic, ChatGPT of OpenAI.</p>
+</section>
+<script>window.KB_CHESS={donnees};</script>
+<script src="{racine}assets/chess.js"></script>"""
+    os.makedirs(os.path.join(SITE, "chess", "opus-vs-astra"), exist_ok=True)
+    open(os.path.join(SITE, "chess", "opus-vs-astra", "index.html"), "w").write(
+        page("Claude Opus 5.5 vs GPT-6 Astra: chess", "Replay the full chess game between Claude Opus 5.5 and GPT-6 Astra, move by move, with Stockfish grades and Claude's own explanations.", racine, corps))
 
 
 def versionner():
     """Ajoute ?v=<empreinte> aux fichiers CSS/JS de toutes les pages : le navigateur recharge dès qu'un fichier change."""
     import hashlib, re
     emp = {}
-    for f in ["assets/style.css", "assets/site.js", "assets/lab.js", "assets/kira.js", "assets/palette.js"]:
+    for f in ["assets/style.css", "assets/site.js", "assets/lab.js", "assets/kira.js", "assets/palette.js", "assets/chess.js"]:
         emp[f] = hashlib.sha1(open(os.path.join(SITE, f), "rb").read()).hexdigest()[:8]
     pages = [os.path.join(dp, f) for dp, _, fs in os.walk(SITE) for f in fs if f.endswith(".html") and "/lab/" not in dp and "/.git" not in dp]
     for p in pages:
@@ -256,5 +350,6 @@ for b in D["benchmarks"]:
     page_epreuve(b)
 page_compare()
 page_index_epreuves()
+page_echecs()
 print("versions ajoutées sur", versionner(), "pages")
 print(len(D["models"]), "modèles,", len(D["benchmarks"]), "épreuves, compare.html")

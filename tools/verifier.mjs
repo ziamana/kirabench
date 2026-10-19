@@ -3,7 +3,7 @@
 import { spawn } from 'node:child_process';
 const BASE = process.argv[2] || 'http://127.0.0.1:8131';
 const PAGES = ['', 'results.html', 'benchmarks/', 'benchmarks/bakery-site/', 'benchmarks/snake-game/', 'compare.html', 'compare.html?b=snake-game', 'benchmarks/car-crash/', 'compare.html?b=car-crash',
-  'models/qwen3.5-9b/', 'models/ornith-1.5-9b/', 'models/neohorse-1-9b/', 'models/qwen3.6-35b-a3b/', 'models/lfm2.5-24b-a2b/', 'privacy.html', 'legal.html'];
+  'models/qwen3.5-9b/', 'models/ornith-1.5-9b/', 'models/neohorse-1-9b/', 'models/qwen3.6-35b-a3b/', 'models/lfm2.5-24b-a2b/', 'chess/opus-vs-astra/', 'chess/opus-vs-astra/#m=50', 'privacy.html', 'legal.html'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const port = 9336 + Math.floor(Math.random() * 400);
 // profil neuf à chaque passage + cache désactivé : on vérifie ce que reçoit un nouveau visiteur, pas une vieille copie

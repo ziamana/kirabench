@@ -1,0 +1,10 @@
+[Event "KiraBench episode 5"]
+[Site "https://kirabench.com/chess/opus-vs-astra/"]
+[Date "2026.10.18"]
+[Round "?"]
+[White "Claude Opus 5.5 (claude.ai, effort high)"]
+[Black "GPT-6 Astra (ChatGPT, effort high)"]
+[Result "0-1"]
+[Annotator "Stockfish 19, depth 20"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Na5 10. Bc2 c5 11. d4 Qc7 12. Nbd2 cxd4 13. cxd4 Nc6 14. Nb3 a5 15. Be3 a4 16. Nbd2 Bd7 17. Rc1 Qb7 18. Qe2 Rfe8 19. Bd3 Nb4 20. Bb1 Rac8 $2 21. a3 $2 Nc6 22. d5 Na5 23. Ba2 b4 $6 24. axb4 $2 Qxb4 25. Rc2 $4 Rxc2 26. Qd3 Rxb2 27. Bc4 Nxc4 28. Nxc4 Qb3 $4 29. Qxb3 $2 Rxb3 30. Nfd2 Rb4 31. Rc1 Bb5 $6 32. f3 $6 Rc8 33. Kf2 Bxc4 34. Nxc4 Rbxc4 35. Rxc4 $4 Rxc4 36. Ke2 a3 37. Kd3 Ra4 $4 38. Bc1 $2 a2 39. Bb2 Nd7 $4 40. Kc2 $6 Nc5 41. Ba1 $2 Ra3 42. Kb2 $6 Rb3+ $4 43. Kxa2 Na4 $4 44. Kxb3 Nc5+ 45. Kc4 Kf8 46. Kb5 Ke8 47. Kc6 Kd8 48. Bc3 Nd3 49. Ba5+ Ke8 50. Bc7 Nc5 51. Bxd6 Bxd6 52. Kxd6 Nd7 53. Kc7 $6 Ke7 54. d6+ Ke6 55. g4 $6 Nf6 56. h4 Ne8+ 57. Kc6 Nxd6 58. Kc5 g6 59. h5 gxh5 60. gxh5 f5 $6 61. exf5+ Nxf5 62. Kc4 Ng3 $4 63. h6 Kf5 64. Kd3 Kf4 65. Kd2 Kxf3 66. Ke1 e4 67. Kd2 e3+ 68. Ke1 e2 69. Kd2 Kf2 70. Kd3 e1=Q 71. Kd4 Qe4+ 72. Kc5 Qe6 73. Kb4 Qc6 74. Kb3 Ke3 75. Kb4 Kd4 76. Kb3 Qc4+ 77. Kb2 Kd3 78. Ka3 Qb5 79. Ka2 Kc3 80. Ka1 Qb2# 0-1

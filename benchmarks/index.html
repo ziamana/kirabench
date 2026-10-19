@@ -10,7 +10,7 @@
 <link rel="icon" href="../favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <link rel="preload" href="../assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/style.css?v=9b34c80d">
+<link rel="stylesheet" href="../assets/style.css?v=b20745ca">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -42,6 +42,16 @@
   <p class="dim small">Tested: LFM2.5 24B A2B, Qwen3.6 35B A3B, Ornith 1.5 9B. Most checks passed: <a href="../models/lfm2.5-24b-a2b/#car-crash">LFM2.5 24B A2B</a> (<span class="chk" tabindex="0" role="button" aria-label="5/6 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;A thin floating stack of bricks instead of a wall, a tiny car, and the counter never leaves 0. The automatic checks score it higher than what you see.&quot;]}]">5/6</span>).</p>
   <p class="more"><a href="../benchmarks/car-crash/">Open the test</a> · <a href="../compare.html?b=car-crash">Compare side by side</a></p>
 </section></section>
+<section>
+  <p class="cmd"><b>$</b> kirabench chess --list</p>
+  <h2>Chess</h2>
+  <section class="run">
+    <h3><a href="../chess/opus-vs-astra/">Claude Opus 5.5 vs GPT-6 Astra</a></h3>
+    <p class="meta mono">1 game · 80 moves · graded by Stockfish 19 · episode 5</p>
+    <p class="dim">Two frontier models play chess in their regular chat apps, no engine, no tools. Astra wins by checkmate; Claude explained every move and still lost a rook it thought was protected.</p>
+    <p class="more"><a href="../chess/opus-vs-astra/">Replay the game move by move</a></p>
+  </section>
+</section>
 </main>
 <footer><div class="wrap">
   <span>KiraBench. Kira is an AI host; every test runs on real hardware. Model names and logos belong to their owners.</span>
