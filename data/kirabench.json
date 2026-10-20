@@ -584,7 +584,7 @@
   },
   {
    "url": "https://youtu.be/x41qiNX41QU",
-   "title": "LFM2.5 24B vs Qwen3.6 35B on a 12GB GPU",
+   "title": "LFM2.5 24B vs Qwen3.6 35B: Can the Smaller One Win?",
    "date": "2026-10-18",
    "models": [
     "qwen3.6-35b-a3b",
