@@ -20,7 +20,7 @@ import html, json, os, sys
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 D = json.load(open(os.path.join(SITE, "data/kirabench.json")))
 APERCU = "--apercu" in sys.argv
-PUB = {v["ep"] for v in D.get("videos", []) if v.get("publie")}
+PUB = {v["ep"] for v in D.get("videos", []) if v.get("publie") and "ep" in v}
 vis = lambda x: APERCU or x.get("ep") is None or x["ep"] in PUB
 
 MODELS = [m for m in D["models"] if vis(m)]
@@ -29,7 +29,8 @@ B = {b["id"]: b for b in D["benchmarks"]}
 R = {r["id"]: r for r in D["rigs"]}
 RUNS = [r for r in D["runs"] if vis(r) and r["model"] in M]
 SPEED = [s for s in D["speed"] if vis(s) and s["model"] in M]
-VIDEOS = sorted([v for v in D.get("videos", []) if vis(v)], key=lambda v: -v["ep"])
+VIDEOS = sorted([v for v in D.get("videos", []) if vis(v) and v.get("publie", True)], key=lambda v: (v.get("date", ""), v.get("ep", 0)), reverse=True)
+quoi = lambda v: v.get("label") or f'Episode {v["ep"]}'  # vidéo hors série (actu) : "label", sinon numéro d'épisode
 VERDICTS = [v for v in D.get("verdicts", []) if vis(v) and all(x in M for x in v["ranking"])]
 TIERS = D.get("tiers") if D.get("tiers") and vis(D["tiers"]) else None
 e = lambda s: html.escape(str(s), quote=True)
@@ -252,7 +253,7 @@ def bloc_installer():
 
 def carte_video(v, grande=False):
     url = v.get("url") or "#"
-    img = f'<img src="{e(v["thumb"])}" alt="" width="960" height="540"{"" if grande else " loading=\"lazy\""}>' if v.get("thumb") else f'<span class="nothumb">Episode {v["ep"]}</span>'
+    img = f'<img src="{e(v["thumb"])}" alt="" width="960" height="540"{"" if grande else " loading=\"lazy\""}>' if v.get("thumb") else f'<span class="nothumb">{e(quoi(v))}</span>'
     date = v.get("date", "")
     return url, img, date
 
@@ -264,11 +265,11 @@ def bloc_videos():
     page_ep = f'<a class="btn ghost" href="{e(v["page"])}/">Replay the game move by move</a>' if v.get("page") else ""
     modeles = [M[x] for x in v.get("models", []) if x in M]
     lignes = f'<p class="vm">Models: {", ".join(f"<a href=\"models/{m["id"]}/\">{e(m["name"])}</a>" for m in modeles)}</p>' if modeles else ""
-    autres = "".join(f"""<li><a href="{e(x.get("url") or "#")}" rel="noopener">{carte_video(x)[1]}<span><b>{e(x["title"])}</b><small>Episode {x["ep"]}{" · " + e(x["date"]) if x.get("date") else ""}</small></span></a></li>""" for x in VIDEOS[1:])
+    autres = "".join(f"""<li><a href="{e(x.get("url") or "#")}" rel="noopener">{carte_video(x)[1]}<span><b>{e(x["title"])}</b><small>{e(quoi(x))}{" · " + e(x["date"]) if x.get("date") else ""}</small></span></a></li>""" for x in VIDEOS[1:])
     return f"""<div class="vid">
   <a class="vthumb" href="{e(url)}" rel="noopener" aria-label="Watch on YouTube: {e(v["title"])}">{img}<span class="vplay">{LECTURE}</span></a>
   <div class="vtext">
-    <p class="vep">Episode {v["ep"]}{" · " + e(date) if date else ""}</p>
+    <p class="vep">{e(quoi(v))}{" · " + e(date) if date else ""}</p>
     <h3>{e(v["title"])}</h3>
     {lignes}
     <div class="actions"><a class="btn pri" href="{e(url)}" rel="noopener">Watch on YouTube</a>{page_ep}</div>

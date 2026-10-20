@@ -649,6 +649,15 @@
    "ep": 5,
    "publie": true,
    "thumb": "assets/img/videos/ep05.jpg"
+  },
+  {
+   "url": "https://youtu.be/dEJ359qEN5A",
+   "title": "DeepSeek Just Gave Away Its Engine",
+   "date": "2026-10-20",
+   "models": [],
+   "publie": true,
+   "thumb": "assets/img/videos/deepinfer.jpg",
+   "label": "News"
   }
  ],
  "verdicts": [
