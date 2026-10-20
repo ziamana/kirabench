@@ -3,115 +3,153 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KiraBench · Which local AI models run on your GPU</title>
-<meta name="description" content="Real, reproducible benchmarks of local AI models on used consumer GPUs. Same checked tasks on every card, failures included.">
+<title>KiraBench · What local AI model should you run on your GPU?</title>
+<meta name="description" content="Which local AI model should you run on your GPU? Real tests on an RTX 2060 12 GB with 32 GB of RAM: what each model built, how fast it writes, failures included.">
 <meta name="theme-color" content="#0f1311">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=b20745ca">
+<link rel="stylesheet" href="assets/style.css?v=67eb0b1f">
 </head>
 <body>
-<!--
-THESIS: A benchmark of local AI on used consumer GPUs (the card changes over time), you can read like a terminal session, not a neon "AI" landing page: the hero runs the actual command and shows its honest output.
-OWN-WORLD: graphite #0f1311 ground, one matte green #78d69b for prompts, links, bars; amber #e5b660 only for failures; Red Hat Display/Text for reading, Red Hat Mono for commands and numbers, Silkscreen for the wordmark only. Kira 32x32 pixel art in muted greens. Thin rules, no glow, no grid.
-STORY: understand what KiraBench tests and on what card, trust it because failures show too, then read results, get an alert, or watch.
-FIRST VIEWPORT: left, H1 "Which local AI models actually run on your GPU?" with "your GPU" in green and a thin underline, lead, primary "See the results" + ghost "Get model alerts". Right, terminal window: Kira on the left, typed session running kirabench on the rig.
-FORM: brief-pinned direction (owner: keep Kira + terminal, less neon), concept roll degraded (no challengers). Signature: typed session once on load.
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
--->
 <header class="top"><div class="wrap">
   <a class="mark" href="./" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
-  <nav aria-label="Main"><a href="results.html">Results</a><a href="benchmarks/">Benchmarks</a><a class="hide-s" href="compare.html">Compare</a><a class="hide-s" href="#alerts">Alerts</a></nav>
+  <nav aria-label="Main"><a href="results.html">Results</a><a href="benchmarks/">Benchmarks</a><a href="./#videos">Videos</a><a class="hide-s" href="compare.html">Compare</a><a class="hide-s" href="./#alerts">Alerts</a></nav>
 </div></header>
-
 <main class="wrap">
-  <div class="hero">
+<section class="install" id="install">
+  <div class="intro">
+    <div class="kira" data-kira="neutre" data-pad="1"></div>
+    <h1>What should you run on your GPU?</h1>
+    <p class="lead">I'm Kira. Every local AI model gets the same three jobs on a real RTX 2060 12 GB with 32 GB of system RAM. You see what it built, how fast it writes, and where it failed.</p>
+  </div>
+  <fieldset class="vram"><legend>How much memory does your graphics card have?</legend><div class="seg2"><input type="radio" name="vram" id="vram-8" value="8"><label for="vram-8">8 GB</label><input type="radio" name="vram" id="vram-12" value="12" checked><label for="vram-12">12 GB</label><input type="radio" name="vram" id="vram-16" value="16"><label for="vram-16">16 GB</label><input type="radio" name="vram" id="vram-24" value="24"><label for="vram-24">24 GB+</label></div></fieldset>
+  <div class="vpanel" data-v="8" role="region" aria-label="8 GB of GPU memory"><p class="badge est">Estimate, not measured</p>
+<div class="estimate"><p>We have only measured on a 12 GB card so far. This is an estimate from file sizes, not a measurement.</p><p>The 9B models (Qwen 3.5 9B, Ornith 1.5, NeoHorse 1) are 5.2 to 5.7 GB files and used 7.2 to 7.4 GB of our card with 64k of context. On 8 GB that is very tight: plan on a shorter context.</p><p>Mixture-of-experts models with the experts in system RAM used 3 GB or less of our card (Qwen3.6 35B A3B: 3.0 GB, LFM2.5 24B: 1.6 GB). They may run on 8 GB too, if you have 32 GB of system RAM.</p></div>
+<p class="soon">Real results for this size: coming soon. <a href="#alerts">Get an alert when they are in</a>.</p></div><div class="vpanel" data-v="12" role="region" aria-label="12 GB of GPU memory"><p class="badge ok">Measured on our RTX 2060 12 GB with 32 GB of system RAM</p><div class="picks n2"><article class="pc">
+  <h3>Coding with an agent</h3>
+  <a class="pm" href="models/qwen3.6-35b-a3b/"><img class="mlogo sm" src="assets/logos/qwen.svg" alt="" width="56" height="56"><span><b>Qwen3.6 35B A3B</b></span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <p>It won all three of our tests, including the only real car crash. It is a mixture of experts: the experts sit in system RAM and the card keeps the rest.</p>
+  <ul class="facts"><li>Writes <b>24.5</b> tokens per second</li><li>Passed <b><span class="chk" tabindex="0" role="button" aria-label="13 of 15 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Navigation bar, big header, 8 products with descriptions, hours for every day.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Saved one folder above the folder it was given: our checker found nothing, so we tested the file by hand.&quot;, &quot;The Game Over box spills outside the board.&quot;]}, {&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;A city at night, the car hits the wall, smoke, 7 bricks fall. Light physics, but a real crash.&quot;]}]">13 of 15</span></b> checks</li><li>32 GB of system RAM (the file is 22.7 GB)</li></ul>
+</article><article class="pc">
+  <h3>Quick questions and small scripts</h3>
+  <a class="pm" href="models/qwen3.5-9b/"><img class="mlogo sm" src="assets/logos/qwen.svg" alt="" width="56" height="56"><span><b>Qwen 3.5 9B</b></span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <p>All of it stays on the card, and it passed every check on the website and Snake tests.</p>
+  <ul class="facts"><li>Writes <b>45.2</b> tokens per second</li><li>Passed <b><span class="chk" tabindex="0" role="button" aria-label="9 of 9 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: []}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 150 ms: classic speed.&quot;]}]">9 of 9</span></b> checks</li><li>About 7.4 GB of the card, with 64k of context</li></ul>
+</article></div></div><div class="vpanel" data-v="16" role="region" aria-label="16 GB of GPU memory"><p class="badge est">Estimate, not measured</p>
+<div class="estimate"><p>We have not tested a 16 GB card. This is an estimate from file sizes, not a measurement.</p><p>Everything that ran entirely on our 12 GB card fits on yours, with room for more context.</p><p>Mixture-of-experts models like Qwen3.6 35B A3B (a 22.7 GB file) still need system RAM, but more of the experts can stay on the card.</p></div>
+<p class="soon">Real results for this size: coming soon. <a href="#alerts">Get an alert when they are in</a>.</p></div><div class="vpanel" data-v="24" role="region" aria-label="24 GB+ of GPU memory"><p class="badge est">Estimate, not measured</p>
+<div class="estimate"><p>We have not tested a 24 GB card. This is an estimate from file sizes, not a measurement.</p><p>Qwen3.6 35B A3B is a 22.7 GB file: on 24 GB, most or all of it could stay on the card, with a short context.</p><p>Every model that ran entirely on our 12 GB card fits easily.</p></div>
+<p class="soon">Real results for this size: coming soon. <a href="#alerts">Get an alert when they are in</a>.</p></div>
+</section>
+<section id="videos">
+  <h2>Latest video</h2>
+  <div class="vid">
+  <a class="vthumb" href="https://youtu.be/HzGZzA3B1ko" rel="noopener" aria-label="Watch on YouTube: Claude Opus 5.5 vs GPT-6 Astra: Chess"><img src="assets/img/videos/ep05.jpg" alt="" width="960" height="540"><span class="vplay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span></a>
+  <div class="vtext">
+    <p class="vep">Episode 5 · 2026-10-19</p>
+    <h3>Claude Opus 5.5 vs GPT-6 Astra: Chess</h3>
+    
+    <div class="actions"><a class="btn pri" href="https://youtu.be/HzGZzA3B1ko" rel="noopener">Watch on YouTube</a><a class="btn ghost" href="chess/opus-vs-astra/">Replay the game move by move</a></div>
+  </div>
+</div>
+<h3 class="sub3">Earlier episodes</h3><ul class="vlist"><li><a href="https://youtu.be/x41qiNX41QU" rel="noopener"><img src="assets/img/videos/ep04.jpg" alt="" width="960" height="540" loading="lazy"><span><b>LFM2.5 24B vs Qwen3.6 35B: Can the Smaller One Win?</b><small>Episode 4 · 2026-10-18</small></span></a></li><li><a href="https://youtu.be/fvvTnrv_aiw" rel="noopener"><img src="assets/img/videos/ep03.jpg" alt="" width="960" height="540" loading="lazy"><span><b>Qwen 3.5 9B vs Ornith 1.5 9B vs NeoHorse 9B</b><small>Episode 3 · 2026-10-17</small></span></a></li></ul>
+  <h2 class="h2b" id="gallery">What the models built</h2>
+<p class="sub">The real files each model wrote from one prompt, with no help. Open one to play it in your browser.</p>
+<div class="gal"><div class="seg2" role="group" aria-label="Test"><input type="radio" name="gal" id="gal-car-crash" checked><label for="gal-car-crash">Car crash</label><input type="radio" name="gal" id="gal-snake-game"><label for="gal-snake-game">Snake</label><input type="radio" name="gal" id="gal-bakery-site"><label for="gal-bakery-site">Bakery website</label></div><div class="gpanel" data-g="car-crash" role="region" aria-label="Car crash (2D physics)">
+  <p class="gp">Same prompt for every model: <q>Create a fun 2D physics animation drawn on a canvas, in the current folder (index.html plus any CSS and JavaScript files you need).</q> <a href="benchmarks/car-crash/">The full test</a> · <a href="compare.html?b=car-crash">Compare side by side</a></p>
+  <div class="tiles"><figure class="tile">
+<a class="shot" href="lab/lfm2.5-24b-a2b/car-crash/index.html" target="_blank" rel="noopener" aria-label="Open car crash (2d physics) by LFM2.5 24B A2B (new tab)"><img src="assets/img/lfm2.5-24b-a2b-car-crash.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open and play</span></a>
+<figcaption><a href="models/lfm2.5-24b-a2b/#car-crash"><b>LFM2.5 24B A2B</b></a><span class="res">Passed 5 of 6 · 18 min 27 s</span><span class="say">A thin floating stack of bricks instead of a wall, a tiny car, and the counter never leaves 0.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/ornith-1.5-9b/car-crash/index.html" target="_blank" rel="noopener" aria-label="Open car crash (2d physics) by Ornith 1.5 9B (new tab)"><img src="assets/img/ornith-1.5-9b-car-crash.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open and play</span></a>
+<figcaption><a href="models/ornith-1.5-9b/#car-crash"><b>Ornith 1.5 9B</b></a><span class="res">Passed 4 of 6 · 6 min 46 s</span><span class="say">Blank screen: one variable (running) is never defined, so the animation dies before it starts.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/qwen3.6-35b-a3b/car-crash/index.html" target="_blank" rel="noopener" aria-label="Open car crash (2d physics) by Qwen3.6 35B A3B (new tab)"><img src="assets/img/qwen3.6-35b-a3b-car-crash.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open and play</span></a>
+<figcaption><a href="models/qwen3.6-35b-a3b/#car-crash"><b>Qwen3.6 35B A3B</b></a><span class="res">Passed 4 of 6 · 6 min 32 s</span><span class="say">A city at night, the car hits the wall, smoke, 7 bricks fall.</span></figcaption></figure></div>
+</div><div class="gpanel" data-g="snake-game" role="region" aria-label="Snake game">
+  <p class="gp">Same prompt for every model: <q>Create a playable Snake game in the current folder (index.html plus any CSS and JavaScript files you need).</q> <a href="benchmarks/snake-game/">The full test</a> · <a href="compare.html?b=snake-game">Compare side by side</a></p>
+  <div class="tiles"><figure class="tile">
+<a class="shot" href="lab/qwen3.5-9b/snake-game/index.html" target="_blank" rel="noopener" aria-label="Open snake game by Qwen 3.5 9B (new tab)"><img src="assets/img/qwen3.5-9b-snake-game.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open and play</span></a>
+<figcaption><a href="models/qwen3.5-9b/#snake-game"><b>Qwen 3.5 9B</b></a><span class="res">Passed 5 of 5 · 1 min 04 s</span><span class="say">One step every 150 ms: classic speed.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/ornith-1.5-9b/snake-game/index.html" target="_blank" rel="noopener" aria-label="Open snake game by Ornith 1.5 9B (new tab)"><img src="assets/img/ornith-1.5-9b-snake-game.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open and play</span></a>
+<figcaption><a href="models/ornith-1.5-9b/#snake-game"><b>Ornith 1.5 9B</b></a><span class="res">Passed 5 of 5 · 43 s</span><span class="say">One step every 100 ms: fast but playable.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/qwen3.6-35b-a3b/snake-game/index.html" target="_blank" rel="noopener" aria-label="Open snake game by Qwen3.6 35B A3B (new tab)"><img src="assets/img/qwen3.6-35b-a3b-snake-game.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open and play</span></a>
+<figcaption><a href="models/qwen3.6-35b-a3b/#snake-game"><b>Qwen3.6 35B A3B</b></a><span class="res">Passed 5 of 5 · 1 min 41 s</span><span class="say">Saved one folder above the folder it was given: our checker found nothing, so we tested the file by hand.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/neohorse-1-9b/snake-game/index.html" target="_blank" rel="noopener" aria-label="Open snake game by NeoHorse 1 9B (new tab)"><img src="assets/img/neohorse-1-9b-snake-game.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open and play</span></a>
+<figcaption><a href="models/neohorse-1-9b/#snake-game"><b>NeoHorse 1 9B</b></a><span class="res">Passed 4 of 5 · 54 s</span><span class="say">The snake moves one cell per screen refresh (60 per second on a 60 Hz screen), so every new game ends almost instantly.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/lfm2.5-24b-a2b/snake-game/index.html" target="_blank" rel="noopener" aria-label="Open snake game by LFM2.5 24B A2B (new tab)"><img src="assets/img/lfm2.5-24b-a2b-snake-game.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open and play</span></a>
+<figcaption><a href="models/lfm2.5-24b-a2b/#snake-game"><b>LFM2.5 24B A2B</b></a><span class="res">Passed 4 of 5 · 4 min 27 s</span><span class="say">The loop moves the snake 10 times per second but never redraws the screen: nothing moves, then Game Over.</span></figcaption></figure></div>
+</div><div class="gpanel" data-g="bakery-site" role="region" aria-label="Bakery website">
+  <p class="gp">Same prompt for every model: <q>Create a complete website for a small French bakery called &quot;Le Petit Four&quot; in the current folder (index.html plus any CSS and JavaScript files you need).</q> <a href="benchmarks/bakery-site/">The full test</a> · <a href="compare.html?b=bakery-site">Compare side by side</a></p>
+  <div class="tiles"><figure class="tile">
+<a class="shot" href="lab/qwen3.5-9b/bakery-site/index.html" target="_blank" rel="noopener" aria-label="Open bakery website by Qwen 3.5 9B (new tab)"><img src="assets/img/qwen3.5-9b-bakery-site.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open the site</span></a>
+<figcaption><a href="models/qwen3.5-9b/#bakery-site"><b>Qwen 3.5 9B</b></a><span class="res">Passed 4 of 4 · 1 min 50 s</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/neohorse-1-9b/bakery-site/index.html" target="_blank" rel="noopener" aria-label="Open bakery website by NeoHorse 1 9B (new tab)"><img src="assets/img/neohorse-1-9b-bakery-site.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open the site</span></a>
+<figcaption><a href="models/neohorse-1-9b/#bakery-site"><b>NeoHorse 1 9B</b></a><span class="res">Passed 4 of 4 · 1 min 53 s</span><span class="say">Its tagline says every &quot;croquette&quot; (kibble) is made with love.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/qwen3.6-35b-a3b/bakery-site/index.html" target="_blank" rel="noopener" aria-label="Open bakery website by Qwen3.6 35B A3B (new tab)"><img src="assets/img/qwen3.6-35b-a3b-bakery-site.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open the site</span></a>
+<figcaption><a href="models/qwen3.6-35b-a3b/#bakery-site"><b>Qwen3.6 35B A3B</b></a><span class="res">Passed 4 of 4 · 7 min 25 s</span><span class="say">Navigation bar, big header, 8 products with descriptions, hours for every day.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/lfm2.5-24b-a2b/bakery-site/index.html" target="_blank" rel="noopener" aria-label="Open bakery website by LFM2.5 24B A2B (new tab)"><img src="assets/img/lfm2.5-24b-a2b-bakery-site.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open the site</span></a>
+<figcaption><a href="models/lfm2.5-24b-a2b/#bakery-site"><b>LFM2.5 24B A2B</b></a><span class="res">Passed 4 of 4 · 4 min 05 s</span><span class="say">Works, but plain: no navigation, and the Contact title sits alone on the left.</span></figcaption></figure><figure class="tile">
+<a class="shot" href="lab/ornith-1.5-9b/bakery-site/index.html" target="_blank" rel="noopener" aria-label="Open bakery website by Ornith 1.5 9B (new tab)"><img src="assets/img/ornith-1.5-9b-bakery-site.jpg" alt="" width="480" height="300" loading="lazy"><span class="open">Open the site</span></a>
+<figcaption><a href="models/ornith-1.5-9b/#bakery-site"><b>Ornith 1.5 9B</b></a><span class="res">Passed 3 of 4 · 1 min 51 s</span><span class="say">The error messages and the thank-you message are already visible when the page opens, before anyone types.</span></figcaption></figure></div>
+</div></div>
+</section>
+<section id="table">
+  <h2>Every model on our 12 GB card</h2>
+  <p class="sub">In plain words. Hover or tap a score to see each check. Last run: 2026-10-18.</p>
+  <div class="tablewrap plain"><table class="simple"><thead><tr><th scope="col">Model</th><th scope="col">Runs from</th><th scope="col">Speed</th><th scope="col">Tests</th></tr></thead>
+<tbody><tr><th scope="row"><a href="models/qwen3.5-9b/"><img class="mlogo xs" src="assets/logos/qwen.svg" alt="" width="56" height="56">Qwen 3.5 9B</a></th>
+<td data-l="Runs from">The card only<small>Q4_K_M, 5.74 GB file</small></td><td data-l="Speed">Writes <b>45.2</b> tokens/s<small>at 64k context</small></td><td data-l="Tests">Passed <b><span class="chk" tabindex="0" role="button" aria-label="9 of 9 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: []}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 150 ms: classic speed.&quot;]}]">9 of 9</span></b> checks<small>Bakery website, snake game</small></td></tr><tr><th scope="row"><a href="models/neohorse-1-9b/"><span class="mlogo xs mono-logo" aria-hidden="true">N1</span>NeoHorse 1 9B</a></th>
+<td data-l="Runs from">The card only<small>Q4_K_M, 5.23 GB file</small></td><td data-l="Speed">Writes <b>47.1</b> tokens/s<small>at 64k context</small></td><td data-l="Tests">Passed <b><span class="chk" tabindex="0" role="button" aria-label="8 of 9 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Its tagline says every \&quot;croquette\&quot; (kibble) is made with love.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: false}], &quot;notes&quot;: [&quot;The snake moves one cell per screen refresh (60 per second on a 60 Hz screen), so every new game ends almost instantly.&quot;]}]">8 of 9</span></b> checks<small>Bakery website, snake game</small></td></tr><tr><th scope="row"><a href="models/lfm2.5-24b-a2b/"><img class="mlogo xs" src="assets/logos/liquid.png" alt="" width="56" height="56">LFM2.5 24B A2B</a></th>
+<td data-l="Runs from">Card + system RAM<small>Q4_K_M, 14.5 GB file</small></td><td data-l="Speed">Writes <b>24.8</b> tokens/s<small>at 64k context</small></td><td data-l="Tests">Passed <b><span class="chk" tabindex="0" role="button" aria-label="13 of 15 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Works, but plain: no navigation, and the Contact title sits alone on the left.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;The loop moves the snake 10 times per second but never redraws the screen: nothing moves, then Game Over.&quot;]}, {&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;A thin floating stack of bricks instead of a wall, a tiny car, and the counter never leaves 0. The automatic checks score it higher than what you see.&quot;]}]">13 of 15</span></b> checks<small>Bakery website, snake game, car crash</small></td></tr><tr><th scope="row"><a href="models/qwen3.6-35b-a3b/"><img class="mlogo xs" src="assets/logos/qwen.svg" alt="" width="56" height="56">Qwen3.6 35B A3B</a></th>
+<td data-l="Runs from">Card + system RAM<small>UD-Q4_K_M, 22.7 GB file</small></td><td data-l="Speed">Writes <b>24.5</b> tokens/s<small>at 64k context</small></td><td data-l="Tests">Passed <b><span class="chk" tabindex="0" role="button" aria-label="13 of 15 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Navigation bar, big header, 8 products with descriptions, hours for every day.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Saved one folder above the folder it was given: our checker found nothing, so we tested the file by hand.&quot;, &quot;The Game Over box spills outside the board.&quot;]}, {&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;A city at night, the car hits the wall, smoke, 7 bricks fall. Light physics, but a real crash.&quot;]}]">13 of 15</span></b> checks<small>Bakery website, snake game, car crash</small></td></tr><tr><th scope="row"><a href="models/ornith-1.5-9b/"><img class="mlogo xs" src="assets/logos/ornith.png" alt="" width="56" height="56">Ornith 1.5 9B</a></th>
+<td data-l="Runs from">The card only<small>Q4_K_M, 5.37 GB file</small></td><td data-l="Speed">Writes <b>47.1</b> tokens/s<small>at 64k context</small></td><td data-l="Tests">Passed <b><span class="chk" tabindex="0" role="button" aria-label="12 of 15 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: false}], &quot;notes&quot;: [&quot;The error messages and the thank-you message are already visible when the page opens, before anyone types.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 100 ms: fast but playable.&quot;]}, {&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Blank screen: one variable (running) is never defined, so the animation dies before it starts. Bonus run after LFM2.5&#x27;s crash.&quot;]}]">12 of 15</span></b> checks<small>Bakery website, snake game, car crash</small></td></tr></tbody></table></div>
+<p class="notes">One run per test, 20 minutes each, on the same card. Speeds from episodes 3 and 4: 64k context, measured with llama-bench.</p>
+  <a class="more" href="results.html">Full table with reading speed and memory used <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</section>
+<section id="method">
+  <h2>How Kira tests</h2>
+  <dl class="man">
+    <dt>One real card</dt>
+    <dd>A <strong>second-hand RTX 2060 12 GB</strong>, with 32 GB of system RAM. Nothing rented in the cloud, and every result says which card it ran on.</dd>
+    <dt>Same jobs for everyone</dt>
+    <dd>Each model drives the Pi coding agent: <strong>one prompt, no help, 20 minutes</strong>. Then a script checks the result in a real browser. No model grades another model.</dd>
+    <dt>Failures shown</dt>
+    <dd>Too slow, broken game, nothing written in 20 minutes: <strong>it goes on the site too</strong>, with the files it wrote.</dd>
+  </dl>
+</section>
+<section id="alerts">
+  <div class="alert">
+    <div class="kira" data-kira="verdict" data-pad="2"></div>
     <div>
-      <h1>Which local AI models actually run on <span class="gb">your&nbsp;GPU</span>?</h1>
-      <p class="lead">I'm Kira, an AI host. Every used GPU that passes through the lab runs <strong>the same checked tasks</strong> on every new open-weight model. You get real speed, real scores, and the failures too.</p>
-      <div class="actions">
-        <a class="btn pri" href="results.html">See the results
-          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <a class="btn ghost" href="#alerts">Get model alerts</a>
-      </div>
-    </div>
-
-    <div class="term" role="img" aria-label="Terminal: Kira runs the benchmark on lab card number one, an RTX 2060 12 GB. No results yet, three models queued.">
-      <div class="bar"><i></i><i></i><i></i><span>kira@bench: ~</span></div>
-      <div class="body">
-        <div class="kira" data-kira="neutre" data-pad="2"></div>
-<pre aria-hidden="true"><span class="l cmd"><span class="p">$</span> <span class="c">kirabench run --gpu rtx2060-12g</span></span>
-<span class="l"><span class="k">card </span>  RTX 2060 12 GB  <span class="k">(lab card #1)</span></span>
-<span class="l"><span class="k">tests</span>  checked by script</span>
-<span class="l"><span class="k">queue</span>  qwen-3.8-27b
-<span class="k">     </span>  ornith-1.5-35b
-<span class="k">     </span>  granite</span>
-<span class="l"><span class="k">state</span>  <span class="w">waiting for the card</span></span>
-<span class="l cmd"><span class="p">$</span> <span class="caret"></span></span></pre>
-      </div>
+      <h2>Know when a new model wins on your GPU</h2>
+      <p class="sub" style="margin:0">One short email when a tested model takes the top spot for your memory size. Nothing else unless you tick the box.</p>
+      <form class="signup" novalidate>
+        <div class="row">
+          <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" aria-label="Email address">
+          <select name="vram" aria-label="Your GPU memory">
+            <option value="" selected disabled>Your GPU memory</option>
+            <option value="6">6 GB</option><option value="8">8 GB</option><option value="10">10 GB</option><option value="12">12 GB</option>
+            <option value="16">16 GB</option><option value="20">20 GB</option><option value="24">24 GB or more</option>
+          </select>
+          <button class="btn pri" type="submit">Alert me</button>
+        </div>
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="check"><input type="checkbox" name="news"> Also send me the weekly KiraBench newsletter (new videos and tests).</label>
+        <p class="fine">Unsubscribe in one click from any email. See the <a href="privacy.html">privacy policy</a>.</p>
+        <p class="msg" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </div>
-
-  <p class="cmd" style="margin:0 0 10px"><b>$</b> kirabench rig --current</p>
-  <dl class="rig" id="rig"></dl>
-
-  <section>
-    <p class="cmd"><b>$</b> kirabench results --top 5</p>
-    <h2>Latest results</h2>
-    <p class="sub">Checks is the share of automatic browser checks passed. Prefill is how fast the model reads, decode is how fast it writes, in tokens per second.</p>
-    <div id="results" data-limit="5"></div>
-    <a class="more" href="results.html">Full table with sorting and filters →</a>
-  </section>
-
-  <section id="method">
-    <p class="cmd"><b>$</b> man kirabench</p>
-    <h2>How Kira tests</h2>
-    <p class="sub">Three rules, the same for every model.</p>
-    <dl class="man">
-      <dt>real used cards</dt>
-      <dd><strong>Consumer GPUs bought second-hand</strong>, the kind most people can actually afford. Nothing rented in the cloud, and every result says which card it ran on.</dd>
-      <dt>checked answers</dt>
-      <dd>Every task has an answer a script can verify: code that must pass its tests, numbers that must match. <strong>No model grades another model.</strong></dd>
-      <dt>failures shown</dt>
-      <dd>Out of memory, broken output, too slow to use: <strong>it goes in the table too.</strong> That is the part leaderboards leave out.</dd>
-    </dl>
-  </section>
-
-  <section id="alerts">
-    <div class="alert">
-      <div class="kira" data-kira="verdict" data-pad="2"></div>
-      <div>
-        <h2>Know when a new model wins on your GPU</h2>
-        <p class="sub" style="margin:0">One short email when a tested model takes the top spot for your memory size. Nothing else unless you tick the box.</p>
-        <form class="signup" novalidate>
-          <div class="row">
-            <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" aria-label="Email address">
-            <select name="vram" aria-label="Your GPU memory">
-              <option value="" selected disabled>Your GPU memory</option>
-              <option value="6">6 GB</option><option value="8">8 GB</option><option value="10">10 GB</option><option value="12">12 GB</option>
-              <option value="16">16 GB</option><option value="20">20 GB</option><option value="24">24 GB or more</option>
-            </select>
-            <button class="btn pri" type="submit">Alert me</button>
-          </div>
-          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <label class="check"><input type="checkbox" name="news"> Also send me the weekly KiraBench newsletter (new videos and tests).</label>
-          <p class="fine">Unsubscribe in one click from any email. See the <a href="privacy.html">privacy policy</a>.</p>
-          <p class="msg" role="status" aria-live="polite"></p>
-        </form>
-      </div>
-    </div>
-  </section>
+</section>
 </main>
-
 <footer><div class="wrap">
-  <span>KiraBench. Kira is an AI host; every test runs on real hardware.</span>
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware. Model names and logos belong to their owners.</span>
   <nav aria-label="Footer"><a href="results.html">Results</a><a href="privacy.html">Privacy</a><a href="legal.html">Legal notice</a></nav>
 </div></footer>
 <script src="assets/palette.js?v=4d212828"></script>
 <script src="assets/kira.js?v=e03618f0"></script>
-<script src="assets/site.js?v=025b6613"></script>
-<script src="assets/lab.js?v=4960febb"></script>
+<script src="assets/site.js?v=380b4c2e"></script>
+<script src="assets/lab.js?v=993cef75"></script>
 </body>
 </html>

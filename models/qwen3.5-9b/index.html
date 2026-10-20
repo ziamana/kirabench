@@ -4,76 +4,74 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Qwen 3.5 9B · KiraBench</title>
-<meta name="description" content="Qwen 3.5 9B tested on real hardware: speed, the websites and games it built, and every check it passed or failed.">
+<meta name="description" content="Qwen 3.5 9B tested on a real RTX 2060 12 GB: what it built, every check it passed or failed, and how fast it runs.">
 <meta name="theme-color" content="#0f1311">
 <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../../favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 <link rel="preload" href="../../assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../../assets/style.css?v=b20745ca">
+<link rel="stylesheet" href="../../assets/style.css?v=67eb0b1f">
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="mark" href="../../" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
-  <nav aria-label="Main"><a href="../../results.html">Results</a><a href="../../benchmarks/">Benchmarks</a><a class="hide-s" href="../../compare.html">Compare</a><a class="hide-s" href="../../#alerts">Alerts</a></nav>
+  <nav aria-label="Main"><a href="../../results.html">Results</a><a href="../../benchmarks/">Benchmarks</a><a href="../../#videos">Videos</a><a class="hide-s" href="../../compare.html">Compare</a><a class="hide-s" href="../../#alerts">Alerts</a></nav>
 </div></header>
 <main class="wrap">
 <section class="hero2">
-  <p class="cmd"><b>$</b> kirabench model qwen3.5-9b</p>
-  <div class="mhead"><img class="mlogo" src="../../assets/logos/qwen.svg" alt="" width="56" height="56"><h1>Qwen 3.5 9B</h1></div>
+  <div class="mhead"><img class="mlogo" src="../../assets/logos/qwen.svg" alt="" width="56" height="56"><div><h1>Qwen 3.5 9B</h1></div></div>
   <p class="sub">The original model. Ornith 1.5 9B and NeoHorse 1 9B are both further-trained versions of it.</p>
-  <dl class="rig"><div><dt>creator</dt><dd>Qwen (Alibaba)</dd></div><div><dt>based on</dt><dd>original model</dd></div><div><dt>license</dt><dd>Apache 2.0</dd></div><div><dt>parameters</dt><dd>9.2 B</dd></div><div><dt>weights</dt><dd><a href="https://huggingface.co/Qwen/Qwen3.5-9B" rel="noopener">Hugging Face</a></dd></div><div><dt>video</dt><dd><a href="https://youtu.be/fvvTnrv_aiw" rel="noopener">▶ Qwen 3.5 9B vs Ornith 1.5 9B vs NeoHorse 9B</a></dd></div></dl>
+  <dl class="man verdict"><dt>Pick it if</dt><dd>You want something that works on the first try: it passed every check, and it is good at using tools.</dd><dt>Watch out</dt><dd>The design is correct but not the most polished. Reviewers find it weaker on large changes spread over many files.</dd></dl>
+  <div class="actions"><a class="btn ghost" href="https://youtu.be/fvvTnrv_aiw" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>Episode 3: Qwen 3.5 9B vs Ornith 1.5 9B vs NeoHorse 9B</a></div>
 </section>
 <section>
-  <p class="cmd"><b>$</b> kirabench speed qwen3.5-9b</p>
-  <h2>Speed on our cards</h2>
-  <p class="dim small">Prefill = how fast it reads (tokens per second), decode = how fast it writes. Measured with llama-bench, 3 runs.</p>
-  <div class="tablewrap"><table><thead><tr><th scope="col">gpu</th><th scope="col">quant</th><th scope="col" class="num">context</th><th scope="col" class="num">vram used</th><th scope="col" class="num">prefill 512</th><th scope="col" class="num">prefill 4096</th><th scope="col" class="num">decode</th></tr></thead><tbody><tr><td>RTX 2060 12 GB</td><td>Q4_K_M</td><td class="num">64k</td><td class="num">7.4 GB</td>
-<td class="num">1,234</td><td class="num">1,218</td><td class="num">45.2</td></tr></tbody></table></div>
-</section>
-<section>
-  <p class="cmd"><b>$</b> kirabench tests qwen3.5-9b</p>
   <h2>What it built</h2>
   <section class="run" id="bakery-site">
-  <h3><a href="../../benchmarks/bakery-site/">Bakery website</a></h3>
-  <p class="meta mono"><span class="chk" tabindex="0" role="button" aria-label="4/4 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: []}]">4/4</span> checks · built in 1 min 50 s · 3 files (index.html, script.js, styles.css) · RTX 2060 12 GB</p>
+  <h3><a href="../../benchmarks/bakery-site/">Bakery website</a> <span class="dim small">episode 3</span></h3>
+  <p class="meta">Passed <span class="chk" tabindex="0" role="button" aria-label="4 of 4 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: []}]">4 of 4</span> checks · built in 1 min 50 s · 3 files</p>
   <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>At least 6 prices in euros<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Opening hours shown<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Contact form with an email field<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Thank-you message appears after sending, without a reload<span class="sr-only">: passed</span></li></ul>
   <div class="lab" data-lab>
   <div class="labbar">
     <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-    <span class="labtitle mono">Qwen 3.5 9B · Bakery website</span>
+    <span class="labtitle">Qwen 3.5 9B · Bakery website</span>
     <div class="seg" role="group" aria-label="Screen size">
       <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
     </div>
     <a class="labopen" href="../../lab/qwen3.5-9b/bakery-site/index.html" target="_blank" rel="noopener">Open full page</a>
   </div>
-  <div class="labview"><iframe title="Qwen 3.5 9B · Bakery website, made by the model" src="../../lab/qwen3.5-9b/bakery-site/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+  <div class="labview"><iframe title="Qwen 3.5 9B · Bakery website, made by the model" src="../../lab/qwen3.5-9b/bakery-site/index.html" sandbox="allow-scripts allow-forms" loading="lazy"></iframe></div>
 </div>
   <details class="log" data-log="../../logs/qwen3.5-9b/bakery-site.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
   <p class="more"><a href="../../compare.html?b=bakery-site">Compare with the other models on this test</a></p>
 </section><section class="run" id="snake-game">
-  <h3><a href="../../benchmarks/snake-game/">Snake game</a></h3>
-  <p class="meta mono"><span class="chk" tabindex="0" role="button" aria-label="5/5 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 150 ms: classic speed.&quot;]}]">5/5</span> checks · built in 1 min 04 s · 3 files (game.js, index.html, styles.css) · RTX 2060 12 GB</p>
+  <h3><a href="../../benchmarks/snake-game/">Snake game</a> <span class="dim small">episode 3</span></h3>
+  <p class="meta">Passed <span class="chk" tabindex="0" role="button" aria-label="5 of 5 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 150 ms: classic speed.&quot;]}]">5 of 5</span> checks · built in 1 min 04 s · 3 files</p>
   <ul class="checks"><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Game drawn on a canvas<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Score shown on screen<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>The snake moves<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Game Over when hitting a wall<span class="sr-only">: passed</span></li><li class="ok"><span class="mark2" aria-hidden="true">✓</span>Restart starts a new, playable game<span class="sr-only">: passed</span></li></ul><p class="note">One step every 150 ms: classic speed.</p>
   <div class="lab" data-lab>
   <div class="labbar">
     <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-    <span class="labtitle mono">Qwen 3.5 9B · Snake game</span>
+    <span class="labtitle">Qwen 3.5 9B · Snake game</span>
     <div class="seg" role="group" aria-label="Screen size">
       <button type="button" data-w="desktop" aria-pressed="true">Desktop</button><button type="button" data-w="phone" aria-pressed="false">Phone</button>
     </div>
     <a class="labopen" href="../../lab/qwen3.5-9b/snake-game/index.html" target="_blank" rel="noopener">Open full page</a>
   </div>
-  <div class="labview"><iframe title="Qwen 3.5 9B · Snake game, made by the model" src="../../lab/qwen3.5-9b/snake-game/index.html" sandbox="allow-scripts allow-forms"></iframe></div>
+  <div class="labview"><iframe title="Qwen 3.5 9B · Snake game, made by the model" src="../../lab/qwen3.5-9b/snake-game/index.html" sandbox="allow-scripts allow-forms" loading="lazy"></iframe></div>
 </div>
   <details class="log" data-log="../../logs/qwen3.5-9b/snake-game.json"><summary>What the agent did, step by step</summary><div class="logbody"><p class="dim">Loading…</p></div></details>
   <p class="more"><a href="../../compare.html?b=snake-game">Compare with the other models on this test</a></p>
 </section><p class="dim">Not tested yet: Car crash (2D physics).</p>
 </section>
+<section>
+  <h2>Speed on our card</h2>
+  <p class="sub small">Reads = how fast it takes in your prompt, writes = how fast it answers, in tokens per second.</p>
+  <div class="tablewrap"><table class="full"><thead><tr><th scope="col">Settings</th><th scope="col">Runs from</th><th scope="col">File</th><th scope="col" class="num">Context</th><th scope="col" class="num">Card memory used</th><th scope="col" class="num">Reads</th><th scope="col" class="num">Writes</th></tr></thead><tbody><tr><th scope="row">Episode 3</th><td data-l="Runs from">The card only</td><td data-l="File">Q4_K_M, 5.74 GB</td><td data-l="Context" class="num">64k</td>
+<td data-l="Card memory used" class="num">7.4 GB</td><td data-l="Reads" class="num">1 234 tokens/s</td><td data-l="Writes" class="num"><b>45.2</b> tokens/s</td></tr></tbody></table></div>
+  <p class="notes">Episode 3: llama.cpp 8172e65, llama-bench (reads 512 tokens, writes 128), 3 runs.</p>
+</section>
 <section class="split">
-  <div><p class="cmd"><b>$</b> man qwen3.5-9b</p><h2>When to pick it</h2>
-  <dl class="man"><dt>pick it if</dt><dd>You want something that works on the first try: it passed every check, and it is good at using tools.</dd><dt>watch out</dt><dd>The design is correct but not the most polished. Reviewers find it weaker on large changes spread over many files.</dd></dl></div>
-  <div><p class="cmd"><b>$</b> kirabench claims qwen3.5-9b</p><h2>What it claims</h2><ul class="plain"><li>No special claims: this is the base model.</li></ul>
+  <div><h2>About the model</h2><dl class="rig col"><div><dt>Creator</dt><dd>Qwen (Alibaba)</dd></div><div><dt>Based on</dt><dd>Original model</dd></div><div><dt>License</dt><dd>Apache 2.0</dd></div><div><dt>Parameters</dt><dd>9.2 B</dd></div><div><dt>Weights</dt><dd><a href="https://huggingface.co/Qwen/Qwen3.5-9B" rel="noopener">Hugging Face</a></dd></div></dl></div>
+  <div><h2>What it claims</h2><ul class="plain"><li>No special claims: this is the base model.</li></ul>
   <h2 style="margin-top:28px">What others say</h2><ul class="plain"><li><a href="https://www.xda-developers.com/replaced-claude-local-9b-model-week-handled-95-work/" rel="noopener">I replaced Claude with a local 9B model for a week, and it handled 95% of my work</a> <span class="who">XDA</span></li></ul></div>
 </section>
 </main>
@@ -83,7 +81,7 @@
 </div></footer>
 <script src="../../assets/palette.js?v=4d212828"></script>
 <script src="../../assets/kira.js?v=e03618f0"></script>
-<script src="../../assets/site.js?v=025b6613"></script>
-<script src="../../assets/lab.js?v=4960febb"></script>
+<script src="../../assets/site.js?v=380b4c2e"></script>
+<script src="../../assets/lab.js?v=993cef75"></script>
 </body>
 </html>

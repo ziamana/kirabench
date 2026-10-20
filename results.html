@@ -4,40 +4,64 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Results · KiraBench</title>
-<meta name="description" content="Every local AI model tested by Kira on used consumer GPUs: speed, score, and whether it fits in the card's memory.">
+<meta name="description" content="Every local AI model tested by Kira on an RTX 2060 12 GB: reading and writing speed, memory used, and checks passed.">
 <meta name="theme-color" content="#0f1311">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=b20745ca">
+<link rel="stylesheet" href="assets/style.css?v=67eb0b1f">
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="mark" href="./" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
-  <nav aria-label="Main"><a href="results.html" aria-current="page">Results</a><a href="benchmarks/">Benchmarks</a><a class="hide-s" href="compare.html">Compare</a><a class="hide-s" href="./#alerts">Alerts</a></nav>
+  <nav aria-label="Main"><a href="results.html" aria-current="page">Results</a><a href="benchmarks/">Benchmarks</a><a href="./#videos">Videos</a><a class="hide-s" href="compare.html">Compare</a><a class="hide-s" href="./#alerts">Alerts</a></nav>
 </div></header>
-
 <main class="wrap">
-  <section style="padding-top:56px">
-    <p class="cmd"><b>$</b> kirabench results --all</p>
-    <h1 style="font-size:clamp(30px,4vw,44px)">Every model, on every <span class="gb">GPU</span> tested</h1>
-    <p class="sub">Click a column to sort. Checks is the share of automatic browser checks passed. Prefill is how fast the model reads, decode is how fast it writes, in tokens per second, at the same context length for every model. "Offload" means the model did not fit in the card's memory and part of it ran from system memory.</p>
-  </section>
-  <p class="cmd" style="margin:0 0 10px"><b>$</b> kirabench rig --current</p>
-  <dl class="rig" id="rig"></dl>
-  <section style="padding-top:36px">
-    <div id="results"></div>
-  </section>
+<section class="hero2">
+  <h1>Every model, measured on our card</h1>
+  <p class="sub">Click a column to sort. <b>Reads</b> is how fast the model takes in your prompt, <b>writes</b> is how fast it answers, in tokens per second (a token is about three quarters of a word). <b>Card + system RAM</b> means the model is bigger than the card's memory and part of it runs from the computer's RAM.</p>
+  <dl class="rig"><div><dt>Graphics card</dt><dd>RTX 2060 12 GB</dd></div><div><dt>Processor</dt><dd>Core i5-9400F, 6 cores</dd></div><div><dt>System RAM</dt><dd>32 GB DDR4-2400</dd></div></dl>
+</section>
+<section>
+  <div class="filters" role="group" aria-label="Filter models"><button type="button" data-f="all" aria-pressed="true">All models</button><button type="button" data-f="card" aria-pressed="false">The card only</button><button type="button" data-f="card+ram" aria-pressed="false">Card + system RAM</button></div>
+  <div class="tablewrap"><table class="full" data-sortable><thead><tr><th scope="col">Model</th><th scope="col">Runs from</th><th scope="col">File</th><th scope="col" class="num">Context</th><th scope="col" class="num">Card memory used</th><th scope="col" class="num">Reads</th><th scope="col" class="num">Writes</th><th scope="col" class="num">Checks passed</th><th scope="col" class="num">Episode</th></tr></thead>
+  <tbody id="results"><tr data-p="card"><th scope="row"><a href="models/qwen3.5-9b/">Qwen 3.5 9B</a></th>
+<td data-l="Runs from" data-v="0">The card only</td><td data-l="File" data-v="5.74">Q4_K_M, 5.74 GB</td>
+<td data-l="Context" class="num" data-v="65536">64k</td>
+<td data-l="Card memory used" class="num" data-v="7.4">7.4 GB</td>
+<td data-l="Reads" class="num" data-v="1234">1 234 tokens/s</td><td data-l="Writes" class="num" data-v="45.2"><b>45.2</b> tokens/s</td>
+<td data-l="Checks passed" class="num" data-v="100"><span class="chk" tabindex="0" role="button" aria-label="9 of 9 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: []}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 150 ms: classic speed.&quot;]}]">9 of 9</span></td><td data-l="Episode" class="num" data-v="3">3</td></tr><tr data-p="card"><th scope="row"><a href="models/neohorse-1-9b/">NeoHorse 1 9B</a></th>
+<td data-l="Runs from" data-v="0">The card only</td><td data-l="File" data-v="5.23">Q4_K_M, 5.23 GB</td>
+<td data-l="Context" class="num" data-v="65536">64k</td>
+<td data-l="Card memory used" class="num" data-v="7.2">7.2 GB</td>
+<td data-l="Reads" class="num" data-v="1230">1 230 tokens/s</td><td data-l="Writes" class="num" data-v="47.1"><b>47.1</b> tokens/s</td>
+<td data-l="Checks passed" class="num" data-v="89"><span class="chk" tabindex="0" role="button" aria-label="8 of 9 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Its tagline says every \&quot;croquette\&quot; (kibble) is made with love.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: false}], &quot;notes&quot;: [&quot;The snake moves one cell per screen refresh (60 per second on a 60 Hz screen), so every new game ends almost instantly.&quot;]}]">8 of 9</span></td><td data-l="Episode" class="num" data-v="3">3</td></tr><tr data-p="card+ram"><th scope="row"><a href="models/lfm2.5-24b-a2b/">LFM2.5 24B A2B</a></th>
+<td data-l="Runs from" data-v="1">Card + system RAM</td><td data-l="File" data-v="14.5">Q4_K_M, 14.5 GB</td>
+<td data-l="Context" class="num" data-v="65536">64k</td>
+<td data-l="Card memory used" class="num" data-v="1.6">1.6 GB</td>
+<td data-l="Reads" class="num" data-v="88">88 tokens/s</td><td data-l="Writes" class="num" data-v="24.8"><b>24.8</b> tokens/s</td>
+<td data-l="Checks passed" class="num" data-v="87"><span class="chk" tabindex="0" role="button" aria-label="13 of 15 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Works, but plain: no navigation, and the Contact title sits alone on the left.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;The loop moves the snake 10 times per second but never redraws the screen: nothing moves, then Game Over.&quot;]}, {&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;A thin floating stack of bricks instead of a wall, a tiny car, and the counter never leaves 0. The automatic checks score it higher than what you see.&quot;]}]">13 of 15</span></td><td data-l="Episode" class="num" data-v="4">4</td></tr><tr data-p="card+ram"><th scope="row"><a href="models/qwen3.6-35b-a3b/">Qwen3.6 35B A3B</a></th>
+<td data-l="Runs from" data-v="1">Card + system RAM</td><td data-l="File" data-v="22.7">UD-Q4_K_M, 22.7 GB</td>
+<td data-l="Context" class="num" data-v="65536">64k</td>
+<td data-l="Card memory used" class="num" data-v="3.0">3.0 GB</td>
+<td data-l="Reads" class="num" data-v="77">77 tokens/s</td><td data-l="Writes" class="num" data-v="24.5"><b>24.5</b> tokens/s</td>
+<td data-l="Checks passed" class="num" data-v="87"><span class="chk" tabindex="0" role="button" aria-label="13 of 15 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Navigation bar, big header, 8 products with descriptions, hours for every day.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Saved one folder above the folder it was given: our checker found nothing, so we tested the file by hand.&quot;, &quot;The Game Over box spills outside the board.&quot;]}, {&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;A city at night, the car hits the wall, smoke, 7 bricks fall. Light physics, but a real crash.&quot;]}]">13 of 15</span></td><td data-l="Episode" class="num" data-v="4">4</td></tr><tr data-p="card"><th scope="row"><a href="models/ornith-1.5-9b/">Ornith 1.5 9B</a></th>
+<td data-l="Runs from" data-v="0">The card only</td><td data-l="File" data-v="5.37">Q4_K_M, 5.37 GB</td>
+<td data-l="Context" class="num" data-v="65536">64k</td>
+<td data-l="Card memory used" class="num" data-v="7.2">7.2 GB</td>
+<td data-l="Reads" class="num" data-v="1230">1 230 tokens/s</td><td data-l="Writes" class="num" data-v="47.1"><b>47.1</b> tokens/s</td>
+<td data-l="Checks passed" class="num" data-v="80"><span class="chk" tabindex="0" role="button" aria-label="12 of 15 checks passed, show details" data-checks="[{&quot;title&quot;: &quot;Bakery website&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;At least 6 prices in euros&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Opening hours shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Contact form with an email field&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Thank-you message appears after sending, without a reload&quot;, &quot;ok&quot;: false}], &quot;notes&quot;: [&quot;The error messages and the thank-you message are already visible when the page opens, before anyone types.&quot;]}, {&quot;title&quot;: &quot;Snake game&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Game drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Score shown on screen&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The snake moves&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Game Over when hitting a wall&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Restart starts a new, playable game&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;One step every 100 ms: fast but playable.&quot;]}, {&quot;title&quot;: &quot;Car crash (2D physics)&quot;, &quot;items&quot;: [{&quot;label&quot;: &quot;Drawn on a canvas&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;The scene moves&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Brick counter shown&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;At least 10 bricks knocked&quot;, &quot;ok&quot;: false}, {&quot;label&quot;: &quot;Debris settles on the ground&quot;, &quot;ok&quot;: true}, {&quot;label&quot;: &quot;Replay restarts the scene&quot;, &quot;ok&quot;: true}], &quot;notes&quot;: [&quot;Blank screen: one variable (running) is never defined, so the animation dies before it starts. Bonus run after LFM2.5&#x27;s crash.&quot;]}]">12 of 15</span></td><td data-l="Episode" class="num" data-v="3">3</td></tr></tbody></table></div>
+  <p class="notes">Episodes 3 and 4: llama.cpp 8172e65, llama-bench (reads 512 tokens, writes 128), 3 runs, 64k context. Later episodes: llama-server with settings tuned for each model (q8 cache, n-gram prediction), reading a 17k-token prompt, at 88k to 128k context; card memory was not recorded there. A model tested in two episodes has two rows; its checks count the latest run of each test.</p>
+</section>
 </main>
-
 <footer><div class="wrap">
-  <span>KiraBench. Kira is an AI host; every test runs on real hardware.</span>
+  <span>KiraBench. Kira is an AI host; every test runs on real hardware. Model names and logos belong to their owners.</span>
   <nav aria-label="Footer"><a href="results.html">Results</a><a href="privacy.html">Privacy</a><a href="legal.html">Legal notice</a></nav>
 </div></footer>
 <script src="assets/palette.js?v=4d212828"></script>
 <script src="assets/kira.js?v=e03618f0"></script>
-<script src="assets/site.js?v=025b6613"></script>
-<script src="assets/lab.js?v=4960febb"></script>
+<script src="assets/site.js?v=380b4c2e"></script>
+<script src="assets/lab.js?v=993cef75"></script>
 </body>
 </html>

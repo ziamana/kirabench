@@ -70,8 +70,10 @@ def main():
     shutil.rmtree(lab, ignore_errors=True)
     shutil.copytree(base, lab)
     logs = os.path.join(SITE, "logs", modele); os.makedirs(logs, exist_ok=True)
-    segs = compacter(os.path.join(run, "journal.jsonl"), base)
-    json.dump(segs, open(os.path.join(logs, epreuve + ".json"), "w"), ensure_ascii=False)
+    j = os.path.join(run, "journal.jsonl")
+    segs = compacter(j, base) if os.path.exists(j) else []   # pas de journal (courses sans limite sur le serveur) : pas de log
+    if segs:
+        json.dump(segs, open(os.path.join(logs, epreuve + ".json"), "w"), ensure_ascii=False)
     if capture:
         from PIL import Image
         im = Image.open(capture).convert("RGB")
@@ -79,7 +81,7 @@ def main():
         im.thumbnail((960, 600))
         os.makedirs(os.path.join(SITE, "assets/img"), exist_ok=True)
         im.save(os.path.join(SITE, "assets/img", f"{modele}-{epreuve}.jpg"), quality=82)
-    print(modele, epreuve, len(segs), "segments", round(os.path.getsize(os.path.join(logs, epreuve + ".json")) / 1024), "Ko")
+    print(modele, epreuve, len(segs), "segments")
 
 
 if __name__ == "__main__":

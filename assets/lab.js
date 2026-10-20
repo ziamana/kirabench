@@ -41,29 +41,32 @@
   // ---- page de comparaison
   const ctl = document.getElementById("cmpctl"), grid = document.getElementById("cmpgrid");
   if (!ctl) return;
-  fetch(racine + "data/kirabench.json", { cache: "no-store" }).then(r => r.json()).then(D => {
+  fetch(racine + "data/public.json", { cache: "no-store" }).then(r => r.json()).then(D => {
     const p = new URLSearchParams(location.search);
     let bench = p.get("b") || D.benchmarks[0].id;
     let device = "desktop";
     const nom = id => (D.models.find(m => m.id === id) || {}).name || id;
+    const cle = r => r.lab;
     function dessiner() {
-      const runs = D.runs.filter(r => r.benchmark === bench);
-      const choisis = new Set((p.get("m") || runs.map(r => r.model).join(",")).split(",").filter(Boolean));
+      const runs = D.runs.filter(r => r.benchmark === bench && r.lab);
+      const choisis = new Set((p.get("m") || runs.filter(r => !r.nolimit).map(cle).join(",")).split(",").filter(Boolean)
+        .map(x => x.includes("/") ? x : (runs.find(r => r.model === x && !r.nolimit) || {}).lab).filter(Boolean)); // anciens liens : ?m=<id modèle>
       ctl.innerHTML = `<div class="seg" role="group" aria-label="Test">${D.benchmarks.map(b =>
           `<button type="button" data-b="${esc(b.id)}" aria-pressed="${b.id === bench}">${esc(b.title)}</button>`).join("")}</div>
         <div class="seg" role="group" aria-label="Models">${runs.map(r =>
-          `<button type="button" data-m="${esc(r.model)}" aria-pressed="${choisis.has(r.model)}">${esc(nom(r.model))}</button>`).join("")}</div>
+          `<button type="button" data-m="${esc(cle(r))}" aria-pressed="${choisis.has(cle(r))}">${esc(r.label || nom(r.model))}</button>`).join("")}</div>
         <div class="seg" role="group" aria-label="Screen size"><button type="button" data-w="desktop" aria-pressed="${device === "desktop"}">Desktop</button><button type="button" data-w="phone" aria-pressed="${device === "phone"}">Phone</button></div>`;
-      const vus = runs.filter(r => choisis.has(r.model));
+      const vus = runs.filter(r => choisis.has(cle(r)));
       grid.style.setProperty("--n", Math.max(1, vus.length));
       grid.innerHTML = vus.map(r => {
         const ok = Object.values(r.checks).filter(Boolean).length, n = Object.keys(r.checks).length;
-        const src = `${racine}lab/${r.model}/${r.benchmark}/index.html`;
+        const src = `${racine}lab/${r.lab}/index.html`;
+        const s = r.seconds, t = s >= 3600 ? `${Math.floor(s / 3600)} h ${String(Math.floor(s % 3600 / 60)).padStart(2, "0")}` : s >= 60 ? Math.floor(s / 60) + " min " + String(s % 60).padStart(2, "0") + " s" : s + " s";
         return `<div class="lab${device === "phone" ? " phone" : ""}">
-          <div class="labbar"><span class="labtitle"><a href="${racine}models/${esc(r.model)}/#${esc(bench)}">${esc(nom(r.model))}</a></span>
-          <span class="mono dim"><span class="chk" tabindex="0" role="button" aria-label="${ok}/${n} checks passed, show details" data-checks="${esc(JSON.stringify([window.KB.detailChecks(D, r)]))}">${ok}/${n}</span> · ${r.seconds >= 60 ? Math.floor(r.seconds / 60) + " min " + String(r.seconds % 60).padStart(2, "0") + " s" : r.seconds + " s"}</span>
+          <div class="labbar"><span class="labtitle"><a href="${racine}models/${esc(r.model)}/#${esc(bench)}">${esc(r.label || nom(r.model))}</a></span>
+          <span class="dim small"><span class="chk" tabindex="0" role="button" aria-label="${ok} of ${n} checks passed, show details" data-checks="${esc(JSON.stringify([window.KB.detailChecks(D, r)]))}">${ok}/${n}</span> · ${t}</span>
           <a class="labopen" href="${src}" target="_blank" rel="noopener">Open</a></div>
-          <div class="labview"><iframe title="${esc(nom(r.model))}" src="${src}" sandbox="allow-scripts allow-forms"></iframe></div></div>`;
+          <div class="labview"><iframe title="${esc(r.label || nom(r.model))}" src="${src}" sandbox="allow-scripts allow-forms"></iframe></div></div>`;
       }).join("") || `<p class="dim">Pick at least one model.</p>`;
       ctl.querySelectorAll("[data-b]").forEach(b => b.onclick = () => { bench = b.dataset.b; p.set("b", bench); p.delete("m"); history.replaceState(null, "", "?" + p); dessiner(); });
       ctl.querySelectorAll("[data-m]").forEach(b => b.onclick = () => {

@@ -2,8 +2,11 @@
 // Usage : node tools/verifier.mjs http://127.0.0.1:8131
 import { spawn } from 'node:child_process';
 const BASE = process.argv[2] || 'http://127.0.0.1:8131';
-const PAGES = ['', 'results.html', 'benchmarks/', 'benchmarks/bakery-site/', 'benchmarks/snake-game/', 'compare.html', 'compare.html?b=snake-game', 'benchmarks/car-crash/', 'compare.html?b=car-crash',
-  'models/qwen3.5-9b/', 'models/ornith-1.5-9b/', 'models/neohorse-1-9b/', 'models/qwen3.6-35b-a3b/', 'models/lfm2.5-24b-a2b/', 'chess/opus-vs-astra/', 'chess/opus-vs-astra/#m=50', 'privacy.html', 'legal.html'];
+// pages fixes + une page par modèle publié (lu dans data/public.json : un épisode activé ajoute ses modèles tout seul)
+const PAGES = ['', 'results.html', 'benchmarks/', 'benchmarks/bakery-site/', 'benchmarks/snake-game/', 'benchmarks/car-crash/', 'compare.html', 'compare.html?b=snake-game', 'compare.html?b=car-crash',
+  'compare.html?b=bakery-site&m=qwen3.5-9b,ornith-1.5-9b', 'chess/opus-vs-astra/', 'chess/opus-vs-astra/#m=50', 'privacy.html', 'legal.html'];
+const PUB = await (await fetch(`${BASE}/data/public.json`)).json();
+for (const m of PUB.models) PAGES.push(`models/${m.id}/`);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const port = 9336 + Math.floor(Math.random() * 400);
 // profil neuf à chaque passage + cache désactivé : on vérifie ce que reçoit un nouveau visiteur, pas une vieille copie
@@ -34,7 +37,7 @@ try {
       const tops = new Set(nav.map(a => Math.round(a.getBoundingClientRect().top)));
       return { titre: document.title, nav: nav.map(a => a.textContent).join('|'), aligne: tops.size === 1,
         erreurTexte: /could not be loaded/i.test(document.body.innerText), iframes: document.querySelectorAll('iframe').length,
-        chk: document.querySelectorAll('[data-checks]').length, lignes: document.querySelectorAll('#results tbody tr').length,
+        chk: document.querySelectorAll('[data-checks]').length, lignes: document.querySelectorAll('tbody tr').length, dates: /\\b(undefined|NaN|null)\\b/.test(document.body.innerText), tiret: document.body.innerText.includes('\u2014'),
         liens: [...document.querySelectorAll('.top a, footer a')].map(a => a.href) };
     })()` })).result.result.value;
     // chaque lien du menu et du pied de page : la page existe, et l'ancre (#alerts…) existe sur la page d'arrivée
@@ -46,7 +49,8 @@ try {
       if (u.hash && !(await rep.text()).includes('id="' + u.hash.slice(1) + '"')) mauvais.push(href + ' (ancre absente)');
     }
     if (mauvais.length) errs.push('liens : ' + mauvais.join(', '));
-    const ok = !r.erreurTexte && r.aligne && r.nav === 'Results|Benchmarks|Compare|Alerts' && errs.length === 0;
+    if (r.dates) errs.push('undefined/NaN/null affiché'); if (r.tiret) errs.push('tiret long dans la page');
+    const ok = !r.erreurTexte && r.aligne && r.nav === 'Results|Benchmarks|Videos|Compare|Alerts' && errs.length === 0;
     if (!ok) echecs++;
     console.log(`${ok ? 'OK ' : 'KO '} ${('/' + pg).padEnd(30)} menu ${r.aligne ? 'aligné' : 'DÉCALÉ'} [${r.nav}] iframes ${r.iframes} scores ${r.chk} lignes ${r.lignes}${r.erreurTexte ? ' ERREUR DONNÉES' : ''}${errs.length ? ' JS: ' + errs.join(' ; ').slice(0, 200) : ''}`);
     ws.close(); await fetch(`http://127.0.0.1:${port}/json/close/${t.id}`).catch(() => {});

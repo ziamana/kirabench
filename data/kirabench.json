@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-18",
+ "updated": "2026-10-20",
  "rigs": [
   {
    "id": "rtx2060-12g",
@@ -251,7 +251,10 @@
    "vram_gb": 7.4,
    "pp512": 1234,
    "pp4096": 1218,
-   "tg128": 45.2
+   "tg128": 45.2,
+   "ep": 3,
+   "placement": "card",
+   "engine": "llama.cpp 8172e65, llama-bench (reads 512 tokens, writes 128), 3 runs"
   },
   {
    "model": "ornith-1.5-9b",
@@ -262,7 +265,10 @@
    "vram_gb": 7.2,
    "pp512": 1230,
    "pp4096": 1216,
-   "tg128": 47.1
+   "tg128": 47.1,
+   "ep": 3,
+   "placement": "card",
+   "engine": "llama.cpp 8172e65, llama-bench (reads 512 tokens, writes 128), 3 runs"
   },
   {
    "model": "neohorse-1-9b",
@@ -273,7 +279,10 @@
    "vram_gb": 7.2,
    "pp512": 1230,
    "pp4096": 1217,
-   "tg128": 47.1
+   "tg128": 47.1,
+   "ep": 3,
+   "placement": "card",
+   "engine": "llama.cpp 8172e65, llama-bench (reads 512 tokens, writes 128), 3 runs"
   },
   {
    "model": "qwen3.6-35b-a3b",
@@ -284,7 +293,10 @@
    "vram_gb": 3.0,
    "pp512": 77,
    "pp4096": 78,
-   "tg128": 24.5
+   "tg128": 24.5,
+   "ep": 4,
+   "placement": "card+ram",
+   "engine": "llama.cpp 8172e65, llama-bench (reads 512 tokens, writes 128), 3 runs"
   },
   {
    "model": "lfm2.5-24b-a2b",
@@ -295,7 +307,10 @@
    "vram_gb": 1.6,
    "pp512": 88,
    "pp4096": 85,
-   "tg128": 24.8
+   "tg128": 24.8,
+   "ep": 4,
+   "placement": "card+ram",
+   "engine": "llama.cpp 8172e65, llama-bench (reads 512 tokens, writes 128), 3 runs"
   }
  ],
  "runs": [
@@ -316,7 +331,9 @@
     "formulaire": true,
     "merci_sans_recharger": true
    },
-   "notes": []
+   "notes": [],
+   "ep": 3,
+   "lab": "qwen3.5-9b/bakery-site"
   },
   {
    "model": "ornith-1.5-9b",
@@ -337,7 +354,9 @@
    },
    "notes": [
     "The error messages and the thank-you message are already visible when the page opens, before anyone types."
-   ]
+   ],
+   "ep": 3,
+   "lab": "ornith-1.5-9b/bakery-site"
   },
   {
    "model": "neohorse-1-9b",
@@ -356,7 +375,9 @@
    },
    "notes": [
     "Its tagline says every \"croquette\" (kibble) is made with love."
-   ]
+   ],
+   "ep": 3,
+   "lab": "neohorse-1-9b/bakery-site"
   },
   {
    "model": "qwen3.5-9b",
@@ -378,7 +399,9 @@
    },
    "notes": [
     "One step every 150 ms: classic speed."
-   ]
+   ],
+   "ep": 3,
+   "lab": "qwen3.5-9b/snake-game"
   },
   {
    "model": "ornith-1.5-9b",
@@ -400,7 +423,9 @@
    },
    "notes": [
     "One step every 100 ms: fast but playable."
-   ]
+   ],
+   "ep": 3,
+   "lab": "ornith-1.5-9b/snake-game"
   },
   {
    "model": "neohorse-1-9b",
@@ -420,7 +445,9 @@
    },
    "notes": [
     "The snake moves one cell per screen refresh (60 per second on a 60 Hz screen), so every new game ends almost instantly."
-   ]
+   ],
+   "ep": 3,
+   "lab": "neohorse-1-9b/snake-game"
   },
   {
    "model": "lfm2.5-24b-a2b",
@@ -441,7 +468,9 @@
    },
    "notes": [
     "Works, but plain: no navigation, and the Contact title sits alone on the left."
-   ]
+   ],
+   "ep": 4,
+   "lab": "lfm2.5-24b-a2b/bakery-site"
   },
   {
    "model": "qwen3.6-35b-a3b",
@@ -460,7 +489,9 @@
    },
    "notes": [
     "Navigation bar, big header, 8 products with descriptions, hours for every day."
-   ]
+   ],
+   "ep": 4,
+   "lab": "qwen3.6-35b-a3b/bakery-site"
   },
   {
    "model": "lfm2.5-24b-a2b",
@@ -482,7 +513,9 @@
    },
    "notes": [
     "The loop moves the snake 10 times per second but never redraws the screen: nothing moves, then Game Over."
-   ]
+   ],
+   "ep": 4,
+   "lab": "lfm2.5-24b-a2b/snake-game"
   },
   {
    "model": "qwen3.6-35b-a3b",
@@ -503,7 +536,9 @@
    "notes": [
     "Saved one folder above the folder it was given: our checker found nothing, so we tested the file by hand.",
     "The Game Over box spills outside the board."
-   ]
+   ],
+   "ep": 4,
+   "lab": "qwen3.6-35b-a3b/snake-game"
   },
   {
    "model": "lfm2.5-24b-a2b",
@@ -524,7 +559,9 @@
    },
    "notes": [
     "A thin floating stack of bricks instead of a wall, a tiny car, and the counter never leaves 0. The automatic checks score it higher than what you see."
-   ]
+   ],
+   "ep": 4,
+   "lab": "lfm2.5-24b-a2b/car-crash"
   },
   {
    "model": "qwen3.6-35b-a3b",
@@ -545,7 +582,9 @@
    },
    "notes": [
     "A city at night, the car hits the wall, smoke, 7 bricks fall. Light physics, but a real crash."
-   ]
+   ],
+   "ep": 4,
+   "lab": "qwen3.6-35b-a3b/car-crash"
   },
   {
    "model": "ornith-1.5-9b",
@@ -568,7 +607,9 @@
    },
    "notes": [
     "Blank screen: one variable (running) is never defined, so the animation dies before it starts. Bonus run after LFM2.5's crash."
-   ]
+   ],
+   "ep": 4,
+   "lab": "ornith-1.5-9b/car-crash"
   }
  ],
  "videos": [
@@ -580,7 +621,10 @@
     "qwen3.5-9b",
     "ornith-1.5-9b",
     "neohorse-1-9b"
-   ]
+   ],
+   "ep": 3,
+   "publie": true,
+   "thumb": "assets/img/videos/ep03.jpg"
   },
   {
    "url": "https://youtu.be/x41qiNX41QU",
@@ -590,7 +634,10 @@
     "qwen3.6-35b-a3b",
     "lfm2.5-24b-a2b",
     "ornith-1.5-9b"
-   ]
+   ],
+   "ep": 4,
+   "publie": true,
+   "thumb": "assets/img/videos/ep04.jpg"
   },
   {
    "url": "https://youtu.be/HzGZzA3B1ko",
@@ -598,7 +645,10 @@
    "date": "2026-10-19",
    "models": [],
    "page": "chess/opus-vs-astra",
-   "short": "https://youtube.com/shorts/TmwNuVf3DO4"
+   "short": "https://youtube.com/shorts/TmwNuVf3DO4",
+   "ep": 5,
+   "publie": true,
+   "thumb": "assets/img/videos/ep05.jpg"
   }
  ],
  "verdicts": [
@@ -610,7 +660,8 @@
     "ornith-1.5-9b"
    ],
    "why": "NeoHorse's site is the one we would ship. Ornith's looks the most professional, but a contact form that shows its errors before anyone types costs you customers.",
-   "title": "Episode 3 · 9B models"
+   "title": "Episode 3 · 9B models",
+   "ep": 3
   },
   {
    "benchmark": "snake-game",
@@ -620,7 +671,8 @@
     "neohorse-1-9b"
    ],
    "why": "Ornith's game is the nicest to play. NeoHorse's snake moves 60 cells per second, so nobody can play it.",
-   "title": "Episode 3 · 9B models"
+   "title": "Episode 3 · 9B models",
+   "ep": 3
   },
   {
    "benchmark": "bakery-site",
@@ -629,7 +681,8 @@
     "qwen3.6-35b-a3b",
     "lfm2.5-24b-a2b"
    ],
-   "why": "Both sites work. Qwen3.6's looks like a real bakery; LFM2.5's is fast but plain."
+   "why": "Both sites work. Qwen3.6's looks like a real bakery; LFM2.5's is fast but plain.",
+   "ep": 4
   },
   {
    "benchmark": "snake-game",
@@ -638,7 +691,8 @@
     "qwen3.6-35b-a3b",
     "lfm2.5-24b-a2b"
    ],
-   "why": "Qwen3.6's game plays well (despite the file in the wrong folder). LFM2.5's never redraws the screen: nobody can play it."
+   "why": "Qwen3.6's game plays well (despite the file in the wrong folder). LFM2.5's never redraws the screen: nobody can play it.",
+   "ep": 4
   },
   {
    "benchmark": "car-crash",
@@ -648,7 +702,56 @@
     "lfm2.5-24b-a2b",
     "ornith-1.5-9b"
    ],
-   "why": "Only Qwen3.6 made a real crash. LFM2.5 used 18 of its 20 minutes for a few floating bricks; Ornith 1.5 shows a blank screen."
+   "why": "Only Qwen3.6 made a real crash. LFM2.5 used 18 of its 20 minutes for a few floating bricks; Ornith 1.5 shows a blank screen.",
+   "ep": 4
+  }
+ ],
+ "advice": [
+  {
+   "vram": "8",
+   "kind": "estimate",
+   "text": [
+    "We have only measured on a 12 GB card so far. This is an estimate from file sizes, not a measurement.",
+    "The 9B models (Qwen 3.5 9B, Ornith 1.5, NeoHorse 1) are 5.2 to 5.7 GB files and used 7.2 to 7.4 GB of our card with 64k of context. On 8 GB that is very tight: plan on a shorter context.",
+    "Mixture-of-experts models with the experts in system RAM used 3 GB or less of our card (Qwen3.6 35B A3B: 3.0 GB, LFM2.5 24B: 1.6 GB). They may run on 8 GB too, if you have 32 GB of system RAM."
+   ]
+  },
+  {
+   "vram": "12",
+   "ep": 4,
+   "kind": "measured",
+   "picks": [
+    {
+     "model": "qwen3.6-35b-a3b",
+     "use": "Coding with an agent",
+     "why": "It won all three of our tests, including the only real car crash. It is a mixture of experts: the experts sit in system RAM and the card keeps the rest.",
+     "needs": "32 GB of system RAM (the file is 22.7 GB)"
+    },
+    {
+     "model": "qwen3.5-9b",
+     "use": "Quick questions and small scripts",
+     "why": "All of it stays on the card, and it passed every check on the website and Snake tests.",
+     "needs": "About 7.4 GB of the card, with 64k of context"
+    }
+   ]
+  },
+  {
+   "vram": "16",
+   "kind": "estimate",
+   "text": [
+    "We have not tested a 16 GB card. This is an estimate from file sizes, not a measurement.",
+    "Everything that ran entirely on our 12 GB card fits on yours, with room for more context.",
+    "Mixture-of-experts models like Qwen3.6 35B A3B (a 22.7 GB file) still need system RAM, but more of the experts can stay on the card."
+   ]
+  },
+  {
+   "vram": "24",
+   "kind": "estimate",
+   "text": [
+    "We have not tested a 24 GB card. This is an estimate from file sizes, not a measurement.",
+    "Qwen3.6 35B A3B is a 22.7 GB file: on 24 GB, most or all of it could stay on the card, with a short context.",
+    "Every model that ran entirely on our 12 GB card fits easily."
+   ]
   }
  ]
 }

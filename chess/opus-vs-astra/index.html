@@ -10,22 +10,20 @@
 <link rel="icon" href="../../favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 <link rel="preload" href="../../assets/fonts/red-hat-text.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../../assets/style.css?v=b20745ca">
+<link rel="stylesheet" href="../../assets/style.css?v=67eb0b1f">
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="mark" href="../../" aria-label="KiraBench home"><span class="k" data-kira="neutre" data-pad="0"></span><b>KiraBench</b></a>
-  <nav aria-label="Main"><a href="../../results.html">Results</a><a href="../../benchmarks/">Benchmarks</a><a class="hide-s" href="../../compare.html">Compare</a><a class="hide-s" href="../../#alerts">Alerts</a></nav>
+  <nav aria-label="Main"><a href="../../results.html">Results</a><a href="../../benchmarks/">Benchmarks</a><a href="../../#videos">Videos</a><a class="hide-s" href="../../compare.html">Compare</a><a class="hide-s" href="../../#alerts">Alerts</a></nav>
 </div></header>
 <main class="wrap">
 <section class="hero2">
-  <p class="cmd"><b>$</b> kirabench chess --white claude-opus-5.5 --black gpt-6-astra</p>
   <h1>GPT-6 Astra beat Claude Opus 5.5 at chess</h1>
   <p class="sub">One game, 80 moves, played in the regular chat apps: no engine, no tools, no code. Stockfish 19 graded every move. Claude explained every move it played; Astra only ever wrote the move.</p>
   <div class="actions"><a class="btn pri" href="https://youtu.be/HzGZzA3B1ko" rel="noopener">▶ Watch the episode</a><a class="btn ghost" href="game.pgn" download>Download the PGN</a></div>
 </section>
 <section data-chess>
-  <p class="cmd"><b>$</b> kirabench replay</p>
   <h2>Replay the game</h2>
   <p class="sub">Click a move, drag the slider or use the arrow keys. Under every move of Claude's: what it wrote before playing it.</p>
   <div class="cz-key" role="group" aria-label="Key moments"><button type="button" data-go="39" aria-pressed="false"><b class="mono">20…Rac8?</b><span>Astra&#x27;s first slip. Claude misses the chance.</span></button><button type="button" data-go="48" aria-pressed="false"><b class="mono">25.Rc2??</b><span>The rook Claude thought was protected.</span></button><button type="button" data-go="50" aria-pressed="false"><b class="mono">26.Qxc2, illegal</b><span>Claude tries to take back through its own knight.</span></button><button type="button" data-go="85" aria-pressed="false"><b class="mono">43…Na4??</b><span>Astra blunders, still winning.</span></button><button type="button" data-go="139" aria-pressed="false"><b class="mono">70…e1=Q</b><span>A new queen.</span></button><button type="button" data-go="159" aria-pressed="false"><b class="mono">80…Qb2#</b><span>Checkmate.</span></button></div>
@@ -47,18 +45,15 @@
       <div class="cz-moves" aria-label="All moves"></div>
     </div>
   </div>
-  <p class="cmd" style="margin-top:28px"><b>$</b> kirabench eval --graph</p>
   <div class="cz-curve" title="Click to jump to a move"></div>
   <p class="small dim">Stockfish's evaluation from White's side after every move (above the line: Claude is better). Dots are blunders. Click to jump.</p>
 </section>
 <section>
-  <p class="cmd"><b>$</b> kirabench chess --stats</p>
   <h2>The numbers</h2>
   <p class="sub">Claude played slightly worse on average but blundered far less. One blunder on move 25 was enough: it cost a whole rook.</p>
   <div class="tablewrap"><table class="cz-stats"><thead><tr><th scope="col">Stockfish 19, depth 20</th><th scope="col" class="num">Claude Opus 5.5 · White</th><th scope="col" class="num">GPT-6 Astra · Black</th></tr></thead><tbody><tr><td>Best moves (within 0.1 pawn of Stockfish)</td><td class="num">58 / 80</td><td class="num">59 / 80</td></tr><tr><td>Good moves</td><td class="num">10</td><td class="num">11</td></tr><tr><td>Inaccuracies ?!</td><td class="num">5</td><td class="num">3</td></tr><tr><td>Mistakes ?</td><td class="num">5</td><td class="num">1</td></tr><tr><td>Blunders ??</td><td class="num">2</td><td class="num">6</td></tr><tr><td>Average loss per move (centipawns)</td><td class="num">34</td><td class="num">54</td></tr><tr><td>Illegal moves</td><td class="num">1</td><td class="num">0</td></tr><tr><td>Total answer time</td><td class="num">52 min</td><td class="num">61 min</td></tr><tr><td>Explained its moves</td><td class="num">every move</td><td class="num">never</td></tr><tr><td>Result</td><td class="num">lost</td><td class="num">won by checkmate</td></tr></tbody></table></div>
 </section>
 <section>
-  <p class="cmd"><b>$</b> man kirabench-chess</p>
   <h2>How it was played</h2>
   <dl class="man">
     <dt>apps</dt><dd><strong>Claude Opus 5.5</strong> on claude.ai, effort high. <strong>GPT-6 Astra</strong> on ChatGPT, effort high. Regular chat apps, no API. A coin toss gave Claude White.</dd>
@@ -78,7 +73,7 @@
 </div></footer>
 <script src="../../assets/palette.js?v=4d212828"></script>
 <script src="../../assets/kira.js?v=e03618f0"></script>
-<script src="../../assets/site.js?v=025b6613"></script>
-<script src="../../assets/lab.js?v=4960febb"></script>
+<script src="../../assets/site.js?v=380b4c2e"></script>
+<script src="../../assets/lab.js?v=993cef75"></script>
 </body>
 </html>

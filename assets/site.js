@@ -1,116 +1,39 @@
-// KiraBench : sprites, terminal du héros, résultats (data/results.json), inscription.
+// KiraBench : sprites, tri du tableau complet, inscription, infobulle des vérifications.
 (function () {
-  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   document.querySelectorAll("[data-kira]").forEach(el => {
     el.innerHTML = window.KiraSprite(el.dataset.kira || "neutre", Number(el.dataset.pad || 1));
   });
 
-  // Terminal du héros : le texte est déjà dans la page ; on le retape une fois si le mouvement est permis.
-  const pre = document.querySelector(".term pre");
-  const face = document.querySelector(".term .kira svg");
-  if (pre && !calm) {
-    const lines = [...pre.querySelectorAll(":scope > span.l")];
-    lines.forEach(l => { l.dataset.full = l.innerHTML; l.style.visibility = "hidden"; });
-    let i = 0;
-    const next = () => {
-      if (i >= lines.length) { face && face.classList.remove("open"); return; }
-      const l = lines[i++], cmd = l.classList.contains("cmd");
-      l.style.visibility = "visible";
-      if (!cmd) { face && face.classList.toggle("open", true); setTimeout(() => { face && face.classList.remove("open"); next(); }, 260); return; }
-      const text = l.textContent, head = l.querySelector(".p").outerHTML; let n = 0;
-      l.innerHTML = head;
-      const t = setInterval(() => {
-        n++; l.innerHTML = head + esc(text.slice(2, 2 + n));
-        if (2 + n >= text.length) { clearInterval(t); l.innerHTML = l.dataset.full; setTimeout(next, 380); }
-      }, 34);
-    };
-    setTimeout(next, 450);
-  }
-
-  // Résultats
-  const holder = document.getElementById("results");
-  if (holder) {
-    fetch("data/kirabench.json", { cache: "no-store" })
-      .then(r => r.json())
-      .then(d => render(holder, versTableau(d), Number(holder.dataset.limit || 0)))
-      .catch(() => { holder.innerHTML = `<div class="empty"><pre><span class="w">error</span> results could not be loaded. Refresh the page.</pre></div>`; });
-  }
-
-  // data/kirabench.json (modèles, épreuves, mesures) → lignes : une par modèle et par carte.
-  // Vérifications = total sur les épreuves passées par ce modèle (un modèle n'a pas besoin de toutes les avoir faites).
-  // Détail d'une épreuve pour l'infobulle : titre, chaque vérification réussie ou non, notes.
+  // data/public.json (écrit par tools/generer.py) : détail d'une épreuve pour l'infobulle (titre, chaque vérification, notes)
   function detailChecks(D, r) {
     const b = D.benchmarks.find(x => x.id === r.benchmark) || { title: r.benchmark, checks: [] };
-    return { title: b.title, items: b.checks.filter(c => c.id in r.checks).map(c => ({ label: c.label, ok: !!r.checks[c.id] })), notes: r.notes || [] };
+    return { title: b.title + (r.nolimit ? " (no time limit)" : ""), items: b.checks.filter(c => c.id in r.checks).map(c => ({ label: c.label, ok: !!r.checks[c.id] })), notes: r.notes || [] };
   }
   window.KB = Object.assign(window.KB || {}, { detailChecks });
 
-  function versTableau(D) {
-    const rig = D.rigs[0] || {};
-    const rows = D.speed.map(s => {
-      const m = D.models.find(x => x.id === s.model) || { name: s.model };
-      const runs = D.runs.filter(r => r.model === s.model && r.rig === s.rig);
-      const ok = runs.reduce((a, r) => a + Object.values(r.checks).filter(Boolean).length, 0);
-      const n = runs.reduce((a, r) => a + Object.keys(r.checks).length, 0);
-      const g = D.rigs.find(x => x.id === s.rig) || {};
-      const detail = runs.map(r => detailChecks(D, r));
-      return { id: s.model, model: m.name, gpu: g.gpu, quant: s.quant, context: s.context, vram_gb: s.vram_gb, pp_tok_s: s.pp512, tok_s: s.tg128,
-               score: n ? Math.round(100 * ok / n) : 0, checks: n ? `${ok}/${n}` : "—", detail, tests: runs.length, fits: true };
+  // Tableau complet (results.html) : tri au clic sur une colonne, filtre par emplacement (carte seule / carte + RAM)
+  document.querySelectorAll("table[data-sortable]").forEach(t => {
+    const tb = t.tBodies[0], ths = [...t.tHead.rows[0].cells];
+    let col = -1, dir = 1;
+    const val = (tr, i) => { const c = tr.cells[i]; const v = c.dataset.v; return v !== undefined && v !== "" && !isNaN(v) ? Number(v) : c.textContent.trim().toLowerCase(); };
+    ths.forEach((th, i) => {
+      th.tabIndex = 0; th.classList.add("sortable");
+      const go = () => {
+        dir = col === i ? -dir : (th.classList.contains("num") ? -1 : 1); col = i;
+        [...tb.rows].sort((a, b) => { const x = val(a, i), y = val(b, i); return (x > y ? 1 : x < y ? -1 : 0) * dir; }).forEach(r => tb.appendChild(r));
+        ths.forEach(h => h.removeAttribute("aria-sort")); th.setAttribute("aria-sort", dir < 0 ? "descending" : "ascending");
+      };
+      th.addEventListener("click", go);
+      th.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
     });
-    const notes = "Context = tokens the model can keep in mind; vram is measured with that context loaded. Prefill = llama-bench pp512, decode = tg128, 3 runs. Checks = automatic browser checks passed on everything the model built (website, Snake game…), one prompt, no help. Click a model for the details.";
-    return { rig: { gpu: [rig.gpu, rig.detail].filter(Boolean).join(" on ").replace(" on EVGA XC on", ", EVGA XC on"), cpu: rig.cpu, ram: rig.ram }, results: rows, notes, queue: ["more models that fit in 12 GB"] };
-  }
-
-  function render(el, data, limit) {
-    const rig = document.getElementById("rig");
-    if (rig && data.rig) {
-      rig.innerHTML = [["gpu", data.rig.gpu], ["cpu", data.rig.cpu], ["memory", data.rig.ram]].filter(x => x[1])
-        .map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
-    }
-    const rows = data.results || [];
-    if (!rows.length) {
-      el.innerHTML = `<div class="tablewrap"><div class="empty"><pre><span class="p">$</span> <span class="c">kirabench results</span>
-no results yet.
-queued: ${(data.queue || []).map(esc).join(", ")}</pre></div></div>`;
-      return;
-    }
-    let key = "score", dir = -1, view = "all", gpu = "all";
-    const gpus = [...new Set(rows.map(r => r.gpu))];
-    const cols = [["model", "model", 0], ["gpu", "gpu", 0], ["quant", "quant", 0], ["context", "context", 1], ["vram_gb", "vram used", 1], ["pp_tok_s", "prefill t/s", 1], ["tok_s", "decode t/s", 1], ["score", "checks", 1], ["fits", "fits", 0]];
-    const max = k => Math.max(...rows.map(r => Number(r[k]) || 0), 1);
-    function draw() {
-      let list = rows.filter(r => (gpu === "all" || r.gpu === gpu) && (view === "all" || (view === "fits" ? r.fits : !r.fits)));
-      list.sort((a, b) => (a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0) * dir);
-      if (limit) list = list.slice(0, limit);
-      const mt = max("tok_s"), ms = max("score");
-      el.innerHTML = `${limit ? "" : `${gpus.length > 1 ? `<div class="filters" role="group" aria-label="Filter by GPU">${
-          [["all", "All GPUs"], ...gpus.map(g => [g, g])].map(([v, l]) =>
-          `<button type="button" data-g="${esc(v)}" aria-pressed="${gpu === v}">${esc(l)}</button>`).join("")}</div>` : ""}
-        <div class="filters" role="group" aria-label="Filter models">${
-          [["all", "All models"], ["fits", "Fits in VRAM"], ["nofit", "Needs offload"]].map(([v, l]) =>
-          `<button type="button" data-v="${v}" aria-pressed="${view === v}">${l}</button>`).join("")}</div>`}
-        <div class="tablewrap"><table><thead><tr>${cols.map(([k, l, n]) =>
-          `<th scope="col" data-k="${k}" class="${n ? "num" : ""}"${k === key ? ` aria-sort="${dir < 0 ? "descending" : "ascending"}"` : ""}>${l}</th>`).join("")}
-        </tr></thead><tbody>${list.map(r => `<tr>
-          <td>${r.id ? `<a href="models/${esc(r.id)}/">${esc(r.model)}</a>` : esc(r.model)}</td>
-          <td>${esc(r.gpu)}</td>
-          <td>${esc(r.quant)}</td>
-          <td class="num">${r.context ? Math.round(r.context / 1024) + "k" : "—"}</td>
-          <td class="num">${esc(r.vram_gb)} GB</td>
-          <td class="num">${esc(r.pp_tok_s)}</td>
-          <td class="num">${esc(r.tok_s)}<span class="meter" style="width:${Math.round(36 * r.tok_s / mt)}px"></span></td>
-          <td class="num"><span class="chk" tabindex="0" role="button" aria-label="${esc(r.checks)} checks passed, show details" data-checks="${esc(JSON.stringify(r.detail || []))}">${esc(r.checks || r.score + "%")}</span><span class="meter" style="width:${Math.round(36 * r.score / ms)}px"></span></td>
-          <td><span class="tag ${r.fits ? "" : "no"}">${r.fits ? "yes" : "offload"}</span></td>
-        </tr>`).join("")}</tbody></table></div>`;
-      if (!limit && data.notes) el.insertAdjacentHTML("beforeend", `<p class="notes">${esc(data.notes)}</p>`);
-      el.querySelectorAll("th").forEach(th => th.onclick = () => { const k = th.dataset.k; dir = k === key ? -dir : -1; key = k; draw(); });
-      el.querySelectorAll(".filters button[data-v]").forEach(b => b.onclick = () => { view = b.dataset.v; draw(); });
-      el.querySelectorAll(".filters button[data-g]").forEach(b => b.onclick = () => { gpu = b.dataset.g; draw(); });
-    }
-    draw();
-  }
+  });
+  document.querySelectorAll(".filters[role=group]").forEach(g => g.querySelectorAll("button[data-f]").forEach(b => b.addEventListener("click", () => {
+    g.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    const t = g.parentElement.querySelector("tbody");
+    t && [...t.rows].forEach(r => { r.hidden = b.dataset.f !== "all" && r.dataset.p !== b.dataset.f; });
+  })));
 
   // Inscription : ajout seul dans Supabase (table alert_signups, RLS « insert » pour anon, aucune lecture possible).
   // La clé publishable est faite pour être publique ; la confirmation par e-mail (double opt-in) viendra avant toute alerte.
