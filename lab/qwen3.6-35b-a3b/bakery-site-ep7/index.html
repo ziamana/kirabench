@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le Petit Four — Boulangerie Pâtisserie Artisanale</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      color: #3b2f2f;
+      background: #fdfaf6;
+      line-height: 1.6;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(253, 250, 246, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e8ddd0;
+      transition: box-shadow 0.3s;
+    }
+
+    .navbar.scrolled {
+      box-shadow: 0 2px 20px rgba(59, 47, 47, 0.08);
+    }
+
+    .navbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.8rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .navbar-brand {
+      font-size: 1.3rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      color: #8b5e3c;
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .navbar-links a {
+      font-size: 0.95rem;
+      color: #5a4a42;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .navbar-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #8b5e3c;
+      transition: width 0.3s;
+    }
+
+    .navbar-links a:hover {
+      color: #8b5e3c;
+    }
+
+    .navbar-links a:hover::after {
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: #5a4a42;
+      transition: all 0.3s;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(210, 170, 120, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(180, 130, 80, 0.1) 0%, transparent 60%),
+        linear-gradient(180deg, #fdfaf6 0%, #f5efe6 100%);
+    }
+
+    .hero-ornament {
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #c9a87c, transparent);
+      margin: 1.5rem auto;
+    }
+
+    .hero-icon {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: normal;
+      color: #5a3e2b;
+      letter-spacing: 0.08em;
+      line-height: 1.1;
+    }
+
+    .hero h1 span {
+      display: block;
+      font-size: 0.45em;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #8b5e3c;
+      margin-top: 0.5rem;
+      font-weight: normal;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: #7a6655;
+      margin-top: 1.5rem;
+      font-style: italic;
+      max-width: 500px;
+    }
+
+    .hero-cta {
+      margin-top: 2.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 2.5rem;
+      border: 2px solid #8b5e3c;
+      color: #8b5e3c;
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: transparent;
+    }
+
+    .btn:hover {
+      background: #8b5e3c;
+      color: #fdfaf6;
+    }
+
+    .btn-filled {
+      background: #8b5e3c;
+      color: #fdfaf6;
+    }
+
+    .btn-filled:hover {
+      background: #6f4b30;
+      border-color: #6f4b30;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      padding: 5rem 2rem;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: normal;
+      color: #5a3e2b;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.06em;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: #8b7b6e;
+      font-style: italic;
+      margin-bottom: 3rem;
+      font-size: 1.05rem;
+    }
+
+    .section-divider {
+      width: 60px;
+      height: 2px;
+      background: #c9a87c;
+      margin: 1rem auto 0;
+    }
+
+    /* ===== ABOUT ===== */
+    .about {
+      background: #f5efe6;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+      color: #5a4a42;
+    }
+
+    .about-image {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, #e8d5be 0%, #d4b896 50%, #c9a87c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-image svg {
+      width: 60%;
+      height: 60%;
+      opacity: 0.35;
+    }
+
+    /* ===== MENU ===== */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .menu-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 16px rgba(59, 47, 47, 0.06);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid #ede5d9;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(59, 47, 47, 0.1);
+    }
+
+    .menu-card-icon {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1rem;
+    }
+
+    .menu-card h3 {
+      font-size: 1.3rem;
+      font-weight: normal;
+      color: #5a3e2b;
+      margin-bottom: 0.5rem;
+    }
+
+    .menu-card-desc {
+      font-size: 0.95rem;
+      color: #8b7b6e;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .menu-card-price {
+      font-size: 1.4rem;
+      color: #8b5e3c;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+    }
+
+    .menu-card-price small {
+      font-size: 0.7em;
+      font-weight: normal;
+      color: #a09080;
+    }
+
+    /* ===== HOURS ===== */
+    .hours {
+      background: #f5efe6;
+    }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .hours-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .hours-table tr {
+      border-bottom: 1px solid #e0d5c8;
+    }
+
+    .hours-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .hours-table td {
+      padding: 1rem 0;
+      font-size: 1.05rem;
+    }
+
+    .hours-table td:first-child {
+      color: #5a4a42;
+      font-weight: bold;
+    }
+
+    .hours-table td:last-child {
+      text-align: right;
+      color: #7a6655;
+    }
+
+    .hours-table tr.closed td:last-child {
+      color: #b07060;
+      font-style: italic;
+    }
+
+    .hours-note {
+      margin-top: 1.5rem;
+      padding: 1.2rem;
+      background: #fff;
+      border-radius: 8px;
+      border-left: 3px solid #c9a87c;
+      font-size: 0.95rem;
+      color: #7a6655;
+    }
+
+    .hours-map {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #e8ddd0 0%, #d4c8b8 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      box-shadow: 0 2px 16px rgba(59, 47, 47, 0.06);
+      border: 1px solid #ede5d9;
+    }
+
+    .hours-map svg {
+      width: 60px;
+      height: 60px;
+      opacity: 0.5;
+    }
+
+    .hours-map p {
+      color: #8b7b6e;
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .hours-map .address {
+      font-style: normal;
+      font-size: 1.1rem;
+      color: #5a4a42;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ===== CONTACT ===== */
+    .contact-form-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #5a4a42;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border: 1px solid #d4c8b8;
+      border-radius: 8px;
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      color: #3b2f2f;
+      background: #fff;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #8b5e3c;
+      box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    .form-submit {
+      text-align: center;
+    }
+
+    .form-submit .btn {
+      min-width: 200px;
+    }
+
+    /* Thank-you message */
+    .thank-you {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .thank-you.show {
+      display: block;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .thank-you-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .thank-you h3 {
+      font-size: 1.8rem;
+      font-weight: normal;
+      color: #5a3e2b;
+      margin-bottom: 0.8rem;
+    }
+
+    .thank-you p {
+      color: #7a6655;
+      font-size: 1.1rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: #3b2f2f;
+      color: #c9b8a8;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-brand {
+      font-size: 1.4rem;
+      color: #e8d5be;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .footer-divider {
+      width: 40px;
+      height: 1px;
+      background: #5a4a42;
+      margin: 1.5rem auto;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: #8b7b6e;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .navbar-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        max-width: 300px;
+        height: 100vh;
+        background: #fdfaf6;
+        flex-direction: column;
+        padding: 5rem 2rem 2rem;
+        gap: 1.5rem;
+        box-shadow: -4px 0 30px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease;
+      }
+
+      .navbar-links.open {
+        right: 0;
+      }
+
+      .hamburger {
+        display: flex;
+        z-index: 1001;
+      }
+
+      .hero {
+        padding: 5rem 1.5rem 3rem;
+        min-height: 90vh;
+      }
+
+      .section {
+        padding: 3.5rem 1.5rem;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .about-image {
+        order: -1;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hours-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .hours-map {
+        aspect-ratio: 16/9;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar-inner {
+        padding: 0.8rem 1.2rem;
+      }
+
+      .hero h1 {
+        letter-spacing: 0.04em;
+      }
+
+      .menu-card {
+        padding: 1.5rem;
+      }
+
+      .section {
+        padding: 3rem 1.2rem;
+      }
+    }
+
+    /* Mobile nav overlay */
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 999;
+    }
+
+    .nav-overlay.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#hero" class="navbar-brand">Le Petit Four</a>
+      <ul class="navbar-links" id="navLinks">
+        <li><a href="#about" onclick="closeMenu()">Notre Histoire</a></li>
+        <li><a href="#menu" onclick="closeMenu()">La Carte</a></li>
+        <li><a href="#hours" onclick="closeMenu()">Horaires</a></li>
+        <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <svg class="hero-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" stroke="#8b5e3c" stroke-width="1.5" fill="none"/>
+      <path d="M30 65 C30 40, 50 25, 50 25 C50 25, 70 40, 70 65 C70 72, 62 78, 50 78 C38 78, 30 72, 30 65Z" fill="#c9a87c" opacity="0.5"/>
+      <path d="M35 62 C35 45, 50 33, 50 33 C50 33, 65 45, 65 62 C65 67, 59 72, 50 72 C41 72, 35 67, 35 62Z" fill="#8b5e3c" opacity="0.4"/>
+      <ellipse cx="50" cy="55" rx="8" ry="12" fill="#5a3e2b" opacity="0.15"/>
+      <path d="M46 30 Q50 18, 54 30" stroke="#c9a87c" stroke-width="1.5" fill="none"/>
+      <path d="M42 35 Q50 22, 58 35" stroke="#c9a87c" stroke-width="1" fill="none" opacity="0.6"/>
+    </svg>
+    <h1>
+      Le Petit Four
+      <span>Boulangerie Pâtisserie Artisanale</span>
+    </h1>
+    <div class="hero-ornament"></div>
+    <p class="hero-tagline">
+      Chaque matin, nos artisans façonnent avec passion des pains dorés et des douceurs qui font de chaque bouchée un moment de bonheur.
+    </p>
+    <div class="hero-cta">
+      <a href="#menu" class="btn">Découvrir notre carte</a>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="section about" id="about">
+    <div class="section-inner">
+      <h2 class="section-title fade-in">Notre Histoire</h2>
+      <div class="section-divider fade-in"></div>
+      <p class="section-subtitle fade-in">Depuis 1987, au cœur de Paris</p>
+      <div class="about-grid">
+        <div class="about-text fade-in">
+          <p>
+            Fondée en 1987 par Marie et Jean-Pierre Durand, <strong>Le Petit Four</strong> est né d'un rêve simple : offrir à ses clients des pains et des pâtisseries d'exception, faits main avec des ingrédients soigneusement sélectionnés.
+          </p>
+          <p>
+            Aujourd'hui, c'est leur fille Éloïse qui perpétue la tradition familiale. Chaque recette est élaborée dans notre atelier, selon les savoir-faire transmis de génération en génération. Farine bio, beurre AOP, chocolat grand cru — rien n'est laissé au hasard.
+          </p>
+          <p>
+            Notre engagement : <em>rien d'industriel, tout d'artisanal</em>. De la fermentation lente de nos pains au levain à la cuisson au feu de bois, chaque étape est maîtrisée pour vous offrir le meilleur.
+          </p>
+        </div>
+        <div class="about-image fade-in">
+          <svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Bakery illustration -->
+            <rect x="20" y="60" width="160" height="80" rx="4" stroke="#5a3e2b" stroke-width="2" fill="none"/>
+            <path d="M10 60 L100 10 L190 60" stroke="#5a3e2b" stroke-width="2" fill="none"/>
+            <rect x="80" y="90" width="40" height="50" rx="2" stroke="#5a3e2b" stroke-width="1.5" fill="none"/>
+            <rect x="30" y="75" width="30" height="25" rx="2" stroke="#5a3e2b" stroke-width="1.5" fill="none"/>
+            <rect x="140" y="75" width="30" height="25" rx="2" stroke="#5a3e2b" stroke-width="1.5" fill="none"/>
+            <text x="100" y="50" text-anchor="middle" font-size="14" fill="#5a3e2b" font-family="Georgia, serif" font-style="italic">Le Petit Four</text>
+            <!-- Smoke -->
+            <path d="M150 10 Q155 0, 150 -10" stroke="#5a3e2b" stroke-width="1" fill="none" opacity="0.4"/>
+            <path d="M160 12 Q165 2, 160 -8" stroke="#5a3e2b" stroke-width="1" fill="none" opacity="0.3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MENU ===== -->
+  <section class="section" id="menu">
+    <div class="section-inner">
+      <h2 class="section-title fade-in">La Carte</h2>
+      <div class="section-divider fade-in"></div>
+      <p class="section-subtitle fade-in">Nos créations artisanales</p>
+      <div class="menu-grid">
+
+        <!-- Product 1 -->
+        <div class="menu-card fade-in">
+          <svg class="menu-card-icon" viewBox="0 0 50 50" fill="none">
+            <ellipse cx="25" cy="32" rx="18" ry="12" fill="#c9a87c" opacity="0.6"/>
+            <ellipse cx="25" cy="28" rx="16" ry="10" fill="#d4b896" opacity="0.7"/>
+            <path d="M12 28 Q18 15, 25 12 Q32 15, 38 28" stroke="#8b5e3c" stroke-width="1.5" fill="none"/>
+          </svg>
+          <h3>Pain au Levain</h3>
+          <p class="menu-card-desc">Fermentation 48h, croûte croustillante mie alvéolée. Farine T110 bio.</p>
+          <span class="menu-card-price">3,80 € <small>/ loaf</small></span>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="menu-card fade-in">
+          <svg class="menu-card-icon" viewBox="0 0 50 50" fill="none">
+            <rect x="10" y="20" width="30" height="18" rx="3" fill="#d4b896" opacity="0.7"/>
+            <rect x="12" y="22" width="26" height="14" rx="2" fill="#c9a87c" opacity="0.5"/>
+            <line x1="15" y1="26" x2="35" y2="26" stroke="#8b5e3c" stroke-width="1" opacity="0.4"/>
+            <line x1="15" y1="30" x2="35" y2="30" stroke="#8b5e3c" stroke-width="1" opacity="0.4"/>
+            <line x1="15" y1="34" x2="35" y2="34" stroke="#8b5e3c" stroke-width="1" opacity="0.4"/>
+          </svg>
+          <h3>Croissant au Beurre</h3>
+          <p class="menu-card-desc">Beurre AOP Charente-Poitou, 7 feuilles pliées. Doré à la œuf frais.</p>
+          <span class="menu-card-price">1,50 € <small>/ unit</small></span>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="menu-card fade-in">
+          <svg class="menu-card-icon" viewBox="0 0 50 50" fill="none">
+            <circle cx="25" cy="28" r="14" fill="#c9a87c" opacity="0.6"/>
+            <circle cx="25" cy="28" r="11" fill="#d4b896" opacity="0.5"/>
+            <circle cx="25" cy="28" r="6" fill="#8b5e3c" opacity="0.2"/>
+            <circle cx="25" cy="28" r="3" fill="#5a3e2b" opacity="0.15"/>
+          </svg>
+          <h3>Tarte au Citron Meringuée</h3>
+          <p class="menu-card-desc">Sablé beurre, crème citron yuzu, meringue italienne torchée.</p>
+          <span class="menu-card-price">4,20 € <small>/ unit</small></span>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="menu-card fade-in">
+          <svg class="menu-card-icon" viewBox="0 0 50 50" fill="none">
+            <rect x="14" y="14" width="22" height="22" rx="4" fill="#d4b896" opacity="0.7"/>
+            <rect x="16" y="16" width="18" height="18" rx="3" fill="#c9a87c" opacity="0.5"/>
+            <rect x="18" y="18" width="14" height="14" rx="2" fill="#8b5e3c" opacity="0.2"/>
+            <line x1="18" y1="25" x2="32" y2="25" stroke="#5a3e2b" stroke-width="1" opacity="0.2"/>
+          </svg>
+          <h3>Chocolate Fudge</h3>
+          <p class="menu-card-desc">Fondant au chocolat grand cru 70%, cœur coulant, éclats de cacao.</p>
+          <span class="menu-card-price">2,80 € <small>/ unit</small></span>
+        </div>
+
+        <!-- Product 5 -->
+        <div class="menu-card fade-in">
+          <svg class="menu-card-icon" viewBox="0 0 50 50" fill="none">
+            <ellipse cx="25" cy="30" rx="16" ry="10" fill="#d4b896" opacity="0.6"/>
+            <path d="M12 30 Q18 18, 25 15 Q32 18, 38 30" fill="#c9a87c" opacity="0.5"/>
+            <circle cx="20" cy="24" r="2" fill="#c44d58" opacity="0.6"/>
+            <circle cx="28" cy="22" r="2" fill="#c44d58" opacity="0.6"/>
+            <circle cx="24" cy="27" r="1.5" fill="#c44d58" opacity="0.5"/>
+          </svg>
+          <h3>Millefeuille Vanille</h3>
+          <p class="menu-card-desc">Pâte feuilletée caramélisée, crème mousseline à la vanille Bourbon.</p>
+          <span class="menu-card-price">5,50 € <small>/ unit</small></span>
+        </div>
+
+        <!-- Product 6 -->
+        <div class="menu-card fade-in">
+          <svg class="menu-card-icon" viewBox="0 0 50 50" fill="none">
+            <ellipse cx="25" cy="32" rx="14" ry="10" fill="#c9a87c" opacity="0.6"/>
+            <ellipse cx="25" cy="28" rx="12" ry="8" fill="#d4b896" opacity="0.5"/>
+            <path d="M18 28 Q25 20, 32 28" stroke="#8b5e3c" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <path d="M20 26 Q25 22, 30 26" stroke="#8b5e3c" stroke-width="1" fill="none" opacity="0.3"/>
+          </svg>
+          <h3>Baguet Tradition</h3>
+          <p class="menu-card-desc">Méthode lente, farine type 65. Croûte dorée et sonore, mie moelleuse.</p>
+          <span class="menu-card-price">1,40 € <small>/ unit</small></span>
+        </div>
+
+        <!-- Product 7 -->
+        <div class="menu-card fade-in">
+          <svg class="menu-card-icon" viewBox="0 0 50 50" fill="none">
+            <ellipse cx="25" cy="30" rx="15" ry="11" fill="#d4b896" opacity="0.6"/>
+            <ellipse cx="25" cy="27" rx="13" ry="9" fill="#c9a87c" opacity="0.5"/>
+            <circle cx="25" cy="27" r="4" fill="#8b5e3c" opacity="0.2"/>
+            <path d="M22 27 L25 23 L28 27" stroke="#8b5e3c" stroke-width="1" fill="none" opacity="0.4"/>
+          </svg>
+          <h3>Chou à la Crème</h3>
+          <p class="menu-card-desc">Pâte à choux croustillante, crème pâtissière onctueuse, sucre glace.</p>
+          <span class="menu-card-price">2,50 € <small>/ unit</small></span>
+        </div>
+
+        <!-- Product 8 -->
+        <div class="menu-card fade-in">
+          <svg class="menu-card-icon" viewBox="0 0 50 50" fill="none">
+            <rect x="12" y="18" width="26" height="18" rx="3" fill="#c9a87c" opacity="0.6"/>
+            <rect x="14" y="20" width="22" height="14" rx="2" fill="#d4b896" opacity="0.5"/>
+            <line x1="14" y1="27" x2="36" y2="27" stroke="#8b5e3c" stroke-width="1" opacity="0.3"/>
+            <circle cx="20" cy="23" r="1.5" fill="#8b5e3c" opacity="0.2"/>
+            <circle cx="30" cy="23" r="1.5" fill="#8b5e3c" opacity="0.2"/>
+            <circle cx="25" cy="31" r="1.5" fill="#8b5e3c" opacity="0.2"/>
+          </svg>
+          <h3>Sablés Bretons Beurre</h3>
+          <p class="menu-card-desc">Beurre demi-sel, fleur de sel de Guérande. Caramélisation parfaite.</p>
+          <span class="menu-card-price">1,80 € <small>/ 3 pcs</small></span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOURS ===== -->
+  <section class="section hours" id="hours">
+    <div class="section-inner">
+      <h2 class="section-title fade-in">Horaires &amp; Accès</h2>
+      <div class="section-divider fade-in"></div>
+      <p class="section-subtitle fade-in">Venez nous rendre visite</p>
+      <div class="hours-grid">
+        <div class="fade-in">
+          <table class="hours-table">
+            <tr>
+              <td>Lundi</td>
+              <td>Fermé</td>
+            </tr>
+            <tr>
+              <td>Mardi</td>
+              <td>7h00 – 19h30</td>
+            </tr>
+            <tr>
+              <td>Mercredi</td>
+              <td>7h00 – 19h30</td>
+            </tr>
+            <tr>
+              <td>Jeudi</td>
+              <td>7h00 – 19h30</td>
+            </tr>
+            <tr>
+              <td>Vendredi</td>
+              <td>7h00 – 20h00</td>
+            </tr>
+            <tr>
+              <td>Samedi</td>
+              <td>7h00 – 20h00</td>
+            </tr>
+            <tr>
+              <td>Dimanche</td>
+              <td>7h00 – 14h00</td>
+            </tr>
+          </table>
+          <div class="hours-note">
+            🥐 <strong>Commande préparée à l'avance :</strong> appelez-nous la veille avant 18h pour réserver vos gâteaux d'anniversaire ou vos pâtisseries pour un événement.
+          </div>
+        </div>
+        <div class="hours-map fade-in">
+          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="25" r="10" stroke="#8b5e3c" stroke-width="2" fill="none"/>
+            <path d="M30 35 L30 55" stroke="#8b5e3c" stroke-width="2"/>
+            <path d="M22 48 L30 55 L38 48" stroke="#8b5e3c" stroke-width="2" fill="none"/>
+            <circle cx="30" cy="25" r="4" fill="#8b5e3c" opacity="0.3"/>
+          </svg>
+          <p class="address">
+            14, Rue des Boulangers<br>
+            75011 Paris, France
+          </p>
+          <p>Métro : Voltaire (Ligne 9)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="section" id="contact">
+    <div class="section-inner">
+      <h2 class="section-title fade-in">Contactez-Nous</h2>
+      <div class="section-divider fade-in"></div>
+      <p class="section-subtitle fade-in">Une question, une commande spéciale ? Écrivez-nous !</p>
+      <div class="contact-form-wrapper fade-in">
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="name">Votre nom</label>
+            <input type="text" id="name" name="name" placeholder="Marie Dupont" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Votre e-mail</label>
+            <input type="email" id="email" name="email" placeholder="marie@exemple.fr" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Votre message</label>
+            <textarea id="message" name="message" placeholder="Je souhaiterais commander un gâteau pour…" required></textarea>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="btn btn-filled">Envoyer le message</button>
+          </div>
+        </form>
+
+        <div class="thank-you" id="thankYou">
+          <svg class="thank-you-icon" viewBox="0 0 70 70" fill="none">
+            <circle cx="35" cy="35" r="33" stroke="#8b5e3c" stroke-width="1.5" fill="none"/>
+            <path d="M22 35 L32 45 L48 25" stroke="#8b5e3c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+          <h3>Merci beaucoup !</h3>
+          <p>Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais. À bientôt au Petit Four !</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-brand">Le Petit Four</div>
+    <p>14, Rue des Boulangers — 75011 Paris</p>
+    <p>Tél. : 01 43 56 78 90</p>
+    <div class="footer-divider"></div>
+    <p class="footer-copy">&copy; 2025 Le Petit Four. Tous droits réservés. Fait avec ❤️ et de la farine.</p>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ---- Mobile menu ----
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    const navOverlay = document.getElementById('navOverlay');
+
+    function toggleMenu() {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('open');
+      navOverlay.classList.toggle('show');
+      document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+    }
+
+    function closeMenu() {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('open');
+      navOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    // ---- Navbar scroll shadow ----
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 10) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // ---- Contact form ----
+    const contactForm = document.getElementById('contactForm');
+    const thankYou = document.getElementById('thankYou');
+
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Hide form, show thank-you
+      contactForm.style.display = 'none';
+      thankYou.classList.add('show');
+
+      // Reset form for future use
+      contactForm.reset();
+    });
+
+    // ---- Scroll-triggered fade-in animations ----
+    const fadeElements = document.querySelectorAll('.fade-in');
+
+    function checkFadeIn() {
+      const windowHeight = window.innerHeight;
+      fadeElements.forEach(function (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < windowHeight - 60) {
+          el.classList.add('visible');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkFadeIn);
+    window.addEventListener('load', checkFadeIn);
+  </script>
+
+</body>
+</html>

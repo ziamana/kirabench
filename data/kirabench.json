@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-20",
+ "updated": "2026-10-21",
  "rigs": [
   {
    "id": "rtx2060-12g",
@@ -239,6 +239,36 @@
    "pick_if": "You want quick results on simple jobs: it built a working bakery site in about 4 minutes, almost twice as fast as Qwen3.6.",
    "watch_out": "It broke on the harder tests: its Snake never redraws the screen, and its car crash shows a few floating bricks with a counter stuck at 0 after 18 minutes. On our 12 GB card it was not 1.7× faster: same writing speed as Qwen3.6.",
    "community": []
+  },
+  {
+   "id": "minicpm-v-4.7",
+   "ep": 7,
+   "name": "MiniCPM-V 4.7 35B A3B",
+   "creator": "OpenBMB",
+   "base": null,
+   "params": "35 B (about 3 B active)",
+   "hf": "https://huggingface.co/openbmb/MiniCPM-V-4.7-35B-A3B",
+   "logo": "assets/logos/openbmb.png",
+   "about": "OpenBMB's vision-language mixture of experts: 35 B parameters, about 3 B active for each token. The Q4_K_M file is 21 GB, so on a 12 GB card the experts run from system RAM.",
+   "claims": [
+    {
+     "text": "Achieves a higher overall score in less inference time than Qwen3.6 35B-A3B",
+     "who": "developer"
+    },
+    {
+     "text": "13+ tokens/s with just 3 GB of memory",
+     "who": "developer"
+    }
+   ],
+   "pick_if": "You want fast drafts: it finished all three tests in 6 min 23, about three times faster than Qwen3.6 35B.",
+   "watch_out": "Read every line: it wrote Chinese characters inside a French word on its bakery site, and in its car crash the brick wall collapses on its own before the car arrives (0 bricks knocked).",
+   "community": [
+    {
+     "title": "MiniCPM-V 4.7 local test: Chinese characters leaked into lines that were supposed to be Korean",
+     "source": "MindStudio",
+     "url": "https://www.mindstudio.ai/blog/minicpm-v-4-7-local-test"
+    }
+   ]
   }
  ],
  "speed": [
@@ -311,6 +341,32 @@
    "ep": 4,
    "placement": "card+ram",
    "engine": "llama.cpp 8172e65, llama-bench (reads 512 tokens, writes 128), 3 runs"
+  },
+  {
+   "model": "minicpm-v-4.7",
+   "rig": "rtx2060-12g",
+   "ep": 7,
+   "quant": "Q4_K_M",
+   "file_gb": 21,
+   "context": 131072,
+   "vram_gb": null,
+   "placement": "card+ram",
+   "read": 132,
+   "write": 33.9,
+   "engine": "llama-server, llama.cpp build of Sep 11, q8 cache, ngram (reads a 17k-token prompt, then writes free text)"
+  },
+  {
+   "model": "qwen3.6-35b-a3b",
+   "rig": "rtx2060-12g",
+   "ep": 7,
+   "quant": "UD-Q4_K_M",
+   "file_gb": 22.7,
+   "context": 131072,
+   "vram_gb": null,
+   "placement": "card+ram",
+   "read": 104,
+   "write": 29.3,
+   "engine": "llama-server, llama.cpp build of Sep 11, q8 cache, ngram (reads a 17k-token prompt, then writes free text)"
   }
  ],
  "runs": [
@@ -610,6 +666,146 @@
    ],
    "ep": 4,
    "lab": "ornith-1.5-9b/car-crash"
+  },
+  {
+   "model": "minicpm-v-4.7",
+   "benchmark": "bakery-site",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-19",
+   "seconds": 158,
+   "files": [
+    "index.html",
+    "script.js",
+    "style.css"
+   ],
+   "checks": {
+    "prix_6": true,
+    "horaires": true,
+    "formulaire": true,
+    "merci_sans_recharger": true
+   },
+   "notes": [
+    "Chinese characters inside a French word: « Pâte feuilletée分层ée »."
+   ],
+   "ep": 7,
+   "lab": "minicpm-v-4.7/bakery-site"
+  },
+  {
+   "model": "minicpm-v-4.7",
+   "benchmark": "snake-game",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-19",
+   "seconds": 81,
+   "files": [
+    "game.js",
+    "index.html",
+    "style.css"
+   ],
+   "checks": {
+    "canvas": true,
+    "score_affiche": true,
+    "anime": true,
+    "game_over": true,
+    "restart": true
+   },
+   "notes": [],
+   "ep": 7,
+   "lab": "minicpm-v-4.7/snake-game"
+  },
+  {
+   "model": "minicpm-v-4.7",
+   "benchmark": "car-crash",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-19",
+   "seconds": 144,
+   "files": [
+    "index.html",
+    "script.js"
+   ],
+   "checks": {
+    "canvas": true,
+    "anime": true,
+    "compteur_affiche": true,
+    "briques_tombent": false,
+    "debris_se_posent": true,
+    "replay": true
+   },
+   "notes": [
+    "The brick wall collapses on its own before the car gets there; the car rolls over it and leaves the screen. 0 bricks knocked."
+   ],
+   "ep": 7,
+   "lab": "minicpm-v-4.7/car-crash"
+  },
+  {
+   "model": "qwen3.6-35b-a3b",
+   "benchmark": "bakery-site",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-19",
+   "seconds": 563,
+   "files": [
+    "index.html"
+   ],
+   "checks": {
+    "prix_6": true,
+    "horaires": true,
+    "formulaire": true,
+    "merci_sans_recharger": true
+   },
+   "notes": [
+    "Second run, at 128k context with tuned settings."
+   ],
+   "ep": 7,
+   "lab": "qwen3.6-35b-a3b/bakery-site-ep7"
+  },
+  {
+   "model": "qwen3.6-35b-a3b",
+   "benchmark": "snake-game",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-19",
+   "seconds": 118,
+   "files": [
+    "game.js",
+    "index.html",
+    "style.css"
+   ],
+   "checks": {
+    "canvas": true,
+    "score_affiche": true,
+    "anime": true,
+    "game_over": true,
+    "restart": true
+   },
+   "notes": [
+    "Saved one folder above the folder it was given, again: we copied the files for the test."
+   ],
+   "ep": 7,
+   "lab": "qwen3.6-35b-a3b/snake-game-ep7"
+  },
+  {
+   "model": "qwen3.6-35b-a3b",
+   "benchmark": "car-crash",
+   "rig": "rtx2060-12g",
+   "date": "2026-10-19",
+   "seconds": 415,
+   "files": [
+    "game.js",
+    "index.html",
+    "physics.js",
+    "style.css"
+   ],
+   "checks": {
+    "canvas": true,
+    "anime": true,
+    "compteur_affiche": true,
+    "briques_tombent": true,
+    "debris_se_posent": false,
+    "replay": true
+   },
+   "notes": [
+    "The wall is drawn as a thin column, the counter jumps to 64 at impact, and the debris never settles. The car is just two wheels, but it does hit the wall."
+   ],
+   "ep": 7,
+   "lab": "qwen3.6-35b-a3b/car-crash-ep7"
   }
  ],
  "videos": [
@@ -658,6 +854,18 @@
    "publie": true,
    "thumb": "assets/img/videos/deepinfer.jpg",
    "label": "News"
+  },
+  {
+   "ep": 7,
+   "publie": true,
+   "url": "https://youtu.be/T_IxV5czhd8",
+   "date": "2026-10-21",
+   "title": "MiniCPM-V 4.7 vs Qwen3.6: 3× Faster, But Better?",
+   "models": [
+    "minicpm-v-4.7",
+    "qwen3.6-35b-a3b"
+   ],
+   "thumb": "assets/img/videos/ep07.jpg"
   }
  ],
  "verdicts": [
@@ -713,6 +921,37 @@
    ],
    "why": "Only Qwen3.6 made a real crash. LFM2.5 used 18 of its 20 minutes for a few floating bricks; Ornith 1.5 shows a blank screen.",
    "ep": 4
+  },
+  {
+   "benchmark": "bakery-site",
+   "ep": 7,
+   "title": "Episode 7 · MiniCPM-V 4.7 vs Qwen3.6 35B",
+   "ranking": [
+    "qwen3.6-35b-a3b",
+    "minicpm-v-4.7"
+   ],
+   "why": "Qwen3.6, by far: MiniCPM-V was three times faster but wrote Chinese characters inside a French word."
+  },
+  {
+   "benchmark": "snake-game",
+   "ep": 7,
+   "title": "Episode 7 · MiniCPM-V 4.7 vs Qwen3.6 35B",
+   "ranking": [
+    "qwen3.6-35b-a3b",
+    "minicpm-v-4.7"
+   ],
+   "tie": true,
+   "why": "A tie: both games work and pass 5 of 5."
+  },
+  {
+   "benchmark": "car-crash",
+   "ep": 7,
+   "title": "Episode 7 · MiniCPM-V 4.7 vs Qwen3.6 35B",
+   "ranking": [
+    "qwen3.6-35b-a3b",
+    "minicpm-v-4.7"
+   ],
+   "why": "Qwen3.6, narrowly: its wall is a thin column and the debris never settles, but MiniCPM-V's wall collapses on its own before the car even arrives."
   }
  ],
  "advice": [

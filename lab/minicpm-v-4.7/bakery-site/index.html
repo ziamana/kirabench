@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Petit Four - Boulangerie Pâtisserie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Le Petit Four</h1>
+            <p class="tagline">Boulangerie Pâtisserie Artisanale</p>
+            <p class="subtitle">Fait avec amour, chaque jour</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#hours">Horaires</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Menu Section -->
+    <section id="menu" class="menu-section">
+        <h2>Notre Menu</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <h3>Croissant au Beurre</h3>
+                <p>Pâte feuilletée分层ée, beurre AOP</p>
+                <span class="price">1,80 €</span>
+            </div>
+            <div class="menu-item">
+                <h3>Pain au Chocolat</h3>
+                <p>Chocolat noir premium, pâte feuilletée</p>
+                <span class="price">2,00 €</span>
+            </div>
+            <div class="menu-item">
+                <h3>Tarte aux Fruits</h3>
+                <p>Fruits de saison, crème pâtissière</p>
+                <span class="price">4,50 €</span>
+            </div>
+            <div class="menu-item">
+                <h3>Cookie Chocolat</h3>
+                <p>Noix de pécan, chocolat au lait</p>
+                <span class="price">2,50 €</span>
+            </div>
+            <div class="menu-item">
+                <h3>Éclair au Café</h3>
+                <p>Pâte à choux, crème au café, glaçage</p>
+                <span class="price">3,50 €</span>
+            </div>
+            <div class="menu-item">
+                <h3>Mille-feuille</h3>
+                <p>Feuilleté croustillant, crème pâtissière</p>
+                <span class="price">5,00 €</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Opening Hours Section -->
+    <section id="hours" class="hours-section">
+        <h2>Nos Horaires</h2>
+        <div class="hours-table">
+            <div class="hours-row">
+                <span>Lundi - Vendredi</span>
+                <span>7h00 - 19h00</span>
+            </div>
+            <div class="hours-row">
+                <span>Samedi</span>
+                <span>7h00 - 18h00</span>
+            </div>
+            <div class="hours-row">
+                <span>Dimanche</span>
+                <span>Fermé</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <h2>Contactez-nous</h2>
+        <form id="contact-form" class="contact-form">
+            <div class="form-group">
+                <label for="name">Nom</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Envoyer</button>
+        </form>
+        <div id="thank-you" class="thank-you-message">
+            <h3>Merci !</h3>
+            <p>Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Le Petit Four - Tous droits réservés</p>
+        <p>12 Rue de la Pâtisserie, 75001 Paris</p>
+        <p>Tél : 01 23 45 67 89</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

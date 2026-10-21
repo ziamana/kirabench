@@ -1,0 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #1a1a2e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #eee;
+}
+
+#game-container {
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #00d26a;
+  text-shadow: 0 0 10px rgba(0, 210, 106, 0.5);
+}
+
+#score {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #f5c542;
+  text-shadow: 0 0 8px rgba(245, 197, 66, 0.4);
+}
+
+#game-canvas {
+  border: 3px solid #00d26a;
+  border-radius: 8px;
+  background: #16213e;
+  box-shadow: 0 0 20px rgba(0, 210, 106, 0.2);
+}
+
+#game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(22, 33, 62, 0.95);
+  padding: 2.5rem 3rem;
+  border-radius: 16px;
+  border: 2px solid #e74c3c;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(231, 76, 60, 0.4);
+}
+
+#game-over h2 {
+  font-size: 2rem;
+  color: #e74c3c;
+  margin-bottom: 0.8rem;
+}
+
+#game-over p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #f5c542;
+}
+
+#restart-btn {
+  padding: 0.8rem 2.5rem;
+  font-size: 1.1rem;
+  background: #00d26a;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s, transform 0.1s;
+}
+
+#restart-btn:hover {
+  background: #00b85c;
+  transform: scale(1.05);
+}
+
+#restart-btn:active {
+  transform: scale(0.97);
+}
+
+.hidden {
+  display: none;
+}
+
+#game-canvas-wrapper {
+  position: relative;
+  display: inline-block;
+}
